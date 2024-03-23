@@ -1,0 +1,111 @@
+1.エンティティの抽出
+ユーザー
+ツイート
+リツイート
+いいね
+フォロー
+プライベートメッセージ
+通知
+投稿スケジュール
+
+
+2.エンティティの定義
+users
+    id                  int             PK
+    name                varchar(30)     NOT NULL, UNIQUE
+    self_introduction   varchar(50)     NOT NULL
+
+careers
+    id          int             PK
+    user_id     int             NOT NULL, FK(users.id)
+    job         varchar(100)    NULLABLE
+
+addresses
+    id          int             PK
+    user_id     int             NOT NULL, FK(users.id)
+    country     varchar(100)    NULLABLE
+    state       varchar(100)    NULLABLE
+    city        varchar(100)    NULLABLE
+    town        varchar(100)    NULLABLE
+
+hobbies
+    id          int             PK
+    user_id     int             NOT NULL, FK(users.id)
+    hobby       varchar(100)    NULLABLE
+
+tweets
+    id                  int             PK
+    reply_to_id         int             NULLABLE, FK(tweets.id)
+    user_id             int             NOT NULL, FK(users.id)
+    message             varchar(255)    NOT NULL
+    media_file_path     varchar(255)    NULLABLE
+    media_type          varchar(255)    NULLABLE
+    posting_datetime    datetime        NOT NULL
+
+retweets
+    id                  int             PK
+    user_id             int             NOT NULL, FK(users.id)
+    tweet_id            int             NOT NULL, FK(tweets.id)
+    retweet_datetime    datetime        NOT NULL
+
+follows
+    id                  int      PK
+    follower_id         int         NOT NULL, FK(users.id)
+    followee_id         int         NOT NULL, FK(users.id)
+    follow_datetime     datetime    NOT NULL
+    UNIQUE(follower_id, followee_id)
+
+likes
+    id              int         PK
+    tweet_id        int         NOT NULL, FK(tweets.id)
+    like_datetime   datetime    NOT NULL
+
+messages
+    id              int             PK
+    sender_id       int             NOT NULL
+    recipient_id    int             NOT NULL
+    message         varchar(255)    NOT NULL
+    send_datetime   datetime        NOT NULL
+
+retweet_notifications
+    id              int             PK
+    user_id         int             NOT NULL, FK(users.id)
+    retweet_id      int             NULLABLE, FK(retweets.id)
+    is_confirmed    boolean         NOT NULL
+    created_at      datetime        NOT NULL
+
+follow_notifications
+    id              int             PK
+    user_id         int             NOT NULL, FK(users.id)
+    follow_id       int             NULLABLE, FK(follows.id)
+    is_confirmed    boolean         NOT NULL
+    created_at      datetime        NOT NULL
+
+like_notifications
+    id              int             PK
+    user_id         int             NOT NULL, FK(users.id)
+    like_id         int             NULLABLE, FK(likes.id)
+    is_confirmed    boolean         NOT NULL
+    created_at      datetime        NOT NULL
+
+message_notifications
+    id              int             PK
+    user_id         int             NOT NULL, FK(users.id)
+    message_id      int             NULLABLE, FK(messages.id)
+    is_confirmed    boolean         NOT NULL
+    created_at      datetime        NOT NULL
+
+scheduled_tweets
+    id                  int             PK
+    user_id             int             NOT NULL, FK(users.id)
+    message             varchar(255)    NOT NULL
+    media_path          varchar(255)    NULLABLE
+    media_type          varchar(255)    NULLABLE
+    scheduled_datetime  datetime        NOT NULL
+
+
+3.正規化
+
+
+4.ER図の作成
+

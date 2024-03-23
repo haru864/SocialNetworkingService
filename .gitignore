@@ -1,0 +1,5 @@
+backend/log/
+backend/config/.env
+backend/public/images/
+backend/public/movies/
+backend/public/nextjs/
