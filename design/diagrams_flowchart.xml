@@ -1,34 +1,37 @@
-<mxfile host="app.diagrams.net" modified="2024-03-22T13:16:49.152Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="ACGTjkyMozW74tpZ1nQQ" version="24.0.4" type="device">
+<mxfile host="app.diagrams.net" modified="2024-03-25T12:56:22.038Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="BFXLoER11fgmYMen6XFJ" version="24.0.7" type="device">
   <diagram name="ページ1" id="jvqJN53400dJCz2KRvl1">
-    <mxGraphModel dx="2901" dy="1119" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2901" dy="2288" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-1" value="インターネット" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="c1j-I0ugs0beVlUwp95W-2" value="登録内容確認画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="414" y="700" width="180" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-1" value="インターネット" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="-490" y="460" width="220" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-2" value="ログイン画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-2" value="ログイン画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
           <mxGeometry x="-40" y="465" width="180" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
-          <mxGeometry x="-210" y="340" width="120" height="60" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-3" value="&lt;div&gt;＜ログイン画面取得＞&lt;/div&gt;https://sns.haru864.com (以下にリダイレクト)&lt;div&gt;https://sns.haru864.com/pages/home.html&lt;br&gt;&lt;div&gt;GET&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;text/html&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="-250" y="290" width="280" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-4" value="ユーザー登録画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="210" y="700" width="180" height="110" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-4" value="ユーザー登録画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="120" y="700" width="180" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-5" value="ホーム画面&lt;div&gt;- プロフィール&lt;/div&gt;&lt;div&gt;- 最新の投稿&lt;/div&gt;&lt;div&gt;- トレンド(人気n件)&lt;/div&gt;&lt;div&gt;- フォロワー&lt;/div&gt;&lt;div&gt;- 通知&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;align=center;" vertex="1" parent="1">
-          <mxGeometry x="470" y="430" width="260" height="180" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-5" value="ホーム画面&lt;div&gt;- プロフィール&lt;/div&gt;&lt;div&gt;- 最新の投稿&lt;/div&gt;&lt;div&gt;- トレンド(人気n件)&lt;/div&gt;&lt;div&gt;- フォロワー&lt;/div&gt;&lt;div&gt;- 通知&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;align=center;" parent="1" vertex="1">
+          <mxGeometry x="914" y="430" width="260" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-6" value="プロフィール編集画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="80" width="200" height="100" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-6" value="プロフィール編集画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1375" y="100" width="200" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-7" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.518;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="fPiDNAXwSVPGr6-VXFNg-2" target="fPiDNAXwSVPGr6-VXFNg-5">
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-7" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.518;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-2" target="fPiDNAXwSVPGr6-VXFNg-5" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="390" y="600" as="sourcePoint" />
             <mxPoint x="440" y="550" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-8" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="fPiDNAXwSVPGr6-VXFNg-2" target="fPiDNAXwSVPGr6-VXFNg-4">
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-8" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-2" target="fPiDNAXwSVPGr6-VXFNg-4" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="390" y="600" as="sourcePoint" />
             <mxPoint x="440" y="550" as="targetPoint" />
@@ -37,41 +40,77 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-9" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=1.006;exitY=0.518;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="fPiDNAXwSVPGr6-VXFNg-4" target="fPiDNAXwSVPGr6-VXFNg-5">
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-9" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.518;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="c1j-I0ugs0beVlUwp95W-1" target="fPiDNAXwSVPGr6-VXFNg-5" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="710" y="700" as="sourcePoint" />
-            <mxPoint x="950" y="910" as="targetPoint" />
+            <mxPoint x="1030" y="780" as="sourcePoint" />
+            <mxPoint x="1110" y="670" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="600" y="670" />
+              <mxPoint x="1044" y="690" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-10" value="投稿一覧画面&lt;div&gt;（時間でソート）&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="1060" y="270" width="200" height="100" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-10" value="投稿一覧画面&lt;div&gt;（時間でソート）&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1375" y="290" width="200" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-11" value="投稿一覧画面&lt;div&gt;（トレンド限定、時間でソート）&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="1045" y="469.5" width="230" height="115" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-11" value="投稿一覧画面&lt;div&gt;（トレンド限定、時間でソート）&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1360" y="489.5" width="230" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-12" value="フォロワー一覧画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="1045" y="680" width="230" height="115" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-12" value="フォロワー一覧画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1360" y="700" width="230" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-13" value="通知一覧画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="1045" y="890" width="230" height="115" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-13" value="通知一覧画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1360" y="910" width="230" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-14" value="投稿画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="1530" y="70" width="200" height="100" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-14" value="投稿画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1845" y="90" width="200" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-15" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.875;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="fPiDNAXwSVPGr6-VXFNg-1" target="fPiDNAXwSVPGr6-VXFNg-2">
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-15" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.875;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-1" target="fPiDNAXwSVPGr6-VXFNg-2" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="-290" y="552" as="sourcePoint" />
             <mxPoint x="40" y="550" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-16" value="スレッド画面&lt;div&gt;（選択した投稿に対する返信を表示）&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="1530" y="300" width="230" height="120" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-16" value="スレッド画面&lt;div&gt;（選択した投稿に対する返信を表示）&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1845" y="320" width="230" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-17" value="ユーザープロフィール画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="1530" y="535" width="220" height="100" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-17" value="ユーザープロフィール画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1845" y="555" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="oSbnpAtGKXMKIoD21E7N-1" value="&lt;div&gt;＜ユーザー登録＞&lt;/div&gt;https://sns.haru864.com/api/signup&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;br&gt;&lt;/div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;username&quot;: ＜ユーザー名＞,&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp; &quot;password&quot;: ＜パスワード＞,&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;email&quot;: ＜メールアドレス＞,&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;self_introduction&quot;: ＜自己紹介＞,&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;country&lt;/span&gt;&quot;:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;＜国＞,&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;state&lt;/span&gt;&quot;:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;＜県 / 州＞,&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;city&lt;/span&gt;&quot;:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;＜市＞,&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;town&lt;/span&gt;&quot;:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;＜町＞,&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;hobbies&lt;/span&gt;&quot;:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;[&quot;趣味１&quot;, &quot;趣味２&quot;, &quot;趣味３&quot;],&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;careers&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;:&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;[&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;仕事１&quot;, &quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;仕事&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;２&quot;, &quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;仕事&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;３&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;]&lt;/span&gt;&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;error_message&quot;: ＜エラーメッセージ＞&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;ログイン成功 =&amp;gt; 入力されたメールアドレスへメール送信して、メール送信通知画面へ遷移&lt;/div&gt;&lt;div&gt;ログイン失敗 =&amp;gt; ユーザー登録画面でアラート表示&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="10" y="860" width="570" height="470" as="geometry" />
+        </mxCell>
+        <mxCell id="oSbnpAtGKXMKIoD21E7N-2" value="&lt;div&gt;＜ログイン＞&lt;/div&gt;https://sns.haru864.com/api/login&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;application/json&lt;br&gt;&lt;/div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;username&quot;: ＜ユーザー名＞,&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp; &quot;password&quot;: ＜パスワード＞&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;セッションIDをヘッダーにセット&lt;/div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;error_message&quot;: ＜エラーメッセージ＞&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;ログイン成功 =&amp;gt; ホーム画面へ&lt;/div&gt;&lt;div&gt;ログイン失敗 =&amp;gt; ログイン画面でアラート表示&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="280" y="70" width="495" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="oSbnpAtGKXMKIoD21E7N-5" value="" style="endArrow=none;dashed=1;html=1;rounded=0;strokeColor=#ED0C23;curved=0;jumpSize=9;strokeWidth=3;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="977" y="1240" as="sourcePoint" />
+            <mxPoint x="977" y="30" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oSbnpAtGKXMKIoD21E7N-6" value="# パスワードのハッシュ化&lt;div&gt;password_hash($password, PASSWORD_DEFAULT)&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;# パスワード確認&lt;/div&gt;&lt;div&gt;password_verify()&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="-380" y="690" width="340" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="oSbnpAtGKXMKIoD21E7N-7" value="&lt;font color=&quot;#ff0000&quot; size=&quot;1&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;セッションあり&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;&lt;div&gt;$_SESSION[&#39;user_id&#39;] = users.id&lt;/div&gt;&lt;div&gt;$_SESSION[&#39;user_name&#39;] = users.name&lt;/div&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;idとnameがテーブルに存在するかチェック&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;クエリ結果をRedisにキャッシュする&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="990" y="-120" width="360" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="c1j-I0ugs0beVlUwp95W-1" value="メール送信通知画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="690" y="700" width="180" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="c1j-I0ugs0beVlUwp95W-5" value="" style="endArrow=classic;html=1;rounded=0;exitX=1.011;exitY=0.491;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-4" target="c1j-I0ugs0beVlUwp95W-2" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="800" y="660" as="sourcePoint" />
+            <mxPoint x="390" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="U3b-cSCGvBMcpt9S6771-1" value="&lt;div&gt;＜メール認証＞&lt;/div&gt;https://sns.haru864.com/api/validate?id={ハッシュ値}&lt;div&gt;GET&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;セッションIDをヘッダーにセット&lt;/div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;error_message&quot;: ＜エラーメッセージ＞&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="690" y="890" width="340" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="U3b-cSCGvBMcpt9S6771-2" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.994;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="c1j-I0ugs0beVlUwp95W-2" target="c1j-I0ugs0beVlUwp95W-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="750" as="sourcePoint" />
+            <mxPoint x="827" y="641" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

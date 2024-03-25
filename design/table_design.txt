@@ -12,8 +12,19 @@
 2.エンティティの定義
 users
     id                  int             PK
-    name                varchar(30)     NOT NULL, UNIQUE
+    name                varchar(15)     NOT NULL, UNIQUE
+    password_hash       varchar(255)    NOT NULL
+    email               varchar(100)    NOT NULL
     self_introduction   varchar(50)     NOT NULL
+    created_at          datetime        NOT NULL
+    last_login          datetime        NOT NULL
+    email_verified_at   datetime        NULLABLE
+
+email_verification
+    hash            varchar(64)     PK
+    user_id         int             NOT NULL, FK(users.id)
+    created_at      datetime        NOT NULL
+    expired_at      datetime        NOT NULL
 
 careers
     id          int             PK
