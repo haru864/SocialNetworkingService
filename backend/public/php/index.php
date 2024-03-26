@@ -13,22 +13,29 @@ spl_autoload_register(function ($class) {
 });
 
 use Logging\Logger;
-use Http\HttpRequest;
-use Http\HttpResponse;
+use Http\Response\HttpResponse;
 use Exceptions\Interface\UserVisibleException;
 use Render\JSONRenderer;
 use Settings\Settings;
+
+function getRequestDirectory()
+{
+    $uri = explode('?', $_SERVER['REQUEST_URI'])[0];
+    $directory = dirname($uri);
+    $directory = $directory === '/' ? $directory : rtrim($directory, '/');
+    return $directory;
+}
 
 try {
     date_default_timezone_set(Settings::env("TIMEZONE"));
     $logger = Logger::getInstance();
     $logger->logRequest();
-    $httpRequest = new HttpRequest();
+    $directory = getRequestDirectory();
     $routes = include($APP_DIRECTORY . 'Routing/routes.php');
     $renderer = null;
     foreach ($routes as $uriPattern => $controller) {
-        if (preg_match($uriPattern, $httpRequest->getUriDir())) {
-            $renderer = $controller->assignProcess();
+        if (preg_match($uriPattern, $directory)) {
+            $renderer = $controller->handleRequest();
         }
     }
     if (is_null($renderer)) {

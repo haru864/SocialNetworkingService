@@ -1,6 +1,6 @@
 <?php
 
-namespace Http;
+namespace Http\Response;
 
 use Render\Interface\HTTPRenderer;
 

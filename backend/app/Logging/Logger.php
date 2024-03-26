@@ -2,7 +2,7 @@
 
 namespace Logging;
 
-use Http\HttpResponse;
+use Http\Response\HttpResponse;
 use Settings\Settings;
 use Throwable;
 

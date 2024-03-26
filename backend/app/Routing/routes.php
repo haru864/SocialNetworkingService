@@ -1,21 +1,14 @@
 <?php
 
-use Database\DataAccess\Implementations\PostDAOImpl;
-use Http\HttpRequest;
-use Services\PostsService;
-use Controllers\ThreadsController;
-use Controllers\RepliesController;
+use Controllers\LoginController;
+use Database\DataAccess\Implementations\UsersDAOImpl;
+use Services\LoginService;
 
-$httpRequest = new HttpRequest();
-$postDAO = new PostDAOImpl();
-$postsService = new PostsService($postDAO);
-$threadsController = new ThreadsController($postsService, $httpRequest);
-$replyController = new RepliesController($postsService, $httpRequest);
+$usersDAOImpl = new UsersDAOImpl();
+$loginController = new LoginController(new LoginService($usersDAOImpl));
 
-$URL_PATTERN_FOR_THREADS_API = '/^\/api\/threads$/';
-$URL_PATTERN_FOR_REPLIES_API = '/^\/api\/replies$/';
+$URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
 
 return [
-    $URL_PATTERN_FOR_THREADS_API => $threadsController,
-    $URL_PATTERN_FOR_REPLIES_API => $replyController
+    $URL_DIR_PATTERN_LOGIN => $loginController,
 ];

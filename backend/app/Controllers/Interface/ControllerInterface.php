@@ -6,5 +6,5 @@ use Render\Interface\HTTPRenderer;
 
 interface ControllerInterface
 {
-    public function assignProcess(): HTTPRenderer;
+    public function handleRequest(): HTTPRenderer;
 }
