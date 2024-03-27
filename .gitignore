@@ -1,5 +1,5 @@
 backend/log/
-backend/config/.env
+backend/config/.env.private
 backend/public/images/
 backend/public/movies/
 backend/public/nextjs/

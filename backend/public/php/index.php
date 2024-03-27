@@ -21,9 +21,7 @@ use Settings\Settings;
 function getRequestDirectory()
 {
     $uri = explode('?', $_SERVER['REQUEST_URI'])[0];
-    $directory = dirname($uri);
-    $directory = $directory === '/' ? $directory : rtrim($directory, '/');
-    return $directory;
+    return $uri;
 }
 
 try {

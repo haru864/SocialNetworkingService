@@ -1,17 +1,22 @@
 <?php
 
-namespace Validate;
+namespace Helpers;
 
 use Settings\Settings;
 use Exceptions\FileSizeLimitExceededException;
-use Exceptions\InvalidTextException;
 use Exceptions\InvalidMimeTypeException;
-use Exceptions\InvalidRequestMethodException;
 use Exceptions\InvalidRequestParameterException;
-use Exceptions\InvalidContentTypeException;
 
 class ValidationHelper
 {
+    public static function isNonEmptyString(string $str): bool
+    {
+        if (is_null($str) || $str === '') {
+            return false;
+        }
+        return true;
+    }
+
     private static function validateImage(): void
     {
         $ALLOWED_MIME_TYPE = ['image/jpeg', 'image/png', 'image/gif'];
