@@ -103,6 +103,7 @@ class Logger
         return ($fileSize + $logEntrybytes) > $maxLogFileSize;
     }
 
+    // TODO パスワードをマスクする
     public function logRequest(): void
     {
         $requestInfo = [

@@ -3,3 +3,5 @@ backend/config/.env.private
 backend/public/images/
 backend/public/movies/
 backend/public/nextjs/
+backend/vendor/
+

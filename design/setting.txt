@@ -1,0 +1,14 @@
+＃ マイグレーションコマンド
+php console.php code-gen migration --name ＜ファイル名＞
+php console.php migrate --init
+php console.php migrate
+
+# .env.private
+DATABASE_NAME           データベース名
+DATABASE_USER           DBユーザー名
+DATABASE_USER_PASSWORD  DBパスワード
+SMTP_SERVER_HOST        SMTPサーバーのホスト名
+SMTP_SERVER_PORT        SMTPサーバーのポート番号
+SMTP_SERVER_USERNAME    SMTPサーバーへ接続する際のユーザー名(Gmailメールアドレス)
+SMTP_SERVER_PASSWORD    SMTPサーバーへ接続する際のパスワード(アプリパスワード)
+

@@ -5,12 +5,12 @@ namespace Settings;
 class Settings
 {
     private const CONFIG_PATH =  __DIR__ . '/../../config/';
-    private const ENV_PATH =  self::CONFIG_PATH . '.env';
-    private const PUBLIC_ENV_PATH =  self::CONFIG_PATH . '.public.env';
+    private const PRIVATE_ENV_PATH =  self::CONFIG_PATH . '.env.private';
+    private const PUBLIC_ENV_PATH =  self::CONFIG_PATH . '.env.public';
 
     public static function env(string $pair): string
     {
-        $privateConfig = parse_ini_file(self::ENV_PATH);
+        $privateConfig = parse_ini_file(self::PRIVATE_ENV_PATH);
         $publicConfig = parse_ini_file(self::PUBLIC_ENV_PATH);
         if ($privateConfig === false) {
             throw new \Exception("ERROR: .env not found");

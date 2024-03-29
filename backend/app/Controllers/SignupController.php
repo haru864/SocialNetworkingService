@@ -23,9 +23,6 @@ class SignupController implements ControllerInterface
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             throw new InvalidRequestMethodException("SignUp request must be 'POST'.");
         }
-        if ($_SERVER['CONTENT_TYPE'] !== 'multipart/form-data') {
-            throw new InvalidRequestMethodException("SignUp request must be 'multipart/form-data'.");
-        }
         $request = new SignupRequest($_POST, $_FILES);
         return $this->signup($request);
     }
@@ -34,6 +31,7 @@ class SignupController implements ControllerInterface
     {
         try {
             $user = $this->signupService->createUser($request);
+            $this->signupService->sendVerificationEmail($user);
             return new JSONRenderer(200, []);
         } catch (InvalidRequestParameterException $e) {
             return new JSONRenderer(400, ["error_message" => $e->displayErrorMessage()]);
