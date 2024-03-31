@@ -51,6 +51,14 @@ class UsersDAOImpl implements UsersDAO
         return $user;
     }
 
+    public function getById(int $id): ?User
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = "SELECT * FROM users WHERE id = ?";
+        $record = $mysqli->prepareAndFetchAll($query, 'i', [$id])[0] ?? null;
+        return $record === null ? null : $this->convertRecordToUser($record);
+    }
+
     public function getByName(string $name): ?User
     {
         $mysqli = DatabaseManager::getMysqliConnection();

@@ -35,7 +35,10 @@ class LoginController implements ControllerInterface
     private function login(LoginRequest $loginRequest): JSONRenderer
     {
         try {
-            $this->loginService->validateLoginUser($loginRequest);
+            $user = $this->loginService->login($loginRequest);
+            session_start();
+            $_SESSION['user_id'] = $user->getId();
+            $_SESSION['user_name'] = $user->getName();
             return new JSONRenderer(200, []);
         } catch (InvalidRequestParameterException $e) {
             return new JSONRenderer(400, ["error_message" => $e->displayErrorMessage()]);

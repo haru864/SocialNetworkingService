@@ -4,14 +4,17 @@ namespace Services;
 
 use Database\DataAccess\Implementations\AddressesDAOImpl;
 use Database\DataAccess\Implementations\CareersDAOImpl;
+use Database\DataAccess\Implementations\EmailVerificationDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
+use Exceptions\InternalServerException;
 use Helpers\FileUtility;
 use Http\Request\SignupRequest;
 use Models\User;
 use Helpers\ValidationHelper;
 use Models\Address;
 use Models\Career;
+use Models\EmailVerification;
 use Models\Hobby;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -23,17 +26,20 @@ class SignupService
     private AddressesDAOImpl $addressesDAOImpl;
     private CareersDAOImpl $careersDAOImpl;
     private HobbiesDAOImpl $hobbiesDAOImpl;
+    private EmailVerificationDAOImpl $emailVerificationDAOImpl;
 
     public function __construct(
         usersDAOImpl $usersDAOImpl,
         AddressesDAOImpl $addressesDAOImpl,
         CareersDAOImpl $careersDAOImpl,
-        HobbiesDAOImpl $hobbiesDAOImpl
+        HobbiesDAOImpl $hobbiesDAOImpl,
+        EmailVerificationDAOImpl $emailVerificationDAOImpl
     ) {
         $this->usersDAOImpl = $usersDAOImpl;
         $this->addressesDAOImpl = $addressesDAOImpl;
         $this->careersDAOImpl = $careersDAOImpl;
         $this->hobbiesDAOImpl = $hobbiesDAOImpl;
+        $this->emailVerificationDAOImpl = $emailVerificationDAOImpl;
     }
 
     // TODO DB登録に失敗した場合、保存された画像ファイルを削除する必要がある。
@@ -87,6 +93,7 @@ class SignupService
     }
 
     // TODO 実行時にクライアントにログが返らないようにする
+    // TODO 送信済みメールをボックスから削除する
     public function sendVerificationEmail(User $user): void
     {
         $mail = new PHPMailer(true);
@@ -106,17 +113,59 @@ class SignupService
         $mail->addAddress($user->getEmail(), 'Joe User');
 
         // Content
+        $mailCharSet = 'ISO-2022-JP';
+        $mail->CharSet = $mailCharSet;
         $mail->isHTML(true);
-        $mail->Subject = 'Here is the subject';
-        $mail->Body = 'This is the HTML message body <b>in bold!</b>';
+        $mail->Subject = mb_encode_mimeheader('メール認証', $mailCharSet);
+        $url = Settings::env('BASE_URL') . '/api/validate?id=' . $this->publishUserVerificationURL($user);
+        $mail->Body = "<a href=" . $url . ">リンク</a>";
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
         $mail->send();
     }
 
-    private function publishUserVerificationURL(): string
+    public function validateEmail(string $hash): User
     {
-        $url = '';
-        return $url;
+        $this->emailVerificationDAOImpl->deleteExpiredHash();
+        $emailVerification = $this->emailVerificationDAOImpl->getByHash($hash);
+        if (is_null($emailVerification)) {
+            throw new InternalServerException('Invalid URL hash.');
+        }
+        $userId = $emailVerification->getUserId();
+        $user = $this->usersDAOImpl->getById($userId);
+        if (is_null($user)) {
+            throw new InternalServerException('Given URL has no related account.');
+        }
+        $currentDatetime = date('Y-m-d H:i:s');
+        $user->setEmailVerifiedAt($currentDatetime);
+        $this->usersDAOImpl->update($user);
+        $this->emailVerificationDAOImpl->deleteByHash($hash);
+        return $user;
+    }
+
+    private function publishUserVerificationURL(User $user): string
+    {
+        $this->emailVerificationDAOImpl->deleteExpiredHash();
+        $hash = hash('sha256', $user->getId());
+        $counter = 0;
+        while ($counter < 1000) {
+            $urlInTable = $this->emailVerificationDAOImpl->getByHash($hash);
+            if (is_null($urlInTable)) {
+                $createdAt = date('Y-m-d H:i:s');
+                $expiredAt = new \Datetime('NOW');
+                $expiredAt->add(\DateInterval::createFromDateString('10 minutes'));
+                $emailVerification = new EmailVerification(
+                    hash: $hash,
+                    userId: $user->getId(),
+                    createdAt: $createdAt,
+                    expiredAt: $expiredAt->format("Y-m-d H:i:s")
+                );
+                $this->emailVerificationDAOImpl->create($emailVerification);
+                return $hash;
+            }
+            $counter++;
+            $hash = hash('sha256',  $user->getId() . $counter);
+        }
+        throw new InternalServerException('Failed to generate unique hash value.');
     }
 }

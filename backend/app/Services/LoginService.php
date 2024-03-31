@@ -5,6 +5,7 @@ namespace Services;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InvalidRequestParameterException;
 use Http\Request\LoginRequest;
+use Models\User;
 
 class LoginService
 {
@@ -15,7 +16,7 @@ class LoginService
         $this->usersDAOImpl = $usersDAOImpl;
     }
 
-    public function validateLoginUser(LoginRequest $loginRequest): void
+    public function login(LoginRequest $loginRequest): User
     {
         $username = $loginRequest->getUsername();
         $userInTable = $this->usersDAOImpl->getByName($username);
@@ -28,5 +29,8 @@ class LoginService
         if (!$isValidPassword) {
             throw new InvalidRequestParameterException("Invalid password.");
         }
+        $userInTable->setLastLogin(date('Y-m-d H:i:s'));
+        $this->usersDAOImpl->update($userInTable);
+        return $userInTable;
     }
 }
