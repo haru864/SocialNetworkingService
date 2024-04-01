@@ -24,14 +24,24 @@ class ValidationHelper
     }
 
     /**
-     * multipart/form-dataでアップされたファイルが有効かどうかを検証する。
+     * 文字列が正の整数として解釈可能かどうかをチェックする。
+     *
+     * @param string $str
+     * @return bool 正の整数として解釈可能ならtrue、それ以外ならfalse
+     */
+    public static function isPositiveIntegerString(string $str): bool
+    {
+        return preg_match('/^[1-9][0-9]*$/', $str) === 1;
+    }
+
+    /**
+     * multipart/form-dataでアップされた画像ファイルが有効かどうかを検証する。
      * 有効でなければ例外をスローする。
      *
      * @param string $fileKeyName リクエストパラメータにおける画像ファイルのキー名
-     * @param array $validMimeTypes 有効なMime-Typeの配列(ex.'image/gif')
      * @return void
      */
-    private static function validateUploadedImage(string $fileKeyName, array $validMimeTypes): void
+    public static function validateUploadedImage(string $fileKeyName): void
     {
         if ($_FILES[$fileKeyName]['error'] != UPLOAD_ERR_OK) {
             throw new InvalidRequestParameterException("Upload Error: error occured when uploading file.");
@@ -40,28 +50,43 @@ class ValidationHelper
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $imagePath = $_FILES[$fileKeyName]['tmp_name'];
         $mimeType = $finfo->file($imagePath);
+        $validMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (!in_array($mimeType, $validMimeTypes)) {
-            throw new InvalidMimeTypeException("Invalid Mime Type: jpeg, png, gif are allowed. Given MIME-TYPE was '{$mimeType}'");
+            $validMimeTypeStr = implode(",", $validMimeTypes);
+            throw new InvalidMimeTypeException("{$validMimeTypeStr} are allowed. ('{$mimeType}' given)");
         }
 
-        // php.iniで定義されたアップロード可能な最大ファイルサイズ(upload_max_filesize)を下回る必要がある
-        $maxFileSizeBytes = Settings::env('MAX_FILE_SIZE_BYTES');
+        $maxFileSizeBytes = Settings::env('MAX_IMAGE_SIZE_BYTES');
         if ($_FILES[$fileKeyName]['size'] > $maxFileSizeBytes) {
             throw new FileSizeLimitExceededException("File Size Over: file size must be under {$maxFileSizeBytes} bytes.");
         }
+    }
 
-        $imageSize = getimagesize($imagePath);
-        if ($imageSize === false) {
-            throw new InvalidMimeTypeException("Given file is not image.");
+    /**
+     * multipart/form-dataでアップされた動画ファイルが有効かどうかを検証する。
+     * 有効でなければ例外をスローする。
+     *
+     * @param string $fileKeyName リクエストパラメータにおける動画ファイルのキー名
+     * @return void
+     */
+    public static function validateUploadedVideo(string $fileKeyName): void
+    {
+        if ($_FILES[$fileKeyName]['error'] != UPLOAD_ERR_OK) {
+            throw new InvalidRequestParameterException("Upload Error: error occured when uploading file.");
         }
 
-        $imageType = $imageSize[2];
-        if (
-            $imageType !== IMAGETYPE_GIF
-            && $imageType !== IMAGETYPE_JPEG
-            && $imageType !== IMAGETYPE_PNG
-        ) {
-            throw new InvalidMimeTypeException('The uploaded image is not in an approved format.');
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $videoFilePath = $_FILES[$fileKeyName]['tmp_name'];
+        $mimeType = $finfo->file($videoFilePath);
+        $validMimeTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+        if (!in_array($mimeType, $validMimeTypes)) {
+            $validMimeTypeStr = implode(",", $validMimeTypes);
+            throw new InvalidMimeTypeException("{$validMimeTypeStr} are allowed. ('{$mimeType}' given)");
+        }
+
+        $maxFileSizeBytes = Settings::env('MAX_VIDEO_SIZE_BYTES');
+        if ($_FILES[$fileKeyName]['size'] > $maxFileSizeBytes) {
+            throw new FileSizeLimitExceededException("File Size Over: file size must be under {$maxFileSizeBytes} bytes.");
         }
     }
 }

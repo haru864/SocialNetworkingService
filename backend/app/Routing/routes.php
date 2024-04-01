@@ -8,6 +8,8 @@ use Database\DataAccess\Implementations\CareersDAOImpl;
 use Database\DataAccess\Implementations\EmailVerificationDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
+use Middleware\AuthMiddleware;
+use Middleware\NoopMiddleware;
 use Services\LoginService;
 use Services\SignupService;
 
@@ -24,10 +26,27 @@ $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
 $URL_DIR_PATTERN_SIGNUP = '/^\/api\/signup$/';
 $URL_DIR_PATTERN_VALIDATE_EMAIL = '/^\/api\/validate$/';
 $URL_DIR_PATTERN_LOGOUT = '/^\/api\/logout$/';
+$URL_DIR_PATTERN_TWEETS = '/^\/api\/tweets$/';
 
 return [
-    $URL_DIR_PATTERN_LOGIN => $loginController,
-    $URL_DIR_PATTERN_SIGNUP => $signupController,
-    $URL_DIR_PATTERN_VALIDATE_EMAIL => $signupController,
-    $URL_DIR_PATTERN_LOGOUT => $logoutController,
+    $URL_DIR_PATTERN_LOGIN => [
+        'controller' => $loginController,
+        'middleware' => new NoopMiddleware()
+    ],
+    $URL_DIR_PATTERN_SIGNUP => [
+        'controller' => $signupController,
+        'middleware' => new NoopMiddleware()
+    ],
+    $URL_DIR_PATTERN_VALIDATE_EMAIL => [
+        'controller' => $signupController,
+        'middleware' => new NoopMiddleware()
+    ],
+    $URL_DIR_PATTERN_LOGOUT => [
+        'controller' => $logoutController,
+        'middleware' => new AuthMiddleware()
+    ],
+    $URL_DIR_PATTERN_TWEETS => [
+        // 'controller' => 
+        'middleware' => new AuthMiddleware()
+    ],
 ];

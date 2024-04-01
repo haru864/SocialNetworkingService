@@ -29,7 +29,8 @@ class FileUtility
         $mimeType = $finfo->file($uploadedTmpFilePath);
         $validImageMimeTypes = [
             'image/jpeg' => 'jpg',
-            'image/png' => 'png'
+            'image/png' => 'png',
+            'image/gif' => 'gif'
         ];
         if (!array_key_exists($mimeType, $validImageMimeTypes)) {
             throw new InvalidMimeTypeException("Invalid Mime-Type: '{$mimeType}'");

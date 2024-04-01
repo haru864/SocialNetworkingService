@@ -9,9 +9,9 @@ class Career implements Model
 {
     use GenericModel;
 
-    public ?int $id;
-    public int $userId;
-    public string $job;
+    private ?int $id;
+    private int $userId;
+    private string $job;
 
     public function __construct(
         ?int $id,

@@ -9,9 +9,9 @@ class Hobby implements Model
 {
     use GenericModel;
 
-    public ?int $id;
-    public int $userId;
-    public string $hobby;
+    private ?int $id;
+    private int $userId;
+    private string $hobby;
 
     public function __construct(
         ?int $id,

@@ -9,15 +9,15 @@ class User implements Model
 {
     use GenericModel;
 
-    public ?int $id;
-    public string $name;
-    public string $password_hash;
-    public string $email;
-    public ?string $self_introduction;
-    public ?string $profile_image;
-    public string $created_at;
-    public string $last_login;
-    public ?string $email_verified_at;
+    private ?int $id;
+    private string $name;
+    private string $password_hash;
+    private string $email;
+    private ?string $self_introduction;
+    private ?string $profile_image;
+    private string $created_at;
+    private string $last_login;
+    private ?string $email_verified_at;
 
     public function __construct(
         ?int $id,

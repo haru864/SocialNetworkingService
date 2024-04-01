@@ -3,6 +3,7 @@
 namespace Http\Request;
 
 use Exceptions\InvalidRequestParameterException;
+use Helpers\ValidationHelper;
 
 class SignupRequest
 {
@@ -51,6 +52,9 @@ class SignupRequest
         $maxCareersCount = 3;
         if (count($postData['careers']) > $maxCareersCount) {
             throw new InvalidRequestParameterException("'careers' must be no more than {$maxCareersCount}.");
+        }
+        if (isset($fileData['profile_image'])) {
+            ValidationHelper::validateUploadedImage('profile_image');
         }
         $this->username = $postData['username'];
         $this->password = $postData['password'];

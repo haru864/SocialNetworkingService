@@ -9,12 +9,12 @@ class Address implements Model
 {
     use GenericModel;
 
-    public ?int $id;
-    public int $userId;
-    public ?string $country;
-    public ?string $state;
-    public ?string $city;
-    public ?string $town;
+    private ?int $id;
+    private int $userId;
+    private ?string $country;
+    private ?string $state;
+    private ?string $city;
+    private ?string $town;
 
     public function __construct(
         ?int $id,

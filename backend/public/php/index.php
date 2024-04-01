@@ -33,10 +33,10 @@ try {
     $directory = getRequestDirectory();
     $routes = include($APP_DIRECTORY . 'Routing/routes.php');
     $renderer = null;
-    foreach ($routes as $uriPattern => $controller) {
-        if (preg_match($uriPattern, $directory)) {
-            $renderer = $controller->handleRequest();
-        }
+    foreach ($routes as $uriPattern => $route) {
+        $middleware = $route['middleware'];
+        $controller = $route['controller'];
+        $renderer = $middleware($controller);
     }
     if (is_null($renderer)) {
         $param = [

@@ -22,7 +22,6 @@ class LogoutController implements ControllerInterface
 
     private function logout(): JSONRenderer
     {
-        session_start();
         unset($_SESSION["user_id"]);
         unset($_SESSION["user_name"]);
         return new JSONRenderer(200, []);

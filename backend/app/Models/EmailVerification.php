@@ -9,10 +9,10 @@ class EmailVerification implements Model
 {
     use GenericModel;
 
-    public string $hash;
-    public int $userId;
-    public string $createdAt;
-    public string $expiredAt;
+    private string $hash;
+    private int $userId;
+    private string $createdAt;
+    private string $expiredAt;
 
     public function __construct(
         string $hash,
