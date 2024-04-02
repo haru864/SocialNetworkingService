@@ -36,7 +36,9 @@ try {
     foreach ($routes as $uriPattern => $route) {
         $middleware = $route['middleware'];
         $controller = $route['controller'];
-        $renderer = $middleware($controller);
+        if (preg_match($uriPattern, $directory)) {
+            $renderer = $middleware->handle($controller);
+        }
     }
     if (is_null($renderer)) {
         $param = [

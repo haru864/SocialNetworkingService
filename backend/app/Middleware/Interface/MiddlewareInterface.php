@@ -1,6 +1,6 @@
 <?php
 
-namespace Middleware;
+namespace Middleware\Interface;
 
 use Controllers\Interface\ControllerInterface;
 use Render\interface\HTTPRenderer;

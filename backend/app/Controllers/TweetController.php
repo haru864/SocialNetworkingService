@@ -23,7 +23,7 @@ class TweetController implements ControllerInterface
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             return $this->getTweets(new GetTweetsRequest($_GET));
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            return $this->postTweet(new PostTweetRequest($_POST));
+            return $this->postTweet(new PostTweetRequest($_POST, $_FILES));
         }
         throw new InvalidRequestMethodException("Tweet request must be 'GET' or 'POST'.");
     }

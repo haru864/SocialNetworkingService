@@ -57,7 +57,7 @@ class SignupService
                 thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_THUMBNAIL'),
                 uploadedTmpFilePath: $request->getProfileImage()['tmp_name'],
                 uploadedFileName: $request->getProfileImage()['name'],
-                thumbWidth: 150
+                thumbWidth: 100
             ),
             created_at: $currentDatetime,
             last_login: $currentDatetime,

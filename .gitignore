@@ -1,7 +1,7 @@
 backend/log/
 backend/config/.env.private
 backend/public/images/
-backend/public/movies/
+backend/public/videos/
 backend/public/nextjs/
 backend/vendor/
 

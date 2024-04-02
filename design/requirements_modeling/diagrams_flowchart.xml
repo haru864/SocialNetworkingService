@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-04-01T13:10:12.489Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="8YqurGnxvbCrpKvHM3xF" version="24.2.1" type="device">
+<mxfile host="app.diagrams.net" modified="2024-04-02T12:35:09.277Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="16xx_CfxNrH706G5RScE" version="24.2.1" type="device">
   <diagram name="ページ1" id="jvqJN53400dJCz2KRvl1">
     <mxGraphModel dx="2901" dy="2288" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -91,8 +91,8 @@
         <mxCell id="oSbnpAtGKXMKIoD21E7N-6" value="# パスワードのハッシュ化&lt;div&gt;password_hash($password, PASSWORD_DEFAULT)&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;# パスワード確認&lt;/div&gt;&lt;div&gt;password_verify()&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-525" y="690" width="340" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="oSbnpAtGKXMKIoD21E7N-7" value="&lt;font color=&quot;#ff0000&quot; size=&quot;1&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;セッションあり&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;&lt;div&gt;$_SESSION[&#39;user_id&#39;] = users.id&lt;/div&gt;&lt;div&gt;$_SESSION[&#39;user_name&#39;] = users.name&lt;/div&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;idとnameがテーブルに存在するかチェック&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;クエリ結果をRedisにキャッシュして&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;応答速度を下げないようにする。&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="1000" y="-110" width="360" height="200" as="geometry" />
+        <mxCell id="oSbnpAtGKXMKIoD21E7N-7" value="&lt;font color=&quot;#ff0000&quot; size=&quot;1&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;セッションあり&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;&lt;div&gt;$_SESSION[&#39;user_id&#39;] = users.id&lt;/div&gt;&lt;div&gt;$_SESSION[&#39;user_name&#39;] = users.name&lt;/div&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;idとnameがテーブルに存在するかチェック。&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;クエリ結果をRedisにキャッシュして&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;応答速度を下げないようにする。&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;無操作(サーバーへのリクエスト無し)30分で&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; color=&quot;#ff0000&quot;&gt;セッション削除する。&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="1000" y="-110" width="430" height="250" as="geometry" />
         </mxCell>
         <mxCell id="c1j-I0ugs0beVlUwp95W-1" value="メール送信通知画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
           <mxGeometry x="525" y="700" width="180" height="110" as="geometry" />
@@ -269,7 +269,7 @@
         <mxCell id="MpfklGeY8ykCIYBafUsi-8" value="&lt;div&gt;＜フォロワー一覧取得＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/follows&lt;/span&gt;&lt;/div&gt;&lt;div&gt;GET&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;※検討中&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="1111" y="1471" width="280" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="MpfklGeY8ykCIYBafUsi-9" value="&lt;div&gt;＜ツイート＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/tweets&lt;/span&gt;&lt;/div&gt;&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;multipart/form-data&lt;/div&gt;&lt;div&gt;message=＜ツイート内容＞&lt;/div&gt;&lt;div&gt;media=＜画像・動画ファイル＞&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;※検討中&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
+        <mxCell id="MpfklGeY8ykCIYBafUsi-9" value="&lt;div&gt;＜ツイート＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/tweets&lt;/span&gt;&lt;/div&gt;&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;multipart/form-data&lt;/div&gt;&lt;div&gt;message=＜ツイート内容 200文字まで＞&lt;/div&gt;&lt;div&gt;media=＜画像・動画ファイル＞&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;※検討中&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="1091" y="1668" width="320" height="200" as="geometry" />
         </mxCell>
         <mxCell id="MpfklGeY8ykCIYBafUsi-11" value="&lt;div&gt;＜通知取得＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/messages&lt;/span&gt;&lt;/div&gt;&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;※検討中&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
@@ -287,13 +287,13 @@
             <mxPoint x="820" y="755" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="c9x4zdmZLx5BV9fpw1Kt-3" value="ログアウト" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+        <mxCell id="c9x4zdmZLx5BV9fpw1Kt-3" value="ログアウト" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
           <mxGeometry x="1550" y="1200" width="110" height="48" as="geometry" />
         </mxCell>
-        <mxCell id="c9x4zdmZLx5BV9fpw1Kt-4" value="&lt;div&gt;＜プロフィール編集＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/logout&lt;/span&gt;&lt;/div&gt;&lt;div&gt;GET&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;ログアウト画面へリダイレクト&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="c9x4zdmZLx5BV9fpw1Kt-4" value="&lt;div&gt;＜プロフィール編集＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/logout&lt;/span&gt;&lt;/div&gt;&lt;div&gt;GET&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;ログアウト画面へリダイレクト&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="1775" y="1172" width="280" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="c9x4zdmZLx5BV9fpw1Kt-5" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0;exitDx=220;exitDy=65;exitPerimeter=0;" edge="1" parent="1" source="U3b-cSCGvBMcpt9S6771-11" target="c9x4zdmZLx5BV9fpw1Kt-3">
+        <mxCell id="c9x4zdmZLx5BV9fpw1Kt-5" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0;exitDx=220;exitDy=65;exitPerimeter=0;" parent="1" source="U3b-cSCGvBMcpt9S6771-11" target="c9x4zdmZLx5BV9fpw1Kt-3" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1350" y="1117" as="sourcePoint" />
             <mxPoint x="1545" y="1363" as="targetPoint" />
@@ -302,8 +302,8 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="c9x4zdmZLx5BV9fpw1Kt-6" value="# 画像ファイルのサポート&lt;div&gt;image/jpeg, image/png, image/gif&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# 動画ファイルのサポート&lt;/div&gt;&lt;div&gt;video/&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="520" y="-60" width="340" height="150" as="geometry" />
+        <mxCell id="c9x4zdmZLx5BV9fpw1Kt-6" value="# 画像ファイルのサポート&lt;div&gt;image/jpeg, image/png, image/gif&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;プロフィール画像は100x100、ツイート画像は200x200のサムネイルを表示、クリックでフルサイズを表示する。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# 動画ファイルのサポート&lt;/div&gt;&lt;div&gt;video/mp4, video/webm, video/ogg&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="460" y="-170" width="370" height="220" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

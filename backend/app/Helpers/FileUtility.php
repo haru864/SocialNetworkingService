@@ -45,6 +45,40 @@ class FileUtility
         return $storedImageFileName;
     }
 
+    // TODO 圧縮処理を追加する
+    /**
+     * リクエストパラメータの動画ファイルを圧縮して指定のディレクトリに保存する。
+     *
+     * @param string $storeDirPath アップロードされた動画ファイルを保存するディレクトリ
+     * @param string $uploadedTmpFilePath アップロードされたファイルがサーバー上で保存されているテンポラリファイルの名前($_FILES['userfile']['tmp_name'])
+     * @param string $uploadedFileName クライアントマシンの元のファイル名($_FILES['userfile']['name'])
+     * @return string 保存されたファイルの名前(拡張子付き)
+     */
+    public static function storeVideo(
+        string $storeDirPath,
+        string $uploadedTmpFilePath,
+        string $uploadedFileName
+    ): string {
+        $hash = FileUtility::generateUniqueHashWithLimit($storeDirPath, $uploadedFileName);
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($uploadedTmpFilePath);
+        $validVideoMimeTypes = [
+            'video/mp4' => 'mp4',
+            'video/webm' => 'webm',
+            'video/ogg' => 'ogg'
+        ];
+        if (!array_key_exists($mimeType, $validVideoMimeTypes)) {
+            throw new InvalidMimeTypeException("Invalid Mime-Type: '{$mimeType}'");
+        }
+        $videoFileExtension = $validVideoMimeTypes[$mimeType];
+        $storedVideoFileName = $hash . '.' . $videoFileExtension;
+        $storedVideoFilePath = $storeDirPath . DIRECTORY_SEPARATOR . $storedVideoFileName;
+        if (!move_uploaded_file($uploadedTmpFilePath, $storedVideoFilePath)) {
+            throw new InternalServerException("Failed to move uploaded file.");
+        }
+        return $storedVideoFileName;
+    }
+
     private static function generateUniqueHashWithLimit(string $dirPath, string $data, $limit = 100): string
     {
         $iterator = new \DirectoryIterator($dirPath);
