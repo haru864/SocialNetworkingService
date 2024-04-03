@@ -13,11 +13,16 @@ class GetTweetsRequest
 
     public function __construct(array $getData)
     {
-        $requiredParams = ['username', 'password', 'email'];
+        $requiredParams = ['type', 'page', 'limit'];
         foreach ($requiredParams as $param) {
             if (is_null($getData[$param])) {
                 throw new InvalidRequestParameterException("'{$param}' must be set in get-tweets request.");
             }
+        }
+        $validTypes = ['popular', 'followers', 'user'];
+        if (!in_array($getData['type'], $validTypes)) {
+            $validTypeStr = implode(",", $validTypes);
+            throw new InvalidRequestParameterException("'type' must be in [{$validTypeStr}].");
         }
         if (
             !ValidationHelper::isPositiveIntegerString($getData['page'])
@@ -25,9 +30,9 @@ class GetTweetsRequest
         ) {
             throw new InvalidRequestParameterException("'page' and 'limit' must be positive integer string.");
         }
-        $this->type = $getData['type'] ?? null;
-        $this->page = $getData['page'] ?? null;
-        $this->limit = $getData['limit'] ?? null;
+        $this->type = $getData['type'];
+        $this->page = $getData['page'];
+        $this->limit = $getData['limit'];
     }
 
     public function getType(): string

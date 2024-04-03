@@ -63,7 +63,7 @@ class TweetService
             replyToId: null,
             userId: $_SESSION['user_id'],
             message: $tweetMessage,
-            mediaFilePath: $mediaFileName,
+            mediaFileName: $mediaFileName,
             mediaType: $mimeType,
             postingDatetime: $currentDatetime
         );
@@ -71,17 +71,20 @@ class TweetService
         return;
     }
 
-    public function getTweetsByUser(): ?array
+    // TODO いいね、フォロー処理の実装後に実装する
+    public function getTweetsByUser(int $userId): ?array
     {
         return null;
     }
 
+    // TODO いいね、フォロー処理の実装後に実装する
     public function getTweetsByLikes(): ?array
     {
         return null;
     }
 
-    public function getTweetsByFollows(): ?array
+    // TODO いいね、フォロー処理の実装後に実装する
+    public function getTweetsByFollows(int $userId): ?array
     {
         return null;
     }

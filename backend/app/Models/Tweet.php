@@ -13,7 +13,7 @@ class Tweet implements Model
     private ?int $replyToId;
     private int $userId;
     private string $message;
-    private ?string $mediaFilePath;
+    private ?string $mediaFileName;
     private ?string $mediaType;
     private string $postingDatetime;
 
@@ -22,7 +22,7 @@ class Tweet implements Model
         ?int $replyToId,
         int $userId,
         string $message,
-        ?string $mediaFilePath,
+        ?string $mediaFileName,
         ?string $mediaType,
         string $postingDatetime
     ) {
@@ -30,7 +30,7 @@ class Tweet implements Model
         $this->replyToId = $replyToId;
         $this->userId = $userId;
         $this->message = $message;
-        $this->mediaFilePath = $mediaFilePath;
+        $this->mediaFileName = $mediaFileName;
         $this->mediaType = $mediaType;
         $this->postingDatetime = $postingDatetime;
     }
@@ -75,14 +75,14 @@ class Tweet implements Model
         $this->message = $message;
     }
 
-    public function getMediaFilePath(): ?string
+    public function getMediaFileName(): ?string
     {
-        return $this->mediaFilePath;
+        return $this->mediaFileName;
     }
 
-    public function setMediaFilePath(?string $mediaFilePath): void
+    public function setMediaFileName(?string $mediaFileName): void
     {
-        $this->mediaFilePath = $mediaFilePath;
+        $this->mediaFileName = $mediaFileName;
     }
 
     public function getMediaType(): ?string

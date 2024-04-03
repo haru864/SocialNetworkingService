@@ -30,7 +30,15 @@ class TweetController implements ControllerInterface
 
     private function getTweets(GetTweetsRequest $request): JSONRenderer
     {
-        return new JSONRenderer(200, []);
+        if ($request->getType() === "popular") {
+            $tweets = $this->tweetService->getTweetsByLikes();
+        } else if ($request->getType() === "followers") {
+            $tweets = $this->tweetService->getTweetsByFollows();
+        } else if ($request->getType() === "user") {
+            $tweets = $this->tweetService->getTweetsByUser();
+        }
+        $resp = ["tweets" => $tweets];
+        return new JSONRenderer(200, $resp);
     }
 
     private function postTweet(PostTweetRequest $request): JSONRenderer

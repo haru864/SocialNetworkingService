@@ -18,7 +18,7 @@ class TweetsDAOImpl implements TweetsDAO
                 reply_to_id,
                 user_id,
                 message,
-                media_file_path,
+                media_file_name,
                 media_type,
                 posting_datetime
             )
@@ -33,7 +33,7 @@ class TweetsDAOImpl implements TweetsDAO
                 $tweet->getReplyToId(),
                 $tweet->getUserId(),
                 $tweet->getMessage(),
-                $tweet->getMediaFilePath(),
+                $tweet->getMediaFileName(),
                 $tweet->getMediaType(),
                 $tweet->getPostingDatetime()
             ],
@@ -70,7 +70,7 @@ class TweetsDAOImpl implements TweetsDAO
                 reply_to_id = ?,
                 user_id = ?,
                 message = ?,
-                media_file_path = ?,
+                media_file_name = ?,
                 media_type = ?,
                 posting_datetime = ?
             WHERE
@@ -83,7 +83,7 @@ class TweetsDAOImpl implements TweetsDAO
                 $tweet->getReplyToId(),
                 $tweet->getUserId(),
                 $tweet->getMessage(),
-                $tweet->getMediaFilePath(),
+                $tweet->getMediaFileName(),
                 $tweet->getMediaType(),
                 $tweet->getPostingDatetime(),
                 $tweet->getId()
@@ -119,7 +119,7 @@ class TweetsDAOImpl implements TweetsDAO
             replyToId: $data['reply_to_id'],
             userId: $data['user_id'],
             message: $data['message'],
-            mediaFilePath: $data['media_file_path'],
+            mediaFileName: $data['media_file_name'],
             mediaType: $data['media_type'],
             postingDatetime: $data['posting_datetime']
         );
