@@ -53,14 +53,16 @@ class SignupRequest
         if (count($postData['careers']) > $maxCareersCount) {
             throw new InvalidRequestParameterException("'careers' must be no more than {$maxCareersCount}.");
         }
-        if (isset($fileData['profile_image'])) {
+        $profileImage = null;
+        if (isset($fileData['profile_image']) && $fileData['profile_image']['tmp_name'] !== '') {
             ValidationHelper::validateUploadedImage('profile_image');
+            $profileImage = $fileData['profile_image'];
         }
         $this->username = $postData['username'];
         $this->password = $postData['password'];
         $this->email = $postData['email'];
         $this->selfIntroduction = $postData['self_introduction'];
-        $this->profileImage = $fileData['profile_image'];
+        $this->profileImage = $profileImage;
         $this->country = $postData['country'];
         $this->state = $postData['state'];
         $this->city = $postData['city'];

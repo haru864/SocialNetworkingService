@@ -28,6 +28,7 @@ class TweetController implements ControllerInterface
         throw new InvalidRequestMethodException("Tweet request must be 'GET' or 'POST'.");
     }
 
+    // TODO いいねとフォロー機能実装後に実装する
     private function getTweets(GetTweetsRequest $request): JSONRenderer
     {
         if ($request->getType() === "popular") {

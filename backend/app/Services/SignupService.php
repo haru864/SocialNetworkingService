@@ -46,19 +46,23 @@ class SignupService
     public function createUser(SignupRequest $request): User
     {
         $currentDatetime = date('Y-m-d H:i:s');
+        $profileImage = null;
+        if ($request->getProfileImage() !== null) {
+            $profileImage = FileUtility::storeImageWithThumbnail(
+                storeDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_UPLOAD'),
+                thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_THUMBNAIL'),
+                uploadedTmpFilePath: $request->getProfileImage()['tmp_name'],
+                uploadedFileName: $request->getProfileImage()['name'],
+                thumbWidth: 100
+            );
+        }
         $user = new User(
             id: null,
             name: $request->getUsername(),
             password_hash: password_hash($request->getPassword(), PASSWORD_DEFAULT),
             email: $request->getEmail(),
             self_introduction: ValidationHelper::isNonEmptyString($request->getSelfIntroduction()) ? $request->getSelfIntroduction() : null,
-            profile_image: FileUtility::storeImageWithThumbnail(
-                storeDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_UPLOAD'),
-                thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_THUMBNAIL'),
-                uploadedTmpFilePath: $request->getProfileImage()['tmp_name'],
-                uploadedFileName: $request->getProfileImage()['name'],
-                thumbWidth: 100
-            ),
+            profile_image: $profileImage,
             created_at: $currentDatetime,
             last_login: $currentDatetime,
             email_verified_at: null

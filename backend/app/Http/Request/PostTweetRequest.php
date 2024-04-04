@@ -15,6 +15,7 @@ class PostTweetRequest
         if (is_null($postData['message'])) {
             throw new InvalidRequestParameterException("'message' must be set in post-tweet request.");
         }
+        $media = null;
         if (isset($fileData['media']) && $fileData['media']['tmp_name'] !== '') {
             $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $fileInfo->file($fileData['media']['tmp_name']);
@@ -25,9 +26,10 @@ class PostTweetRequest
             } else {
                 throw new InvalidRequestParameterException("'media' must be image or video file.");
             }
+            $media = $fileData['media'];
         }
         $this->message = $postData['message'];
-        $this->media = $fileData['media'];
+        $this->media = $media;
     }
 
     public function getMessage(): string

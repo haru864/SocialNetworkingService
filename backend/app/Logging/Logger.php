@@ -106,6 +106,19 @@ class Logger
     // TODO パスワードをマスクする
     public function logRequest(): void
     {
+        $postData = 'N/A';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+                $jsonData = file_get_contents('php://input');
+                $postData = json_decode($jsonData, true);
+
+                // $this->logDebug(json_encode($postData));
+            } else {
+                $postData = $_POST;
+
+                // $this->logDebug(json_encode($_POST));
+            }
+        }
         $requestInfo = [
             'method' => $_SERVER['REQUEST_METHOD'] ?? 'N/A',
             'content_type' => $_SERVER['CONTENT_TYPE'] ?? 'N/A',
@@ -113,11 +126,11 @@ class Logger
             'query' => $_SERVER['QUERY_STRING'] ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'N/A',
             'ip_address' => $_SERVER['REMOTE_ADDR'] ?? 'N/A',
-            'post_data' => $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : 'N/A',
+            'post_data' => $postData,
             'files_data' => $_SERVER['REQUEST_METHOD'] === 'POST' ? $_FILES : 'N/A'
         ];
         if ($this->truncateEnabled) {
-            $requestInfo['post_data'] = $this->truncateArray($_POST, $this->truncateLimit);
+            $requestInfo['post_data'] = $this->truncateArray($postData, $this->truncateLimit);
             $requestInfo['files_data'] = $this->truncateArray($_FILES, $this->truncateLimit);
         }
         $this->log(LogLevel::INFO, 'Request received', ['request' => $requestInfo]);
