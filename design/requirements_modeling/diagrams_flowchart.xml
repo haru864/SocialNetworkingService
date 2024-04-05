@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-04-03T15:55:10.208Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="vhOjT2o5bPY9q88S--9P" version="24.2.1" type="device">
+<mxfile host="app.diagrams.net" modified="2024-04-05T13:26:23.004Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="oWcu2DNoVrPwPa94HZm4" version="24.2.1" type="device">
   <diagram name="ページ1" id="jvqJN53400dJCz2KRvl1">
     <mxGraphModel dx="2901" dy="2288" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -250,7 +250,7 @@
             <mxPoint x="2040" y="1010" as="sourcePoint" />
             <mxPoint x="2270" y="1360" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="2270" y="1205" />
+              <mxPoint x="2370" y="1540" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -269,8 +269,8 @@
         <mxCell id="MpfklGeY8ykCIYBafUsi-8" value="&lt;div&gt;＜フォロワー一覧取得＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/follows&lt;/span&gt;&lt;/div&gt;&lt;div&gt;GET&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;※検討中&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="1111" y="1471" width="280" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="MpfklGeY8ykCIYBafUsi-9" value="&lt;div&gt;＜ツイート＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/tweets&lt;/span&gt;&lt;/div&gt;&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;multipart/form-data&lt;/div&gt;&lt;div&gt;message=＜ツイート内容 200文字まで＞&lt;/div&gt;&lt;div&gt;media=＜画像・動画ファイル＞&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;※検討中&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="1091" y="1668" width="320" height="200" as="geometry" />
+        <mxCell id="MpfklGeY8ykCIYBafUsi-9" value="&lt;div&gt;＜ツイート＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/tweets&lt;/span&gt;&lt;/div&gt;&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;multipart/form-data&lt;/div&gt;&lt;div&gt;message=＜ツイート内容 200文字まで＞&lt;/div&gt;&lt;div&gt;media=＜画像・動画ファイル＞&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;[]&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="1090" y="1668" width="320" height="200" as="geometry" />
         </mxCell>
         <mxCell id="MpfklGeY8ykCIYBafUsi-11" value="&lt;div&gt;＜通知取得＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/messages&lt;/span&gt;&lt;/div&gt;&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;※検討中&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="2040" y="2060" width="280" height="170" as="geometry" />
@@ -291,7 +291,7 @@
           <mxGeometry x="1550" y="1200" width="110" height="48" as="geometry" />
         </mxCell>
         <mxCell id="c9x4zdmZLx5BV9fpw1Kt-4" value="&lt;div&gt;＜プロフィール編集＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/logout&lt;/span&gt;&lt;/div&gt;&lt;div&gt;GET&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;ログアウト画面へリダイレクト&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="1775" y="1172" width="280" height="170" as="geometry" />
+          <mxGeometry x="2390" y="840" width="280" height="170" as="geometry" />
         </mxCell>
         <mxCell id="c9x4zdmZLx5BV9fpw1Kt-5" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0;exitDx=220;exitDy=65;exitPerimeter=0;" parent="1" source="U3b-cSCGvBMcpt9S6771-11" target="c9x4zdmZLx5BV9fpw1Kt-3" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -305,8 +305,29 @@
         <mxCell id="c9x4zdmZLx5BV9fpw1Kt-6" value="# 画像ファイルのサポート&lt;div&gt;image/jpeg, image/png, image/gif&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;プロフィール画像は100x100、ツイート画像は200x200のサムネイルを表示、クリックでフルサイズを表示する。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# 動画ファイルのサポート&lt;/div&gt;&lt;div&gt;video/mp4, video/webm, video/ogg&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="460" y="-170" width="370" height="220" as="geometry" />
         </mxCell>
-        <mxCell id="R3_24kzW_z_KSJEPPbAJ-3" value="&lt;div&gt;＜いいね＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/likes&lt;/span&gt;&lt;/div&gt;&lt;div&gt;applicaiton/json&lt;/div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;tweet_id&quot;: ＜ツイートID＞&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;既に「いいね」していれば取り消す。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="R3_24kzW_z_KSJEPPbAJ-3" value="&lt;div&gt;＜いいね＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/likes&lt;/span&gt;&lt;/div&gt;&lt;div&gt;applicaiton/json&lt;/div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;tweet_id&quot;: ＜ツイートID＞&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;[]&lt;/div&gt;&lt;div&gt;既に「いいね」していれば取り消す。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="2160" y="403" width="340" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pdHZCsrRM6Oby8DtXzj--1" value="フォロー" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="2210" y="1532" width="110" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="pdHZCsrRM6Oby8DtXzj--2" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.54;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="fPiDNAXwSVPGr6-VXFNg-17" target="pdHZCsrRM6Oby8DtXzj--1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="2120" y="1557" as="sourcePoint" />
+            <mxPoint x="2224" y="1555" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pdHZCsrRM6Oby8DtXzj--3" value="&lt;div&gt;＜フォロー＞&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/follows&lt;/span&gt;&lt;/div&gt;&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;action&quot;: &quot;add_follow || remove_follow || get_follwers || get_followees&quot;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;followee_id&quot;: ＜フォローされる側のuser_id＞&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;# add_follow, remove_follow&lt;/div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;[]&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# get_followers&lt;/div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;user_id&quot;: [&lt;span style=&quot;background-color: initial;&quot;&gt;123,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;...&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;]&lt;/span&gt;&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# get_followees&lt;/div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;&lt;div&gt;{&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;user_id&quot;: [&lt;span style=&quot;background-color: initial;&quot;&gt;123,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;...&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;]&lt;/span&gt;&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="2400" y="1121" width="430" height="399" as="geometry" />
+        </mxCell>
+        <mxCell id="pdHZCsrRM6Oby8DtXzj--4" value="ユーザー削除" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1830" y="1333" width="110" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="pdHZCsrRM6Oby8DtXzj--5" value="" style="endArrow=classic;html=1;rounded=0;exitX=1.01;exitY=0.57;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="fPiDNAXwSVPGr6-VXFNg-6" target="pdHZCsrRM6Oby8DtXzj--4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1710" y="1355" as="sourcePoint" />
+            <mxPoint x="1830" y="1351" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

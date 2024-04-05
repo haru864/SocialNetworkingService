@@ -65,4 +65,15 @@ class Follow implements Model
     {
         $this->$followDatetime = $followDatetime;
     }
+
+    public function toArray(): array
+    {
+        $data = [
+            'id' => $this->getId(),
+            'followerId' => $this->getFollowerId(),
+            'followeeId' => $this->getFolloweeId(),
+            'followDatetime' => $this->getFollowDatetime(),
+        ];
+        return $data;
+    }
 }

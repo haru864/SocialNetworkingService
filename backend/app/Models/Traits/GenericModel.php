@@ -6,7 +6,7 @@ trait GenericModel
 {
     public function toArray(): array
     {
-        return (array) $this;
+        return (array)$this;
     }
 
     public function toString(): string

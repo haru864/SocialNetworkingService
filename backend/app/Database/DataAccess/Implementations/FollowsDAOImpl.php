@@ -73,11 +73,12 @@ class FollowsDAOImpl implements FollowsDAO
 
     private function convertRecordToFollow(array $data): Follow
     {
-        return new Follow(
+        $follow = new Follow(
             id: $data['id'],
             followerId: $data['follower_id'],
             followeeId: $data['followee_id'],
-            followDatetime: $data['followee_datetime']
+            followDatetime: $data['follow_datetime']
         );
+        return $follow;
     }
 }
