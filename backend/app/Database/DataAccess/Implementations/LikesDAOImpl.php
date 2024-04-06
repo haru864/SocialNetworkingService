@@ -38,20 +38,12 @@ class LikesDAOImpl implements LikesDAO
         return $like;
     }
 
-    public function isLiked(int $userId, int $tweetId): bool
+    public function getLikeUsers(int $tweetId): array
     {
         $mysqli = DatabaseManager::getMysqliConnection();
-        $query = "SELECT * FROM likes WHERE user_id = ? AND tweet_id = ?";
-        $records = $mysqli->prepareAndFetchAll($query, 'ii', [$userId, $tweetId]);
-        return count($records) > 0;
-    }
-
-    public function getLikeCountByTweet(int $tweetId): int
-    {
-        $mysqli = DatabaseManager::getMysqliConnection();
-        $query = "SELECT count(*) FROM likes WHERE tweet_id = ?";
-        $count = $mysqli->prepareAndFetchAll($query, 'i', [$tweetId])[0];
-        return $count;
+        $query = "SELECT * FROM likes WHERE tweet_id = ?";
+        $records = $mysqli->prepareAndFetchAll($query, 'i', [$tweetId]);
+        return is_null($records) ? [] : $this->convertRecordArrayToLikeArray($records);
     }
 
     public function delete(int $userId, int $tweetId): bool
@@ -59,5 +51,26 @@ class LikesDAOImpl implements LikesDAO
         $mysqli = DatabaseManager::getMysqliConnection();
         $sql = "DELETE FROM likes WHERE user_id = ? AND tweet_id = ?";
         return $mysqli->prepareAndExecute($sql, 'ii', [$userId, $tweetId]);
+    }
+
+    private function convertRecordArrayToLikeArray(array $records): array
+    {
+        $likes = [];
+        foreach ($records as $record) {
+            $like = $this->convertRecordToLike($record);
+            array_push($likes, $like);
+        }
+        return $likes;
+    }
+
+    private function convertRecordToLike(array $data): Like
+    {
+        $like = new Like(
+            id: $data['id'],
+            userId: $data['user_id'],
+            tweetId: $data['tweet_id'],
+            likeDatetime: $data['like_datetime']
+        );
+        return $like;
     }
 }

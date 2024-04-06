@@ -27,12 +27,31 @@ class LikeController implements ControllerInterface
         }
         $jsonData = file_get_contents('php://input');
         $reqParamMap = json_decode($jsonData, true);
-        return $this->like(new LikeRequest($reqParamMap));
+        $request = new LikeRequest($reqParamMap);
+        if ($request->getAction() === 'add_like') {
+            return $this->addLike($request);
+        } else if ($request->getAction() === 'remove_like') {
+            return $this->removeLike($request);
+        } else if ($request->getAction() === 'get_users') {
+            return $this->getUsers($request);
+        }
     }
 
-    private function like(LikeRequest $request): JSONRenderer
+    private function addLike(LikeRequest $request): JSONRenderer
     {
-        $this->likeService->updateLike($request->getTweetId());
+        $this->likeService->addLike($request->getTweetId());
         return new JSONRenderer(200, []);
+    }
+
+    private function removeLike(LikeRequest $request): JSONRenderer
+    {
+        $this->likeService->removeLike($request->getTweetId());
+        return new JSONRenderer(200, []);
+    }
+
+    private function getUsers(LikeRequest $request): JSONRenderer
+    {
+        $userIds = $this->likeService->getLikeUsers($request->getTweetId());
+        return new JSONRenderer(200, ["user_id" => $userIds]);
     }
 }

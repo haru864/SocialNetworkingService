@@ -14,21 +14,33 @@ class LikeService
         $this->likesDAOImpl = $likesDAOImpl;
     }
 
-    public function updateLike(int $tweetId): void
+    public function addLike(int $tweetId): void
     {
         $userId = $_SESSION['user_id'];
-        $isLiked = $this->likesDAOImpl->isLiked($userId, $tweetId);
-        if ($isLiked) {
-            $this->likesDAOImpl->delete($userId, $tweetId);
-        } else {
-            $like = new Like(
-                id: null,
-                userId: $userId,
-                tweetId: $tweetId,
-                likeDatetime: date('Y-m-d H:i:s')
-            );
-            $this->likesDAOImpl->create($like);
-        }
+        $like = new Like(
+            id: null,
+            userId: $userId,
+            tweetId: $tweetId,
+            likeDatetime: date('Y-m-d H:i:s')
+        );
+        $this->likesDAOImpl->create($like);
         return;
+    }
+
+    public function removeLike(int $tweetId): void
+    {
+        $userId = $_SESSION['user_id'];
+        $this->likesDAOImpl->delete($userId, $tweetId);
+        return;
+    }
+
+    public function getLikeUsers(int $tweetId): array
+    {
+        $likes = $this->likesDAOImpl->getLikeUsers($tweetId);
+        $userIds = [];
+        foreach ($likes as $like) {
+            array_push($userIds, $like->getUserId());
+        }
+        return $userIds;
     }
 }

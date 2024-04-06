@@ -27,22 +27,47 @@ class FollowController implements ControllerInterface
         }
         $jsonData = file_get_contents('php://input');
         $reqParamMap = json_decode($jsonData, true);
-        return $this->follow(new FollowRequest($reqParamMap));
+        $request = new FollowRequest($reqParamMap);
+        if ($request->getAction() === 'add_follow') {
+            return $this->addFollow($request);
+        } else if ($request->getAction() === 'remove_follow') {
+            return $this->removeFollow($request);
+        } else if ($request->getAction() === 'get_followers') {
+            return $this->getFollowers($request);
+        } else if ($request->getAction() === 'get_followees') {
+            return $this->getFollowees($request);
+        }
     }
 
-    private function follow(FollowRequest $request): JSONRenderer
+    private function addFollow(FollowRequest $request): JSONRenderer
     {
         $resp = [];
         $userId = $_SESSION['user_id'];
-        if ($request->getAction() === 'add_follow') {
-            $this->followService->addFollow($userId, $request->getFolloweeId());
-        } else if ($request->getAction() === 'remove_follow') {
-            $this->followService->removeFollow($userId, $request->getFolloweeId());
-        } else if ($request->getAction() === 'get_followers') {
-            $resp = $this->followService->getFollowers($userId);
-        } else if ($request->getAction() === 'get_followees') {
-            $resp = $this->followService->getFollowees($userId);
-        }
+        $this->followService->addFollow($userId, $request->getFolloweeId());
+        return new JSONRenderer(200, $resp);
+    }
+
+    private function removeFollow(FollowRequest $request): JSONRenderer
+    {
+        $resp = [];
+        $userId = $_SESSION['user_id'];
+        $this->followService->removeFollow($userId, $request->getFolloweeId());
+        return new JSONRenderer(200, $resp);
+    }
+
+    private function getFollowers(FollowRequest $request): JSONRenderer
+    {
+        $resp = [];
+        $userId = $_SESSION['user_id'];
+        $resp = $this->followService->getFollowers($userId);
+        return new JSONRenderer(200, $resp);
+    }
+
+    private function getFollowees(FollowRequest $request): JSONRenderer
+    {
+        $resp = [];
+        $userId = $_SESSION['user_id'];
+        $resp = $this->followService->getFollowees($userId);
         return new JSONRenderer(200, $resp);
     }
 }
