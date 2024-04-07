@@ -14,7 +14,7 @@ class LogoutController implements ControllerInterface
 
     public function handleRequest(): JSONRenderer
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             throw new InvalidRequestMethodException("logout request must be 'GET'.");
         }
         return $this->logout();

@@ -104,4 +104,18 @@ class Tweet implements Model
     {
         $this->postingDatetime = $postingDatetime;
     }
+
+    public function toArray(): array
+    {
+        $data = [
+            'id' => $this->getId(),
+            'replyToId' => $this->getReplyToId(),
+            'userId' => $this->getUserId(),
+            'message' => $this->getMessage(),
+            'mediaFileName' => $this->getMediaFileName(),
+            'mediaType' => $this->getMediaType(),
+            'postingDatetime' => $this->getPostingDatetime()
+        ];
+        return $data;
+    }
 }

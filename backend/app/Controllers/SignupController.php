@@ -22,6 +22,9 @@ class SignupController implements ControllerInterface
     public function handleRequest(): JSONRenderer
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!preg_match('/multipart\/form-data/', $_SERVER['CONTENT_TYPE'])) {
+                throw new InvalidRequestMethodException("SignUp request must be 'multipart/form-data'.");
+            }
             $request = new SignupRequest($_POST, $_FILES);
             return $this->signup($request);
         } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {

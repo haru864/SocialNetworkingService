@@ -23,20 +23,22 @@ class TweetController implements ControllerInterface
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             return $this->getTweets(new GetTweetsRequest($_GET));
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!preg_match('/multipart\/form-data/', $_SERVER['CONTENT_TYPE'])) {
+                throw new InvalidRequestMethodException("Post-Tweet request must be 'multipart/form-data'.");
+            }
             return $this->postTweet(new PostTweetRequest($_POST, $_FILES));
         }
         throw new InvalidRequestMethodException("Tweet request must be 'GET' or 'POST'.");
     }
 
-    // TODO いいねとフォロー機能実装後に実装する
     private function getTweets(GetTweetsRequest $request): JSONRenderer
     {
         if ($request->getType() === "popular") {
-            $tweets = $this->tweetService->getTweetsByLikes();
+            $tweets = $this->tweetService->getTweetsByPopular($request);
         } else if ($request->getType() === "followers") {
-            $tweets = $this->tweetService->getTweetsByFollows();
+            $tweets = $this->tweetService->getTweetsByFollows($request);
         } else if ($request->getType() === "user") {
-            $tweets = $this->tweetService->getTweetsByUser();
+            $tweets = $this->tweetService->getTweetsByUser($request);
         }
         $resp = ["tweets" => $tweets];
         return new JSONRenderer(200, $resp);

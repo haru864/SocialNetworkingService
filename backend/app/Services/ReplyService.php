@@ -3,18 +3,15 @@
 namespace Services;
 
 use Database\DataAccess\Implementations\TweetsDAOImpl;
-use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
 use Helpers\ValidationHelper;
-use Http\Request\GetTweetsRequest;
-use Http\Request\LoginRequest;
-use Http\Request\PostTweetRequest;
+use Http\Request\GetRepliesRequest;
+use Http\Request\PostReplyRequest;
 use Models\Tweet;
-use Models\User;
 use Settings\Settings;
 
-class TweetService
+class ReplyService
 {
     private TweetsDAOImpl $tweetsDAOImpl;
 
@@ -23,13 +20,13 @@ class TweetService
         $this->tweetsDAOImpl = $tweetsDAOImpl;
     }
 
-    public function createTweet(PostTweetRequest $request): void
+    public function createReply(PostReplyRequest $request): void
     {
         $currentDatetime = date('Y-m-d H:i:s');
         $tweetMessage = $request->getMessage();
         $maxTweetMsgChars = 200;
         if (mb_strlen($tweetMessage) < 1 || mb_strlen($tweetMessage) > $maxTweetMsgChars) {
-            throw new InvalidRequestParameterException("Tweets must be at least 1 character and no more than {$maxTweetMsgChars} characters");
+            throw new InvalidRequestParameterException("Reply must be at least 1 character and no more than {$maxTweetMsgChars} characters");
         }
 
         if (is_null($request->getMedia())) {
@@ -61,7 +58,7 @@ class TweetService
 
         $tweet = new Tweet(
             id: null,
-            replyToId: null,
+            replyToId: $request->getTweetId(),
             userId: $_SESSION['user_id'],
             message: $tweetMessage,
             mediaFileName: $mediaFileName,
@@ -72,36 +69,23 @@ class TweetService
         return;
     }
 
-    public function getTweetsByUser(GetTweetsRequest $request): ?array
+    public function getRepliedTweet(GetRepliesRequest $request): ?array
     {
-        $userId = $_SESSION['user_id'];
+        $tweetId = $request->getTweetId();
+        $tweet  = $this->tweetsDAOImpl->getByTweetId($tweetId);
+        return is_null($tweet) ? null : $tweet->toArray();
+    }
+
+    public function getReplies(GetRepliesRequest $request): array
+    {
         $page = $request->getPage();
         $limit = $request->getLimit();
         $offset = ($page - 1) * $limit;
-        $tweets = $this->tweetsDAOImpl->getByUserId($userId, $limit, $offset);
-        $tweetArr = [];
-        foreach ($tweets as $tweet) {
-            array_push($tweetArr, $tweet->toArray());
+        $replies = $this->tweetsDAOImpl->getByReplyToId($request->getTweetId(), $limit, $offset);
+        $replyArr = ["replies" => []];
+        foreach ($replies as $reply) {
+            array_push($replyArr["replies"], $reply->toArray());
         }
-        return $tweetArr;
-    }
-
-    public function getTweetsByPopular(GetTweetsRequest $request): ?array
-    {
-        
-    }
-
-    public function getTweetsByFollows(GetTweetsRequest $request): ?array
-    {
-        $userId = $_SESSION['user_id'];
-        $page = $request->getPage();
-        $limit = $request->getLimit();
-        $offset = ($page - 1) * $limit;
-        $tweets = $this->tweetsDAOImpl->getByFollower($userId, $limit, $offset);
-        $tweetArr = [];
-        foreach ($tweets as $tweet) {
-            array_push($tweetArr, $tweet->toArray());
-        }
-        return $tweetArr;
+        return $replyArr;
     }
 }

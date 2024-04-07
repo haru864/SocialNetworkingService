@@ -5,7 +5,6 @@ namespace Database\DataAccess\Implementations;
 use Database\DataAccess\Interfaces\TweetsDAO;
 use Database\DatabaseManager;
 use Models\Tweet;
-use Exceptions\InvalidDataException;
 use Exceptions\QueryFailedException;
 
 class TweetsDAOImpl implements TweetsDAO
@@ -45,54 +44,57 @@ class TweetsDAOImpl implements TweetsDAO
         return $tweet;
     }
 
-    public function getByUserId(int $userId): ?array
+    public function getByTweetId(int $id): ?Tweet
     {
         $mysqli = DatabaseManager::getMysqliConnection();
-        $query = "SELECT * FROM tweets WHERE user_id = ?";
-        $records = $mysqli->prepareAndFetchAll($query, 'i', [$userId]) ?? null;
+        $query = <<<SQL
+            SELECT * FROM tweets
+            WHERE id = ?
+        SQL;
+        $record = $mysqli->prepareAndFetchAll($query, 'i', [$id])[0];
+        return $record === null ? null : $this->convertRecordToTweet($record);
+    }
+
+    public function getByReplyToId(int $replyToId, int $limit, int $offset): ?array
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = <<<SQL
+            SELECT * FROM tweets
+            WHERE reply_to_id = ?
+            ORDER BY posting_datetime DESC
+            LIMIT ?
+            OFFSET ?
+        SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'iii', [$replyToId, $limit, $offset]);
         return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
     }
 
-    public function update(Tweet $tweet): bool
+    public function getByUserId(int $userId, int $limit, int $offset): ?array
     {
-        if ($tweet->getId() === null) {
-            throw new InvalidDataException('Tweet specified has no ID.');
-        }
-        $tweetsInTable = $this->getByUserId($tweet->getUserId());
-        if ($tweetsInTable === null) {
-            throw new InvalidDataException(sprintf("Tweet's user_id '%s' does not exist.", $tweet->getUserId()));
-        }
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            UPDATE
-                tweets
-            SET
-                reply_to_id = ?,
-                user_id = ?,
-                message = ?,
-                media_file_name = ?,
-                media_type = ?,
-                posting_datetime = ?
-            WHERE
-                id = ?
+            SELECT * FROM tweets
+            WHERE user_id = ?
+            ORDER BY posting_datetime DESC
+            LIMIT ?
+            OFFSET ?
         SQL;
-        $result = $mysqli->prepareAndExecute(
-            $query,
-            'iissssi',
-            [
-                $tweet->getReplyToId(),
-                $tweet->getUserId(),
-                $tweet->getMessage(),
-                $tweet->getMediaFileName(),
-                $tweet->getMediaType(),
-                $tweet->getPostingDatetime(),
-                $tweet->getId()
-            ],
-        );
-        if (!$result) {
-            throw new QueryFailedException("UPDATE 'tweets' failed.");
-        }
-        return $mysqli->insert_id;
+        $records = $mysqli->prepareAndFetchAll($query, 'iii', [$userId, $limit, $offset]);
+        return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
+    }
+
+    public function getByFollower(int $userId, int $limit, int $offset): ?array
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = <<<SQL
+            SELECT * FROM tweets
+            WHERE user_id IN (SELECT follower_id FROM follows WHERE followee_id = ?)
+            ORDER BY posting_datetime DESC
+            LIMIT ?
+            OFFSET ?
+        SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'iii', [$userId, $limit, $offset]);
+        return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
     }
 
     public function deleteById(int $id): bool

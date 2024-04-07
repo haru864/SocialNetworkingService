@@ -4,6 +4,7 @@ use Controllers\FollowController;
 use Controllers\LikeController;
 use Controllers\LoginController;
 use Controllers\LogoutController;
+use Controllers\ReplyController;
 use Controllers\SignupController;
 use Controllers\TweetController;
 use Database\DataAccess\Implementations\AddressesDAOImpl;
@@ -19,6 +20,7 @@ use Middleware\NoopMiddleware;
 use Services\FollowService;
 use Services\LikeService;
 use Services\LoginService;
+use Services\ReplyService;
 use Services\SignupService;
 use Services\TweetService;
 
@@ -34,6 +36,7 @@ $loginController = new LoginController(new LoginService($usersDAOImpl));
 $signupController = new SignupController(new SignupService($usersDAOImpl, $addressesDAOImpl, $careersDAOImpl, $hobbiesDAOImpl, $emailVerificationDAOImpl));
 $logoutController = new LogoutController();
 $tweetController = new TweetController(new TweetService($tweetsDAOImpl));
+$replyController  = new ReplyController(new ReplyService($tweetsDAOImpl));
 $likeController = new LikeController(new LikeService($likesDAOImpl));
 $followController = new FollowController(new FollowService($followsDAOImpl));
 
@@ -42,6 +45,8 @@ $URL_DIR_PATTERN_SIGNUP = '/^\/api\/signup$/';
 $URL_DIR_PATTERN_VALIDATE_EMAIL = '/^\/api\/validate$/';
 $URL_DIR_PATTERN_LOGOUT = '/^\/api\/logout$/';
 $URL_DIR_PATTERN_TWEETS = '/^\/api\/tweets$/';
+$URL_DIR_PATTERN_RETWEETS = '/^\/api\/tweets\/(\d+)\/retweets$/';
+$URL_DIR_PATTERN_REPLIES = '/^\/api\/tweets\/(\d+)\/replies$/';
 $URL_DIR_PATTERN_LIKES = '/^\/api\/likes$/';
 $URL_DIR_PATTERN_FOLLOWS = '/^\/api\/follows$/';
 
@@ -64,6 +69,10 @@ return [
     ],
     $URL_DIR_PATTERN_TWEETS => [
         'controller' => $tweetController,
+        'middleware' => new AuthMiddleware()
+    ],
+    $URL_DIR_PATTERN_REPLIES => [
+        'controller' => $replyController,
         'middleware' => new AuthMiddleware()
     ],
     $URL_DIR_PATTERN_LIKES => [
