@@ -130,4 +130,20 @@ class User implements Model
     {
         $this->email_verified_at = $email_verified_at;
     }
+
+    public function toArray(): array
+    {
+        $data = [
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "password_hash" => "****",
+            "email" => $this->getEmail(),
+            "self_introduction" => $this->getSelfIntroduction(),
+            "profile_image" => $this->getProfileImage(),
+            "created_at" => $this->getCreatedAt(),
+            "last_login" => $this->getLastLogin(),
+            "email_verified_at" => $this->getEmailVerifiedAt()
+        ];
+        return $data;
+    }
 }

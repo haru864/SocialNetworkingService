@@ -8,7 +8,6 @@ use Exceptions\InvalidRequestMethodException;
 use Http\Request\GetRepliesRequest;
 use Http\Request\PostReplyRequest;
 use Services\ReplyService;
-use Services\TweetService;
 
 class ReplyController implements ControllerInterface
 {

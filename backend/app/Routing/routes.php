@@ -5,6 +5,7 @@ use Controllers\LikeController;
 use Controllers\LoginController;
 use Controllers\LogoutController;
 use Controllers\ReplyController;
+use Controllers\RetweetController;
 use Controllers\SignupController;
 use Controllers\TweetController;
 use Database\DataAccess\Implementations\AddressesDAOImpl;
@@ -14,6 +15,7 @@ use Database\DataAccess\Implementations\FollowsDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\LikesDAOImpl;
 use Database\DataAccess\Implementations\TweetsDAOImpl;
+use Database\DataAccess\Implementations\RetweetsDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Middleware\AuthMiddleware;
 use Middleware\NoopMiddleware;
@@ -21,6 +23,7 @@ use Services\FollowService;
 use Services\LikeService;
 use Services\LoginService;
 use Services\ReplyService;
+use Services\RetweetService;
 use Services\SignupService;
 use Services\TweetService;
 
@@ -30,12 +33,14 @@ $careersDAOImpl = new CareersDAOImpl();
 $hobbiesDAOImpl = new HobbiesDAOImpl();
 $emailVerificationDAOImpl = new EmailVerificationDAOImpl();
 $tweetsDAOImpl = new TweetsDAOImpl();
+$retweetsDAOImpl = new RetweetsDAOImpl();
 $likesDAOImpl = new LikesDAOImpl();
 $followsDAOImpl = new FollowsDAOImpl();
 $loginController = new LoginController(new LoginService($usersDAOImpl));
 $signupController = new SignupController(new SignupService($usersDAOImpl, $addressesDAOImpl, $careersDAOImpl, $hobbiesDAOImpl, $emailVerificationDAOImpl));
 $logoutController = new LogoutController();
 $tweetController = new TweetController(new TweetService($tweetsDAOImpl));
+$retweetController = new RetweetController(new RetweetService($retweetsDAOImpl));
 $replyController  = new ReplyController(new ReplyService($tweetsDAOImpl));
 $likeController = new LikeController(new LikeService($likesDAOImpl));
 $followController = new FollowController(new FollowService($followsDAOImpl));
@@ -69,6 +74,10 @@ return [
     ],
     $URL_DIR_PATTERN_TWEETS => [
         'controller' => $tweetController,
+        'middleware' => new AuthMiddleware()
+    ],
+    $URL_DIR_PATTERN_RETWEETS => [
+        'controller' => $retweetController,
         'middleware' => new AuthMiddleware()
     ],
     $URL_DIR_PATTERN_REPLIES => [
