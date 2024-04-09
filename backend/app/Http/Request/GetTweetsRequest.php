@@ -19,7 +19,7 @@ class GetTweetsRequest
                 throw new InvalidRequestParameterException("'{$param}' must be set in get-tweets request.");
             }
         }
-        $validTypes = ['popular', 'followers', 'user'];
+        $validTypes = ['trend', 'follower', 'user'];
         if (!in_array($getData['type'], $validTypes)) {
             $validTypeStr = implode(",", $validTypes);
             throw new InvalidRequestParameterException("'type' must be in [{$validTypeStr}].");

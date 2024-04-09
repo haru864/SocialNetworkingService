@@ -88,7 +88,15 @@ class TweetService
 
     public function getTweetsByPopular(GetTweetsRequest $request): ?array
     {
-        
+        $page = $request->getPage();
+        $limit = $request->getLimit();
+        $offset = ($page - 1) * $limit;
+        $tweets = $this->tweetsDAOImpl->getByPopular($limit, $offset);
+        $tweetArr = [];
+        foreach ($tweets as $tweet) {
+            array_push($tweetArr, $tweet->toArray());
+        }
+        return $tweetArr;
     }
 
     public function getTweetsByFollows(GetTweetsRequest $request): ?array

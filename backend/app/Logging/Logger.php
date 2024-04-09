@@ -103,7 +103,6 @@ class Logger
         return ($fileSize + $logEntrybytes) > $maxLogFileSize;
     }
 
-    // TODO パスワードをマスクする
     public function logRequest(): void
     {
         $postData = 'N/A';
@@ -111,12 +110,15 @@ class Logger
             if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
                 $jsonData = file_get_contents('php://input');
                 $postData = json_decode($jsonData, true);
-
-                // $this->logDebug(json_encode($postData));
+                if (array_key_exists('password', $postData)) {
+                    $maskedPassword = "";
+                    for ($i = 0; $i < mb_strlen($postData['password']); $i++) {
+                        $maskedPassword .= '*';
+                    }
+                    $postData['password'] = $maskedPassword;
+                }
             } else {
                 $postData = $_POST;
-
-                // $this->logDebug(json_encode($_POST));
             }
         }
         $requestInfo = [
