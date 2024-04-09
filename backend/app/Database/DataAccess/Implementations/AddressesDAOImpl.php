@@ -74,7 +74,7 @@ class AddressesDAOImpl implements AddressesDAO
         SQL;
         $result = $mysqli->prepareAndExecute(
             $query,
-            'ssss',
+            'ssssi',
             [
                 $address->getCountry(),
                 $address->getState(),

@@ -116,7 +116,7 @@ class UsersDAOImpl implements UsersDAO
     public function delete(int $id): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();
-        $sql = "DELETE FROM users WHERE post_id = ?";
+        $sql = "DELETE FROM users WHERE id = ?";
         return $mysqli->prepareAndExecute($sql, 'i', [$id]);
     }
 

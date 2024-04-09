@@ -91,4 +91,15 @@ class Address implements Model
     {
         $this->town = $town;
     }
+
+    public function toArray(): array
+    {
+        $data = [
+            'country' => $this->getCountry(),
+            'state' => $this->getState(),
+            'city' => $this->getCity(),
+            'town' => $this->getTown()
+        ];
+        return $data;
+    }
 }

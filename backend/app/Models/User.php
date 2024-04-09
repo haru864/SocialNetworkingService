@@ -136,7 +136,7 @@ class User implements Model
         $data = [
             "id" => $this->getId(),
             "name" => $this->getName(),
-            "password_hash" => "****",
+            "password_hash" => "",
             "email" => $this->getEmail(),
             "self_introduction" => $this->getSelfIntroduction(),
             "profile_image" => $this->getProfileImage(),

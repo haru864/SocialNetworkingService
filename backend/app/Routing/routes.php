@@ -4,6 +4,7 @@ use Controllers\FollowController;
 use Controllers\LikeController;
 use Controllers\LoginController;
 use Controllers\LogoutController;
+use Controllers\ProfileController;
 use Controllers\ReplyController;
 use Controllers\RetweetController;
 use Controllers\SignupController;
@@ -22,6 +23,7 @@ use Middleware\NoopMiddleware;
 use Services\FollowService;
 use Services\LikeService;
 use Services\LoginService;
+use Services\ProfileService;
 use Services\ReplyService;
 use Services\RetweetService;
 use Services\SignupService;
@@ -36,14 +38,25 @@ $tweetsDAOImpl = new TweetsDAOImpl();
 $retweetsDAOImpl = new RetweetsDAOImpl();
 $likesDAOImpl = new LikesDAOImpl();
 $followsDAOImpl = new FollowsDAOImpl();
-$loginController = new LoginController(new LoginService($usersDAOImpl));
-$signupController = new SignupController(new SignupService($usersDAOImpl, $addressesDAOImpl, $careersDAOImpl, $hobbiesDAOImpl, $emailVerificationDAOImpl));
+
+$loginService = new LoginService($usersDAOImpl);
+$signupService = new SignupService($usersDAOImpl, $addressesDAOImpl, $careersDAOImpl, $hobbiesDAOImpl, $emailVerificationDAOImpl);
+$tweetService = new TweetService($tweetsDAOImpl);
+$retweetService = new RetweetService($retweetsDAOImpl);
+$replyService = new ReplyService($tweetsDAOImpl);
+$likeService = new LikeService($likesDAOImpl);
+$followService = new FollowService($followsDAOImpl);
+$profileService = new ProfileService($usersDAOImpl, $addressesDAOImpl, $careersDAOImpl, $hobbiesDAOImpl);
+
+$loginController = new LoginController($loginService);
+$signupController = new SignupController($signupService);
 $logoutController = new LogoutController();
-$tweetController = new TweetController(new TweetService($tweetsDAOImpl));
-$retweetController = new RetweetController(new RetweetService($retweetsDAOImpl));
-$replyController  = new ReplyController(new ReplyService($tweetsDAOImpl));
-$likeController = new LikeController(new LikeService($likesDAOImpl));
-$followController = new FollowController(new FollowService($followsDAOImpl));
+$tweetController = new TweetController($tweetService);
+$retweetController = new RetweetController($retweetService);
+$replyController  = new ReplyController($replyService);
+$likeController = new LikeController($likeService);
+$followController = new FollowController($followService);
+$profileController = new ProfileController($profileService, $signupService);
 
 $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
 $URL_DIR_PATTERN_SIGNUP = '/^\/api\/signup$/';
@@ -54,6 +67,7 @@ $URL_DIR_PATTERN_RETWEETS = '/^\/api\/tweets\/(\d+)\/retweets$/';
 $URL_DIR_PATTERN_REPLIES = '/^\/api\/tweets\/(\d+)\/replies$/';
 $URL_DIR_PATTERN_LIKES = '/^\/api\/likes$/';
 $URL_DIR_PATTERN_FOLLOWS = '/^\/api\/follows$/';
+$URL_DIR_PATTERN_PROFILE = '/^\/api\/profile$/';
 
 return [
     $URL_DIR_PATTERN_LOGIN => [
@@ -90,6 +104,10 @@ return [
     ],
     $URL_DIR_PATTERN_FOLLOWS => [
         'controller' => $followController,
+        'middleware' => new AuthMiddleware()
+    ],
+    $URL_DIR_PATTERN_PROFILE => [
+        'controller' => $profileController,
         'middleware' => new AuthMiddleware()
     ],
 ];

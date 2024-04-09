@@ -2,6 +2,7 @@
 
 namespace Helpers;
 
+use Exceptions\FileNotFoundException;
 use Exceptions\InternalServerException;
 use Exceptions\InvalidMimeTypeException;
 
@@ -45,6 +46,24 @@ class FileUtility
         return $storedImageFileName;
     }
 
+    public static function deleteImageWithThumbnail(
+        string $storeDirPath,
+        string $thumbDirPath,
+        string $imageFileName,
+    ): void {
+        $storedImageFilePath = $storeDirPath . DIRECTORY_SEPARATOR . $imageFileName;
+        if (!file_exists($storedImageFilePath)) {
+            throw new FileNotFoundException($storedImageFilePath);
+        }
+        $thumbnailFilePath = $thumbDirPath . DIRECTORY_SEPARATOR . $imageFileName;
+        if (!file_exists($thumbnailFilePath)) {
+            throw new FileNotFoundException($thumbnailFilePath);
+        }
+        unlink($storedImageFilePath);
+        unlink($thumbnailFilePath);
+        return;
+    }
+
     // TODO 圧縮処理を追加する
     /**
      * リクエストパラメータの動画ファイルを圧縮して指定のディレクトリに保存する。
@@ -77,6 +96,18 @@ class FileUtility
             throw new InternalServerException("Failed to move uploaded file.");
         }
         return $storedVideoFileName;
+    }
+
+    public static function deleteVideo(
+        string $storeDirPath,
+        string $videoFileName,
+    ): void {
+        $videoFilePath = $storeDirPath . DIRECTORY_SEPARATOR . $videoFileName;
+        if (!file_exists($videoFilePath)) {
+            throw new FileNotFoundException($videoFilePath);
+        }
+        unlink($videoFilePath);
+        return;
     }
 
     private static function generateUniqueHashWithLimit(string $dirPath, string $data, $limit = 100): string

@@ -8,7 +8,9 @@ use Database\DataAccess\Implementations\EmailVerificationDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InternalServerException;
+use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
+use Helpers\MailUtility;
 use Http\Request\SignupRequest;
 use Models\User;
 use Helpers\ValidationHelper;
@@ -16,9 +18,8 @@ use Models\Address;
 use Models\Career;
 use Models\EmailVerification;
 use Models\Hobby;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use Settings\Settings;
+use Throwable;
 
 class SignupService
 {
@@ -42,90 +43,89 @@ class SignupService
         $this->emailVerificationDAOImpl = $emailVerificationDAOImpl;
     }
 
-    // TODO DB登録に失敗した場合、保存された画像ファイルを削除する必要がある。
     public function createUser(SignupRequest $request): User
     {
-        $currentDatetime = date('Y-m-d H:i:s');
-        $profileImage = null;
-        if ($request->getProfileImage() !== null) {
-            $profileImage = FileUtility::storeImageWithThumbnail(
-                storeDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_UPLOAD'),
-                thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_THUMBNAIL'),
-                uploadedTmpFilePath: $request->getProfileImage()['tmp_name'],
-                uploadedFileName: $request->getProfileImage()['name'],
-                thumbWidth: 100
-            );
+        if ($this->usersDAOImpl->getByName($request->getUsername()) != null) {
+            throw new InvalidRequestParameterException("Specified username is already used.");
         }
-        $user = new User(
-            id: null,
-            name: $request->getUsername(),
-            password_hash: password_hash($request->getPassword(), PASSWORD_DEFAULT),
-            email: $request->getEmail(),
-            self_introduction: ValidationHelper::isNonEmptyString($request->getSelfIntroduction()) ? $request->getSelfIntroduction() : null,
-            profile_image: $profileImage,
-            created_at: $currentDatetime,
-            last_login: $currentDatetime,
-            email_verified_at: null
-        );
-        $userInTable = $this->usersDAOImpl->create($user);
-        $address = new Address(
-            id: null,
-            userId: $userInTable->getId(),
-            country: $request->getCountry(),
-            state: $request->getState(),
-            city: $request->getCity(),
-            town: $request->getTown()
-        );
-        $this->addressesDAOImpl->create($address);
-        foreach ($request->getCareers() as $job) {
-            $career = new Career(
+        try {
+            $currentDatetime = date('Y-m-d H:i:s');
+            $profileImage = null;
+            if ($request->getProfileImage() !== null) {
+                $profileImage = FileUtility::storeImageWithThumbnail(
+                    storeDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_UPLOAD'),
+                    thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_THUMBNAIL'),
+                    uploadedTmpFilePath: $request->getProfileImage()['tmp_name'],
+                    uploadedFileName: $request->getProfileImage()['name'],
+                    thumbWidth: 100
+                );
+            }
+            $user = new User(
+                id: null,
+                name: $request->getUsername(),
+                password_hash: password_hash($request->getPassword(), PASSWORD_DEFAULT),
+                email: $request->getEmail(),
+                self_introduction: ValidationHelper::isNonEmptyString($request->getSelfIntroduction()) ? $request->getSelfIntroduction() : null,
+                profile_image: $profileImage,
+                created_at: $currentDatetime,
+                last_login: $currentDatetime,
+                email_verified_at: null
+            );
+            $userInTable = null;
+            $userInTable = $this->usersDAOImpl->create($user);
+            $address = new Address(
                 id: null,
                 userId: $userInTable->getId(),
-                job: $job
+                country: $request->getCountry(),
+                state: $request->getState(),
+                city: $request->getCity(),
+                town: $request->getTown()
             );
-            $this->careersDAOImpl->create($career);
+            $this->addressesDAOImpl->create($address);
+            foreach ($request->getCareers() as $job) {
+                $career = new Career(
+                    id: null,
+                    userId: $userInTable->getId(),
+                    job: $job
+                );
+                $this->careersDAOImpl->create($career);
+            }
+            foreach ($request->getHobbies() as $hobby) {
+                $hobbyObj = new Hobby(
+                    id: null,
+                    userId: $userInTable->getId(),
+                    hobby: $hobby
+                );
+                $this->hobbiesDAOImpl->create($hobbyObj);
+            }
+            return $userInTable;
+        } catch (Throwable $t) {
+            if (isset($profileImage)) {
+                FileUtility::deleteImageWithThumbnail(
+                    storeDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_UPLOAD'),
+                    thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_THUMBNAIL'),
+                    imageFileName: $profileImage
+                );
+            }
+            if (isset($userInTable)) {
+                $this->usersDAOImpl->delete($userInTable->getId());
+            }
+            throw $t;
         }
-        foreach ($request->getHobbies() as $hobby) {
-            $hobbyObj = new Hobby(
-                id: null,
-                userId: $userInTable->getId(),
-                hobby: $hobby
-            );
-            $this->hobbiesDAOImpl->create($hobbyObj);
-        }
-        return $userInTable;
     }
 
-    // TODO 実行時にクライアントにログが返らないようにする
-    // TODO 送信済みメールをボックスから削除する
     public function sendVerificationEmail(User $user): void
     {
-        $mail = new PHPMailer(true);
-
-        //Server settings
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-        $mail->isSMTP();
-        $mail->Host = Settings::env('SMTP_SERVER_HOST');
-        $mail->SMTPAuth = true;
-        $mail->Username = Settings::env('SMTP_SERVER_USERNAME');
-        $mail->Password = Settings::env('SMTP_SERVER_PASSWORD');
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $mail->Port = Settings::env('SMTP_SERVER_PORT');
-
-        //Recipients
-        $mail->setFrom(Settings::env('SMTP_SERVER_USERNAME'), 'Mailer');
-        $mail->addAddress($user->getEmail(), 'Joe User');
-
-        // Content
-        $mailCharSet = 'ISO-2022-JP';
-        $mail->CharSet = $mailCharSet;
-        $mail->isHTML(true);
-        $mail->Subject = mb_encode_mimeheader('メール認証', $mailCharSet);
         $url = Settings::env('BASE_URL') . '/api/validate?id=' . $this->publishUserVerificationURL($user);
-        $mail->Body = "<a href=" . $url . ">リンク</a>";
-        $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-        $mail->send();
+        $htmlBody = "<a href=" . $url . ">認証リンク</a>にアクセスしてメール認証を完了してください。";
+        $textBody = "次のURLにアクセスしてメール認証を完了してください。" . PHP_EOL . $url;
+        MailUtility::sendEmail(
+            recipientEmail: $user->getEmail(),
+            recipientName: $user->getName(),
+            subject: 'メール認証',
+            htmlBody: $htmlBody,
+            textBody: $textBody
+        );
     }
 
     public function validateEmail(string $hash): User
