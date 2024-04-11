@@ -97,6 +97,7 @@ class TweetsDAOImpl implements TweetsDAO
         return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
     }
 
+    // TODO ビューを使う
     public function getByPopular(int $limit, int $offset): ?array
     {
         $mysqli = DatabaseManager::getMysqliConnection();

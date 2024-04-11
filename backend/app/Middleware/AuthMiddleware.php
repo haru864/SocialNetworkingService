@@ -17,6 +17,7 @@ class AuthMiddleware implements MiddlewareInterface
             throw new InvalidSessionException('Request has no session.');
         }
         $usersDAOImpl = new UsersDAOImpl();
+        // TODO インメモリデータベース(Redis)で高速化する
         $userSelectedById = $usersDAOImpl->getById($_SESSION['user_id']);
         $userSelectedByName = $usersDAOImpl->getByName($_SESSION['user_name']);
         if (is_null($userSelectedById) || is_null($userSelectedByName)) {

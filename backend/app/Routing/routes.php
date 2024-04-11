@@ -4,6 +4,7 @@ use Controllers\FollowController;
 use Controllers\LikeController;
 use Controllers\LoginController;
 use Controllers\LogoutController;
+use Controllers\MessageController;
 use Controllers\ProfileController;
 use Controllers\ReplyController;
 use Controllers\RetweetController;
@@ -15,6 +16,7 @@ use Database\DataAccess\Implementations\EmailVerificationDAOImpl;
 use Database\DataAccess\Implementations\FollowsDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\LikesDAOImpl;
+use Database\DataAccess\Implementations\MessagesDAOImpl;
 use Database\DataAccess\Implementations\TweetsDAOImpl;
 use Database\DataAccess\Implementations\RetweetsDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
@@ -23,6 +25,7 @@ use Middleware\NoopMiddleware;
 use Services\FollowService;
 use Services\LikeService;
 use Services\LoginService;
+use Services\MessageService;
 use Services\ProfileService;
 use Services\ReplyService;
 use Services\RetweetService;
@@ -38,6 +41,7 @@ $tweetsDAOImpl = new TweetsDAOImpl();
 $retweetsDAOImpl = new RetweetsDAOImpl();
 $likesDAOImpl = new LikesDAOImpl();
 $followsDAOImpl = new FollowsDAOImpl();
+$messagesDAOImpl = new MessagesDAOImpl();
 
 $loginService = new LoginService($usersDAOImpl);
 $signupService = new SignupService($usersDAOImpl, $addressesDAOImpl, $careersDAOImpl, $hobbiesDAOImpl, $emailVerificationDAOImpl);
@@ -47,6 +51,7 @@ $replyService = new ReplyService($tweetsDAOImpl);
 $likeService = new LikeService($likesDAOImpl);
 $followService = new FollowService($followsDAOImpl);
 $profileService = new ProfileService($usersDAOImpl, $addressesDAOImpl, $careersDAOImpl, $hobbiesDAOImpl);
+$messageService = new MessageService($messagesDAOImpl, $usersDAOImpl);
 
 $loginController = new LoginController($loginService);
 $signupController = new SignupController($signupService);
@@ -57,6 +62,7 @@ $replyController  = new ReplyController($replyService);
 $likeController = new LikeController($likeService);
 $followController = new FollowController($followService);
 $profileController = new ProfileController($profileService, $signupService);
+$messageController = new MessageController($messageService);
 
 $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
 $URL_DIR_PATTERN_SIGNUP = '/^\/api\/signup$/';
@@ -68,6 +74,7 @@ $URL_DIR_PATTERN_REPLIES = '/^\/api\/tweets\/(\d+)\/replies$/';
 $URL_DIR_PATTERN_LIKES = '/^\/api\/likes$/';
 $URL_DIR_PATTERN_FOLLOWS = '/^\/api\/follows$/';
 $URL_DIR_PATTERN_PROFILE = '/^\/api\/profile$/';
+$URL_DIR_PATTERN_MESSAGES = '/^\/api\/messages(\/\d+)?$/';
 
 return [
     $URL_DIR_PATTERN_LOGIN => [
@@ -108,6 +115,10 @@ return [
     ],
     $URL_DIR_PATTERN_PROFILE => [
         'controller' => $profileController,
+        'middleware' => new AuthMiddleware()
+    ],
+    $URL_DIR_PATTERN_MESSAGES => [
+        'controller' => $messageController,
         'middleware' => new AuthMiddleware()
     ],
 ];
