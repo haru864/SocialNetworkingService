@@ -3,6 +3,7 @@
 namespace Render;
 
 use Render\Interface\HTTPRenderer;
+use Settings\Settings;
 
 class JSONRenderer implements HTTPRenderer
 {
@@ -29,7 +30,7 @@ class JSONRenderer implements HTTPRenderer
     {
         return [
             'Content-Type' => 'application/json; charset=UTF-8',
-            'Access-Control-Allow-Origin' => '*'
+            'Access-Control-Allow-Origin' => Settings::env('ACCESS_CONTROL_ALLOW_ORIGIN')
         ];
     }
 
