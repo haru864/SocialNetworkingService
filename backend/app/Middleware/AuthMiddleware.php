@@ -7,11 +7,16 @@ use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InvalidSessionException;
 use Middleware\Interface\MiddlewareInterface;
 use Render\interface\HTTPRenderer;
+use Render\JSONRenderer;
+use Settings\Settings;
 
 class AuthMiddleware implements MiddlewareInterface
 {
     public function handle(ControllerInterface $controller): HTTPRenderer
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            return new JSONRenderer(200, []);
+        }
         session_start();
         if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_name'])) {
             throw new InvalidSessionException('Request has no session.');
