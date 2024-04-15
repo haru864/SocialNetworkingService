@@ -1,7 +1,7 @@
 "use client"
 
-import * as ValidationUtil from '../utils/ValidationUtil';
-import * as React from 'react';
+import * as ValidationUtil from '../../utils/ValidationUtil';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Copyright(props: any) {
     return (
@@ -26,7 +27,7 @@ function Copyright(props: any) {
     );
 }
 
-async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+async function handleSubmit(event: React.FormEvent<HTMLFormElement>, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
     try {
         event.preventDefault();
         const data: FormData = new FormData(event.currentTarget);
@@ -36,22 +37,25 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         ValidationUtil.validateRequiredFields(email, "Email");
         ValidationUtil.validateEmail(email);
         const msgBody = {
-            username: username,
-            email: email,
+            'action': 'send_email',
+            'username': username,
+            'email': email,
         };
-        // const response = await fetch(`${process.env.API_DOMAIN}/api/login`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(msgBody),
-        // });
-        // console.log(response);
-        // if (!response.ok) {
-        //     const responseData = await response.json();
-        //     throw new Error(responseData["error_message"]);
-        // }
-        // window.location.href = `${process.env.FRONT_DOMAIN}/home`;
+        setLoading(true);
+        const response = await fetch(`${process.env.API_DOMAIN}/api/reset_password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(msgBody),
+        });
+        setLoading(false);
+        console.log(response);
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
+        alert('A link for reconfiguration has been sent to your registered email address.');
     } catch (error: any) {
         console.error(error);
         alert(error);
@@ -61,6 +65,14 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+    const [loading, setLoading] = useState(false);
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -79,7 +91,7 @@ export default function SignIn() {
                     <Typography component="h1" variant="h5">
                         Reset Password
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={(e) => handleSubmit(e, setLoading)} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required

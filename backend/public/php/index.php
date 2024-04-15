@@ -41,31 +41,16 @@ try {
         }
     }
     if (is_null($renderer)) {
-        $param = [
-            "result" => "failure",
-            'title' => '404 Not Found',
-            'headline' => '404 Not Found',
-            'message' => 'There is no content associated with the specified URL.'
-        ];
+        $param = ['message' => 'There is no content associated with the specified URL.'];
         $renderer = new JSONRenderer(404, $param);
     }
     $httpResponse = new HttpResponse($renderer);
 } catch (UserVisibleException $e) {
-    $param = [
-        "result" => "failure",
-        'title' => '400 Bad Request',
-        'headline' => '400 Bad Request',
-        'message' => $e->displayErrorMessage()
-    ];
+    $param = ['message' => $e->displayErrorMessage()];
     $httpResponse = new HttpResponse(new JSONRenderer(400, $param));
     $logger->logError($e);
 } catch (Throwable $e) {
-    $param = [
-        "result" => "failure",
-        'title' => '500 Internal Server Error',
-        'headline' => '500 Internal Server Error',
-        'message' => 'Internal error, please contact the admin.'
-    ];
+    $param = ['message' => 'Internal error, please contact the admin.'];
     $httpResponse = new HttpResponse(new JSONRenderer(500, $param));
     $logger->logError($e);
 } finally {

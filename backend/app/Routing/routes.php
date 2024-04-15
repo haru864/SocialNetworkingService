@@ -7,6 +7,7 @@ use Controllers\LogoutController;
 use Controllers\MessageController;
 use Controllers\ProfileController;
 use Controllers\ReplyController;
+use Controllers\ResetPasswordController;
 use Controllers\RetweetController;
 use Controllers\SignupController;
 use Controllers\TweetController;
@@ -28,6 +29,7 @@ use Services\LoginService;
 use Services\MessageService;
 use Services\ProfileService;
 use Services\ReplyService;
+use Services\ResetPasswordService;
 use Services\RetweetService;
 use Services\SignupService;
 use Services\TweetService;
@@ -52,6 +54,7 @@ $likeService = new LikeService($likesDAOImpl);
 $followService = new FollowService($followsDAOImpl);
 $profileService = new ProfileService($usersDAOImpl, $addressesDAOImpl, $careersDAOImpl, $hobbiesDAOImpl);
 $messageService = new MessageService($messagesDAOImpl, $usersDAOImpl);
+$resetPasswordService = new ResetPasswordService($usersDAOImpl, $emailVerificationDAOImpl);
 
 $loginController = new LoginController($loginService);
 $signupController = new SignupController($signupService);
@@ -63,8 +66,10 @@ $likeController = new LikeController($likeService);
 $followController = new FollowController($followService);
 $profileController = new ProfileController($profileService, $signupService);
 $messageController = new MessageController($messageService);
+$resetPasswordController = new ResetPasswordController($resetPasswordService);
 
 $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
+$URL_DIR_PATTERN_RESET_PASSWORD = '/^\/api\/reset_password$/';
 $URL_DIR_PATTERN_SIGNUP = '/^\/api\/signup$/';
 $URL_DIR_PATTERN_VALIDATE_EMAIL = '/^\/api\/validate$/';
 $URL_DIR_PATTERN_LOGOUT = '/^\/api\/logout$/';
@@ -79,6 +84,10 @@ $URL_DIR_PATTERN_MESSAGES = '/^\/api\/messages(\/\d+)?$/';
 return [
     $URL_DIR_PATTERN_LOGIN => [
         'controller' => $loginController,
+        'middleware' => new NoopMiddleware()
+    ],
+    $URL_DIR_PATTERN_RESET_PASSWORD => [
+        'controller' => $resetPasswordController,
         'middleware' => new NoopMiddleware()
     ],
     $URL_DIR_PATTERN_SIGNUP => [

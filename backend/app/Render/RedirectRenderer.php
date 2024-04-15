@@ -5,15 +5,15 @@ namespace Render;
 use Render\Interface\HTTPRenderer;
 use Settings\Settings;
 
-class JSONRenderer implements HTTPRenderer
+class RedirectRenderer implements HTTPRenderer
 {
     private int $statusCode;
-    private array $data;
+    private string $redirectUrl;
 
-    public function __construct(int $statusCode, array $data)
+    public function __construct(int $statusCode, string $redirectUrl)
     {
         $this->statusCode = $statusCode;
-        $this->data = $data;
+        $this->redirectUrl = $redirectUrl;
     }
 
     public function isStringContent(): bool
@@ -36,11 +36,12 @@ class JSONRenderer implements HTTPRenderer
             'Access-Control-Allow-Origin' => $allowedOrigin,
             'Access-Control-Allow-Methods' => $allowedMethods,
             'Access-Control-Allow-Headers' => $allowedHeaders,
+            'Location' => $this->redirectUrl
         ];
     }
 
     public function getContent(): string
     {
-        return json_encode($this->data, JSON_THROW_ON_ERROR);
+        return '';
     }
 }

@@ -34,6 +34,46 @@ class ValidationHelper
         return preg_match('/^[1-9][0-9]*$/', $str) === 1;
     }
 
+    public static function validateUsername(string $username): void
+    {
+        $pattern = '/^[a-zA-Z0-9]{1,15}$/';
+        if (!preg_match($pattern, $username)) {
+            throw new InvalidRequestParameterException('Username must be alphanumeric characters only and limited to 15 characters.');
+        }
+        return;
+    }
+
+    public static function validatePassword(string $password): void
+    {
+        $invalidCharsPattern = '/[^a-zA-Z0-9!-\/:-@\[-`\{-~]/';
+        if (preg_match($invalidCharsPattern, $password)) {
+            throw new InvalidRequestParameterException('Only single-byte alphanumeric characters and symbols can be used.');
+        }
+
+        $typesIncluded = 0;
+        if (preg_match('/[a-z]/', $password)) {
+            $typesIncluded++;
+        }
+        if (preg_match('/[A-Z]/', $password)) {
+            $typesIncluded++;
+        }
+        if (preg_match('/[0-9]/', $password)) {
+            $typesIncluded++;
+        }
+        if (preg_match('/[!-\/:-@\[-`\{-~]/', $password)) {
+            $typesIncluded++;
+        }
+        $minTypesCount = 4;
+        if ($typesIncluded < $minTypesCount) {
+            throw new InvalidRequestParameterException('Include all four types of uppercase and lowercase letters, numbers and symbols.');
+        }
+
+        $minPasswordChars = 8;
+        if (strlen($password) < $minPasswordChars) {
+            throw new InvalidRequestParameterException('Password must be at least 8 characters.');
+        }
+    }
+
     /**
      * multipart/form-dataでアップされた画像ファイルが有効かどうかを検証する。
      * 有効でなければ例外をスローする。
