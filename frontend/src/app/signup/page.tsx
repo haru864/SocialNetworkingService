@@ -5,8 +5,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,32 +12,42 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Copyright from "../common/copyright";
 
-function Copyright(props: any) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    try {
+        event.preventDefault();
+        const data: FormData = new FormData(event.currentTarget);
+        const username: string = data.get('username') as string;
+        const password: string = data.get('password') as string;
+        ValidationUtil.validateRequiredFields(username, "Username");
+        ValidationUtil.validateRequiredFields(password, "Password");
+        const msgBody = {
+            username: username,
+            password: password,
+        };
+        const response = await fetch(`${process.env.API_DOMAIN}/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(msgBody),
+        });
+        console.log(response);
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
+        window.location.href = `${process.env.FRONT_DOMAIN}/home`;
+    } catch (error: any) {
+        console.error(error);
+        alert(error);
+    }
+};
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
-
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -60,26 +68,50 @@ export default function SignUp() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12}>
+                                <Typography component="p" align='center'>
+                                    Username - Max 15 characters, single-byte alphabetic characters and numbers are available.
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
-                                    autoComplete="given-name"
-                                    name="firstName"
                                     required
                                     fullWidth
-                                    id="firstName"
-                                    label="First Name"
-                                    autoFocus
+                                    id="username"
+                                    label="Username"
+                                    name="username"
+                                    autoComplete="username"
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12}>
+                                <Typography component="p" align='center'>
+                                    Password - At least 8 characters, contain single-byte lowercase and uppercase alphabetic characters, numbers and symbols.
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
-                                    id="lastName"
-                                    label="Last Name"
-                                    name="lastName"
-                                    autoComplete="family-name"
+                                    id="password"
+                                    label="Password"
+                                    name="password"
+                                    autoComplete="password"
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="password_confirmation"
+                                    label="Password Confirmation"
+                                    name="password_confirmation"
+                                    autoComplete="password_confirmation"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography component="p" align='center'>
+                                    Email - Used to reset passwords and for notifications from the service.
+                                </Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -92,20 +124,139 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
+                                <Typography component="p" align='center'>
+                                    Self Introduction - Recommend stating to connect with like-minded users.
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
-                                    required
                                     fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
+                                    name="self_introduction"
+                                    label="Self Introduction"
+                                    type="self_introduction"
+                                    id="self_introduction"
+                                    autoComplete="self_introduction"
+                                    multiline
+                                    minRows={3}
+                                    maxRows={5}
+                                />
+                            </Grid>
+                            <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                                <input
+                                    accept="image/jpeg, image/png, image/gif"
+                                    type="file"
+                                    id="upload_file_button"
+                                    style={{ display: 'none' }}
+                                />
+                                <label htmlFor="upload_file_button">
+                                    <Button variant="contained" component="span">
+                                        Upload Profile Image
+                                    </Button>
+                                </label>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography component="p" align='center'>
+                                    Address - Will be open to other users.
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="country"
+                                    label="Country"
+                                    name="country"
+                                    autoComplete="country"
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                    label="I want to receive inspiration, marketing promotions and updates via email."
+                                <TextField
+                                    fullWidth
+                                    id="state"
+                                    label="State"
+                                    name="state"
+                                    autoComplete="state"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="city"
+                                    label="City"
+                                    name="city"
+                                    autoComplete="city"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="town"
+                                    label="Town"
+                                    name="town"
+                                    autoComplete="town"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography component="p" align='center'>
+                                    Hobbies - Connect with your hobbies.
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="hobby_1"
+                                    label="Hobby 1"
+                                    name="hobby_1"
+                                    autoComplete="hobby_1"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="hobby_2"
+                                    label="Hobby 2"
+                                    name="hobby_2"
+                                    autoComplete="hobby_2"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="hobby_3"
+                                    label="Hobby 3"
+                                    name="hobby_3"
+                                    autoComplete="hobby_3"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography component="p" align='center'>
+                                    Careers - Connect with your jobs.
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="career_1"
+                                    label="Career 1"
+                                    name="career_1"
+                                    autoComplete="career_1"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="career_2"
+                                    label="Career 2"
+                                    name="career_2"
+                                    autoComplete="career_2"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="career_3"
+                                    label="Career 3"
+                                    name="career_3"
+                                    autoComplete="career_3"
                                 />
                             </Grid>
                         </Grid>
@@ -128,6 +279,6 @@ export default function SignUp() {
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
             </Container>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }
