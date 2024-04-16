@@ -11,14 +11,14 @@ class LoginRequest
 
     public function __construct(array $data)
     {
-        $this->username = $data['username'] ?? null;
-        $this->password = $data['password'] ?? null;
-        if (is_null($this->username)) {
-            throw new InvalidRequestParameterException("'username' must be set in login-request.");
+        $requiredParams = ['username', 'password'];
+        foreach ($requiredParams as $requiredParam) {
+            if (is_null($data[$requiredParam])) {
+                throw new InvalidRequestParameterException("'{$requiredParam}' must be set.");
+            }
         }
-        if (is_null($this->password)) {
-            throw new InvalidRequestParameterException("'password' must be set in login-request.");
-        }
+        $this->username = $data['username'];
+        $this->password = $data['password'];
     }
 
     public function getUsername(): string

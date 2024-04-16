@@ -7,6 +7,7 @@ use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InternalServerException;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\MailUtility;
+use Helpers\ValidationHelper;
 use Models\User;
 use Models\EmailVerification;
 use Settings\Settings;
@@ -30,8 +31,9 @@ class ResetPasswordService
         if (is_null($userInTable)) {
             throw new InvalidRequestParameterException("Specified username does not exist.");
         }
+        ValidationHelper::validateEmailAddress($email);
         if ($userInTable->getEmail() !== $email) {
-            throw new InvalidRequestParameterException("Specified email is not correct.");
+            throw new InvalidRequestParameterException("Specified email is not registered.");
         }
         $url = Settings::env('FRONT_URL') . '/reset_password/reset?id=' . $this->publishURL($userInTable);
         $htmlBody = "<a href=" . $url . ">Password reset link</a>";
@@ -58,6 +60,7 @@ class ResetPasswordService
         if (is_null($user)) {
             throw new InvalidRequestParameterException('Given URL hash has no related account.');
         }
+        ValidationHelper::validatePassword($newPassword);
         $user->setPasswordHash(password_hash($newPassword, PASSWORD_DEFAULT));
         $this->usersDAOImpl->update($user);
         $this->emailVerificationDAOImpl->deleteByHash($hash);

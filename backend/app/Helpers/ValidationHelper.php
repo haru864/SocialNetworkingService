@@ -74,6 +74,13 @@ class ValidationHelper
         }
     }
 
+    public static function validateEmailAddress(string $email): void
+    {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidRequestParameterException('Invalid Email Format.');
+        }
+    }
+
     /**
      * multipart/form-dataでアップされた画像ファイルが有効かどうかを検証する。
      * 有効でなければ例外をスローする。

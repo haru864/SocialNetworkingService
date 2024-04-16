@@ -6,26 +6,13 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import EmailIcon from '@mui/icons-material/Email';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
-
-function Copyright(props: any) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://github.com/haru864">
-                haru864
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import Copyright from "../../common/copyright";
 
 async function handleSubmit(event: React.FormEvent<HTMLFormElement>, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
     try {
@@ -88,8 +75,11 @@ export default function SignIn() {
                     <Avatar sx={{ m: 1, bgcolor: 'info.main' }}>
                         <EmailIcon />
                     </Avatar>
-                    <Typography component="h1" variant="h5">
+                    <Typography component="h1" variant="h5" gutterBottom>
                         Reset Password
+                    </Typography>
+                    <Typography component="p" align='center'>
+                        Link to reset your password will be sent to your registered email address.
                     </Typography>
                     <Box component="form" onSubmit={(e) => handleSubmit(e, setLoading)} noValidate sx={{ mt: 1 }}>
                         <TextField
