@@ -5,7 +5,6 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
-use Exceptions\InvalidRequestParameterException;
 use Http\Request\SignupRequest;
 use Http\Request\ValidateEmailRequest;
 use Services\SignupService;
@@ -37,25 +36,17 @@ class SignupController implements ControllerInterface
 
     private function signup(SignupRequest $request): JSONRenderer
     {
-        try {
-            $user = $this->signupService->createUser($request);
-            $this->signupService->sendVerificationEmail($user);
-            return new JSONRenderer(200, []);
-        } catch (InvalidRequestParameterException $e) {
-            return new JSONRenderer(400, ["error_message" => $e->displayErrorMessage()]);
-        }
+        $user = $this->signupService->createUser($request);
+        $this->signupService->sendVerificationEmail($user);
+        return new JSONRenderer(200, []);
     }
 
     private function validateEmail(ValidateEmailRequest $request): JSONRenderer
     {
-        try {
-            $user = $this->signupService->validateEmail($request->getId());
-            session_start();
-            $_SESSION['user_id'] = $user->getId();
-            $_SESSION['user_name'] = $user->getName();
-            return new JSONRenderer(200, []);
-        } catch (InvalidRequestParameterException $e) {
-            return new JSONRenderer(400, ["error_message" => $e->displayErrorMessage()]);
-        }
+        $user = $this->signupService->validateEmail($request->getId());
+        session_start();
+        $_SESSION['user_id'] = $user->getId();
+        $_SESSION['user_name'] = $user->getName();
+        return new JSONRenderer(200, []);
     }
 }

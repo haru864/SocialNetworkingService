@@ -117,12 +117,12 @@ class SignupService
     public function sendVerificationEmail(User $user): void
     {
         $url = Settings::env('BASE_URL') . '/api/validate?id=' . $this->publishUserVerificationURL($user);
-        $htmlBody = "<a href=" . $url . ">認証リンク</a>にアクセスしてメール認証を完了してください。";
-        $textBody = "次のURLにアクセスしてメール認証を完了してください。" . PHP_EOL . $url;
+        $htmlBody = "Access the following URL to complete Sign-Up.<br><a href=" . $url . ">Verification Link</a>";
+        $textBody = "Access the following URL to complete Sign-Up." . PHP_EOL . $url;
         MailUtility::sendEmail(
             recipientEmail: $user->getEmail(),
             recipientName: $user->getName(),
-            subject: 'メール認証',
+            subject: 'Sign-Up Email Verification',
             htmlBody: $htmlBody,
             textBody: $textBody
         );

@@ -1,7 +1,7 @@
 "use client"
 
 import * as ValidationUtil from '../utils/ValidationUtil';
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,9 +13,13 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
 import Copyright from "../common/copyright";
 
-async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) {
     try {
         event.preventDefault();
         const data: FormData = new FormData(event.currentTarget);
@@ -27,6 +31,7 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             username: username,
             password: password,
         };
+        setLoading(true);
         const response = await fetch(`${process.env.API_DOMAIN}/api/login`, {
             method: 'POST',
             headers: {
@@ -34,6 +39,7 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             },
             body: JSON.stringify(msgBody),
         });
+        setLoading(false);
         console.log(response);
         if (!response.ok) {
             const responseData = await response.json();
@@ -49,6 +55,14 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 const defaultTheme = createTheme();
 
 export default function LogIn() {
+    const [loading, setLoading] = useState(false);
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -67,7 +81,7 @@ export default function LogIn() {
                     <Typography component="h1" variant="h5">
                         Log in
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={(e) => handleSubmit(e, setLoading)} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required

@@ -1,6 +1,7 @@
 "use client"
 
-import * as React from 'react';
+import * as ValidationUtil from '../utils/ValidationUtil';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,33 +13,65 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
 import Copyright from "../common/copyright";
 
-async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) {
     try {
         event.preventDefault();
         const data: FormData = new FormData(event.currentTarget);
         const username: string = data.get('username') as string;
         const password: string = data.get('password') as string;
+        const passwordConf: string = data.get('password_confirmation') as string;
+        const email: string = data.get('email') as string;
+        const selfIntro: string = data.get('self_introduction') as string;
+        const country: string = data.get('country') as string;
+        const state: string = data.get('state') as string;
+        const city: string = data.get('city') as string;
+        const town: string = data.get('town') as string;
+        const hobby_1: string = data.get('hobby_1') as string;
+        const hobby_2: string = data.get('hobby_2') as string;
+        const hobby_3: string = data.get('hobby_3') as string;
+        const career_1: string = data.get('career_1') as string;
+        const career_2: string = data.get('career_2') as string;
+        const career_3: string = data.get('career_3') as string;
         ValidationUtil.validateRequiredFields(username, "Username");
         ValidationUtil.validateRequiredFields(password, "Password");
-        const msgBody = {
-            username: username,
-            password: password,
-        };
-        const response = await fetch(`${process.env.API_DOMAIN}/api/login`, {
+        ValidationUtil.validateRequiredFields(password, "passwordConf");
+        ValidationUtil.validateRequiredFields(password, "email");
+        ValidationUtil.validateUsername(username);
+        if (password !== passwordConf) {
+            throw new Error('Confirmation password does not match the other.');
+        }
+        ValidationUtil.validatePassword(password);
+        ValidationUtil.validateEmail(email);
+        ValidationUtil.validateCharCount(email, "Email", null, 100);
+        ValidationUtil.validateCharCount(selfIntro, "Self Introduction", null, 50);
+        ValidationUtil.validateCharCount(country, "Country", null, 100);
+        ValidationUtil.validateCharCount(state, "State", null, 100);
+        ValidationUtil.validateCharCount(city, "City", null, 100);
+        ValidationUtil.validateCharCount(town, "Town", null, 100);
+        ValidationUtil.validateCharCount(hobby_1, "Hobby_1", null, 100);
+        ValidationUtil.validateCharCount(hobby_2, "Hobby_2", null, 100);
+        ValidationUtil.validateCharCount(hobby_3, "Hobby_3", null, 100);
+        ValidationUtil.validateCharCount(career_1, "Career_1", null, 100);
+        ValidationUtil.validateCharCount(career_2, "Career_2", null, 100);
+        ValidationUtil.validateCharCount(career_3, "Career_3", null, 100);
+        setLoading(true);
+        const response = await fetch(`${process.env.API_DOMAIN}/api/signup`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(msgBody),
+            body: data
         });
-        console.log(response);
+        setLoading(false);
         if (!response.ok) {
             const responseData = await response.json();
+            // console.log(responseData);
             throw new Error(responseData["error_message"]);
         }
-        window.location.href = `${process.env.FRONT_DOMAIN}/home`;
+        alert('URL for authentication has been sent to the email address you entered.\nPlease follow the instructions in the e-mail to complete sign-up.');
     } catch (error: any) {
         console.error(error);
         alert(error);
@@ -48,6 +81,14 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+    const [loading, setLoading] = useState(false);
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -66,11 +107,11 @@ export default function SignUp() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box component="form" noValidate onSubmit={(e) => handleSubmit(e, setLoading)} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Typography component="p" align='center'>
-                                    Username - Max 15 characters, single-byte alphabetic characters and numbers are available.
+                                    Username - Up to 15 characters, single-byte alphabetic characters and numbers are available.
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
@@ -125,7 +166,7 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component="p" align='center'>
-                                    Self Introduction - Recommend stating to connect with like-minded users.
+                                    Self Introduction - Up to 50 characters
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
@@ -146,6 +187,7 @@ export default function SignUp() {
                                     accept="image/jpeg, image/png, image/gif"
                                     type="file"
                                     id="upload_file_button"
+                                    name="profile_image"
                                     style={{ display: 'none' }}
                                 />
                                 <label htmlFor="upload_file_button">

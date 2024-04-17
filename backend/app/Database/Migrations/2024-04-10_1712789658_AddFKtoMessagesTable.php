@@ -10,8 +10,8 @@ class AddFKtoMessagesTable implements Database\SchemaMigration
     {
         // マイグレーションロジックをここに追加してください
         return [
-            "ALTER TABLE messages ADD CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES users(id)",
-            "ALTER TABLE messages ADD CONSTRAINT fk_recipient_id FOREIGN KEY (recipient_id) REFERENCES users(id)",
+            "ALTER TABLE messages ADD CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE",
+            "ALTER TABLE messages ADD CONSTRAINT fk_recipient_id FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE",
         ];
     }
 

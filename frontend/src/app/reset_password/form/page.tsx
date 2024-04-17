@@ -14,7 +14,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Copyright from "../../common/copyright";
 
-async function handleSubmit(event: React.FormEvent<HTMLFormElement>, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) {
     try {
         event.preventDefault();
         const data: FormData = new FormData(event.currentTarget);

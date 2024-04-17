@@ -41,16 +41,16 @@ try {
         }
     }
     if (is_null($renderer)) {
-        $param = ['message' => 'There is no content associated with the specified URL.'];
+        $param = ['error_message' => 'There is no content associated with the specified URL.'];
         $renderer = new JSONRenderer(404, $param);
     }
     $httpResponse = new HttpResponse($renderer);
 } catch (UserVisibleException $e) {
-    $param = ['message' => $e->displayErrorMessage()];
+    $param = ['error_message' => $e->displayErrorMessage()];
     $httpResponse = new HttpResponse(new JSONRenderer(400, $param));
     $logger->logError($e);
 } catch (Throwable $e) {
-    $param = ['message' => 'Internal error, please contact the admin.'];
+    $param = ['error_message' => 'Internal error, please contact the admin.'];
     $httpResponse = new HttpResponse(new JSONRenderer(500, $param));
     $logger->logError($e);
 } finally {

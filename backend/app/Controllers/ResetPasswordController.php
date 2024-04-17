@@ -5,9 +5,7 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
-use Exceptions\InvalidRequestParameterException;
 use Http\Request\ResetPasswordRequest;
-use Render\RedirectRenderer;
 use Services\ResetPasswordService;
 
 class ResetPasswordController implements ControllerInterface
@@ -40,21 +38,13 @@ class ResetPasswordController implements ControllerInterface
 
     private function sendEmail(ResetPasswordRequest $request): JSONRenderer
     {
-        try {
-            $this->resetPasswordService->sendEmail($request->getUsername(), $request->getEmail());
-            return new JSONRenderer(200, []);
-        } catch (InvalidRequestParameterException $e) {
-            return new JSONRenderer(400, ["error_message" => $e->displayErrorMessage()]);
-        }
+        $this->resetPasswordService->sendEmail($request->getUsername(), $request->getEmail());
+        return new JSONRenderer(200, []);
     }
 
     private function resetPassword(ResetPasswordRequest $request): JSONRenderer
     {
-        try {
-            $this->resetPasswordService->resetPassword($request->getNewPassword(), $request->getHash());
-            return new JSONRenderer(200, []);
-        } catch (InvalidRequestParameterException $e) {
-            return new JSONRenderer(400, ["error_message" => $e->displayErrorMessage()]);
-        }
+        $this->resetPasswordService->resetPassword($request->getNewPassword(), $request->getHash());
+        return new JSONRenderer(200, []);
     }
 }

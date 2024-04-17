@@ -38,7 +38,7 @@ class ValidationHelper
     {
         $pattern = '/^[a-zA-Z0-9]{1,15}$/';
         if (!preg_match($pattern, $username)) {
-            throw new InvalidRequestParameterException('Username must be alphanumeric characters only and limited to 15 characters.');
+            throw new InvalidRequestParameterException('Username must be alphanumeric characters only and limited up to 15 characters.');
         }
         return;
     }
@@ -47,7 +47,7 @@ class ValidationHelper
     {
         $invalidCharsPattern = '/[^a-zA-Z0-9!-\/:-@\[-`\{-~]/';
         if (preg_match($invalidCharsPattern, $password)) {
-            throw new InvalidRequestParameterException('Only single-byte alphanumeric characters and symbols can be used.');
+            throw new InvalidRequestParameterException('Password can contain only single-byte alphanumeric characters, numbers and symbols.');
         }
 
         $typesIncluded = 0;
@@ -65,7 +65,7 @@ class ValidationHelper
         }
         $minTypesCount = 4;
         if ($typesIncluded < $minTypesCount) {
-            throw new InvalidRequestParameterException('Include all four types of uppercase and lowercase letters, numbers and symbols.');
+            throw new InvalidRequestParameterException('Password must contain uppercase and lowercase letters, numbers and symbols.');
         }
 
         $minPasswordChars = 8;
@@ -76,7 +76,8 @@ class ValidationHelper
 
     public static function validateEmailAddress(string $email): void
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $pattern = '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+        if (!preg_match($pattern, $email)) {
             throw new InvalidRequestParameterException('Invalid Email Format.');
         }
     }

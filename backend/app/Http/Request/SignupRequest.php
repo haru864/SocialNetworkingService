@@ -16,42 +16,55 @@ class SignupRequest
     private string $state;
     private string $city;
     private string $town;
-    private array $hobbies;
-    private array $careers;
+    private string $hobby_1;
+    private string $hobby_2;
+    private string $hobby_3;
+    private string $career_1;
+    private string $career_2;
+    private string $career_3;
 
     public function __construct($postData, $fileData)
     {
         $requiredParams = [
-            'username' => 'text',
-            'password' => 'text',
-            'email' => 'text',
-            'self_introduction' => 'text',
+            'username' => ['type' => 'text', 'minCharCount' => 1, 'maxCharCount' => 15],
+            'password' => ['type' => 'text', 'minCharCount' => 8, 'maxCharCount' => null],
+            'email' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => null],
+            'self_introduction' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 50],
             // 'profile_image' => 'file',
-            'country' => 'text',
-            'state' => 'text',
-            'city' => 'text',
-            'town' => 'text',
-            'hobbies' => 'text',
-            'careers' => 'text'
+            'country' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
+            'state' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
+            'city' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
+            'town' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
+            'hobby_1' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
+            'hobby_2' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
+            'hobby_3' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
+            'career_1' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
+            'career_2' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
+            'career_3' => ['type' => 'text', 'minCharCount' => null, 'maxCharCount' => 100],
         ];
-        foreach ($requiredParams as $param => $dataType) {
-            $isNullParam = true;
-            if ($dataType === 'text') {
-                $isNullParam = is_null($postData[$param]);
-            } else if ($dataType === 'file') {
-                $isNullParam = is_null($fileData[$param]);
+        foreach ($requiredParams as $param => $paramInfo) {
+            $type = $paramInfo['type'];
+            $minCharCount = $paramInfo['minCharCount'];
+            $maxCharCount = $paramInfo['maxCharCount'];
+            $isNull = false;
+            $isUnderMin = false;
+            $isOverMax = false;
+            if ($type === 'text') {
+                $isNull = is_null($postData[$param]);
+                if (isset($minCharCount)) $isUnderMin = mb_strlen($postData[$param]) < $minCharCount;
+                if (isset($maxCharCount)) $isOverMax = mb_strlen($postData[$param]) > $maxCharCount;
+            } else if ($type === 'file') {
+                $isNull = is_null($fileData[$param]);
             }
-            if ($isNullParam) {
-                throw new InvalidRequestParameterException("'{$param}' must be set in signup-request.");
+            if ($isNull) {
+                throw new InvalidRequestParameterException("'{$param}' must be set in request.");
             }
-        }
-        $maxHobbiesCount = 3;
-        if (count($postData['hobbies']) > $maxHobbiesCount) {
-            throw new InvalidRequestParameterException("'hobbies' must be no more than {$maxHobbiesCount}.");
-        }
-        $maxCareersCount = 3;
-        if (count($postData['careers']) > $maxCareersCount) {
-            throw new InvalidRequestParameterException("'careers' must be no more than {$maxCareersCount}.");
+            if ($isUnderMin) {
+                throw new InvalidRequestParameterException("'{$param}' must contain at least {$minCharCount} characters.");
+            }
+            if ($isOverMax) {
+                throw new InvalidRequestParameterException("'{$param}' can contain up to {$maxCharCount} characters.");
+            }
         }
         $profileImage = null;
         if (isset($fileData['profile_image']) && $fileData['profile_image']['tmp_name'] !== '') {
@@ -67,8 +80,15 @@ class SignupRequest
         $this->state = $postData['state'];
         $this->city = $postData['city'];
         $this->town = $postData['town'];
-        $this->hobbies = $postData['hobbies'];
-        $this->careers = $postData['careers'];
+        $this->hobby_1 = $postData['hobby_1'];
+        $this->hobby_2 = $postData['hobby_2'];
+        $this->hobby_3 = $postData['hobby_3'];
+        $this->career_1 = $postData['career_1'];
+        $this->career_2 = $postData['career_2'];
+        $this->career_3 = $postData['career_3'];
+        ValidationHelper::validateUsername($this->username);
+        ValidationHelper::validatePassword($this->password);
+        ValidationHelper::validateEmailAddress($this->email);
     }
 
     public function getUsername(): string
@@ -118,11 +138,19 @@ class SignupRequest
 
     public function getHobbies(): array
     {
-        return $this->hobbies;
+        $hobbies = [];
+        if (isset($this->hobby_1) && $this->hobby_1 !== '') array_push($hobbies, $this->hobby_1);
+        if (isset($this->hobby_2) && $this->hobby_2 !== '') array_push($hobbies, $this->hobby_2);
+        if (isset($this->hobby_3) && $this->hobby_3 !== '') array_push($hobbies, $this->hobby_3);
+        return $hobbies;
     }
 
     public function getCareers(): array
     {
-        return $this->careers;
+        $careers = [];
+        if (isset($this->career_1) && $this->career_1 !== '') array_push($careers, $this->career_1);
+        if (isset($this->career_2) && $this->career_2 !== '') array_push($careers, $this->career_2);
+        if (isset($this->career_3) && $this->career_3 !== '') array_push($careers, $this->career_3);
+        return $careers;
     }
 }
