@@ -9,6 +9,7 @@ use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InternalServerException;
 use Exceptions\InvalidRequestParameterException;
+use Exceptions\InvalidRequestURIException;
 use Helpers\FileUtility;
 use Helpers\MailUtility;
 use Http\Request\SignupRequest;
@@ -116,9 +117,9 @@ class SignupService
 
     public function sendVerificationEmail(User $user): void
     {
-        $url = Settings::env('BASE_URL') . '/api/validate?id=' . $this->publishUserVerificationURL($user);
-        $htmlBody = "Access the following URL to complete Sign-Up.<br><a href=" . $url . ">Verification Link</a>";
-        $textBody = "Access the following URL to complete Sign-Up." . PHP_EOL . $url;
+        $url = Settings::env('FRONT_URL') . '/validate_email?id=' . $this->publishUserVerificationURL($user);
+        $htmlBody = "Hello, " . $user->getName() . ".<br>" . "Access the following URL to complete Sign-Up.<br><a href=" . $url . ">Verification Link</a>";
+        $textBody = "Hello, " . $user->getName() . "." . PHP_EOL . "Access the following URL to complete Sign-Up." . PHP_EOL . $url;
         MailUtility::sendEmail(
             recipientEmail: $user->getEmail(),
             recipientName: $user->getName(),
@@ -133,12 +134,12 @@ class SignupService
         $this->emailVerificationDAOImpl->deleteExpiredHash();
         $emailVerification = $this->emailVerificationDAOImpl->getByHash($hash);
         if (is_null($emailVerification)) {
-            throw new InternalServerException('Invalid URL hash.');
+            throw new InvalidRequestURIException('Invalid Verification URL.');
         }
         $userId = $emailVerification->getUserId();
         $user = $this->usersDAOImpl->getById($userId);
         if (is_null($user)) {
-            throw new InternalServerException('Given URL has no related account.');
+            throw new InvalidRequestURIException('Given URL has no related account.');
         }
         $currentDatetime = date('Y-m-d H:i:s');
         $user->setEmailVerifiedAt($currentDatetime);

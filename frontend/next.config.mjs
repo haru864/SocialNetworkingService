@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'export',
+    // output: 'export',
     env: {
         // frontDomain: 'http://sns.test.com',
         FRONT_DOMAIN: 'http://localhost:3000',

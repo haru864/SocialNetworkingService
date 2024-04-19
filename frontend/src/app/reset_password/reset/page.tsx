@@ -1,7 +1,7 @@
 "use client"
 
 import * as ValidationUtil from '../../utils/ValidationUtil';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -61,7 +61,7 @@ async function handleSubmit(
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+function ResetPassword() {
     const [loading, setLoading] = useState(false);
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
@@ -127,5 +127,13 @@ export default function SignIn() {
                 <Copyright sx={{ mt: 8, mb: 4 }} />
             </Container>
         </ThemeProvider>
+    );
+}
+
+export default function WrappedComponent() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ResetPassword />
+        </Suspense>
     );
 }
