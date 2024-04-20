@@ -7,16 +7,15 @@ import Followers from './Followers';
 import Timeline from './Timeline';
 
 const ContentArea = () => {
-  const [tab, setTab] = useState('home'); // home, trends, followers の3タブ
-
+  const [tab, setTab] = useState('timeline');
   return (
     <div style={{ width: '80%', padding: '20px' }}>
       <div>
-        <Button variant="contained" color="primary" onClick={() => setTab('home')}>Home</Button>
+        <Button variant="contained" color="primary" onClick={() => setTab('timeline')}>Timeline</Button>
         <Button variant="contained" color="primary" onClick={() => setTab('trends')}>Trends</Button>
         <Button variant="contained" color="primary" onClick={() => setTab('followers')}>Followers</Button>
       </div>
-      {tab === 'home' && <Timeline />}
+      {tab === 'timeline' && <Timeline />}
       {tab === 'trends' && <Trends />}
       {tab === 'followers' && <Followers />}
     </div>

@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 const Sidebar = () => {
     return (
         <div style={{ width: '20%', backgroundColor: '#1DA1F2', padding: '20px', color: 'white' }}>
-            <h1>Twitter</h1>
+            <h1>Social Networking Service</h1>
             <List component="nav" aria-label="main mailbox folders">
                 <ListItem disablePadding>
                     <ListItemButton>
@@ -17,12 +17,27 @@ const Sidebar = () => {
                 </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
-                        <ListItemText primary="Trends" />
+                        <ListItemText primary="Profile" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemText primary="Notifications" />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemText primary="Followers" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemText primary="Tweet" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemText primary="Messages" />
                     </ListItemButton>
                 </ListItem>
             </List>
