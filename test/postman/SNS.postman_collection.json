@@ -1,0 +1,1392 @@
+{
+	"info": {
+		"_postman_id": "97dbfff0-25d0-4f9f-951c-d668c1435850",
+		"name": "SNS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16083717"
+	},
+	"item": [
+		{
+			"name": "ユーザー情報",
+			"item": [
+				{
+					"name": "[正常系]サインアップ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "takina",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Pass123@",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "t9348551@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "self_introduction",
+									"value": "hogehoge",
+									"type": "text"
+								},
+								{
+									"key": "profile_image",
+									"type": "file",
+									"src": "/home/haru/Pictures/icon_02 (1).jpg"
+								},
+								{
+									"key": "country",
+									"value": "country_01",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "state_01",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "city_01",
+									"type": "text"
+								},
+								{
+									"key": "town",
+									"value": "town_01",
+									"type": "text"
+								},
+								{
+									"key": "hobby_1",
+									"value": "hobby_1",
+									"type": "text"
+								},
+								{
+									"key": "hobby_2",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "hobby_3",
+									"value": "hobby_3",
+									"type": "text"
+								},
+								{
+									"key": "career_1",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "career_2",
+									"value": "career_2",
+									"type": "text"
+								},
+								{
+									"key": "career_3",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/signup",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[異常系]サインアップ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "dummy123",
+									"description": "入力必須、半角英数字、1-15文字",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "Pass12_4",
+									"description": "入力必須、半角英数字記号、8文字以上",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "t9348551@gmail.com",
+									"description": "入力必須、100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "self_introduction",
+									"value": "12345678901234567890123456789012345678901234567890",
+									"description": "50文字以内",
+									"type": "text"
+								},
+								{
+									"key": "profile_image",
+									"description": "JPEG, PNG, GIFのみ",
+									"type": "file",
+									"src": "/home/haru/Downloads/B5.pdf"
+								},
+								{
+									"key": "country",
+									"value": "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+									"description": "100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+									"description": "100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+									"description": "100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "town",
+									"value": "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+									"description": "100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "hobby_1",
+									"value": "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+									"description": "100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "hobby_2",
+									"value": "",
+									"description": "100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "hobby_3",
+									"value": "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+									"description": "100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "career_1",
+									"value": "",
+									"description": "100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "career_2",
+									"value": "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+									"description": "100文字以内",
+									"type": "text"
+								},
+								{
+									"key": "career_3",
+									"value": "",
+									"description": "100文字以内",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/signup",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]プロフィール取得",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/profile",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]プロフィール変更",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "edit",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "test_user_dummy",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pass",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "t9348551@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "self_introduction",
+									"value": "hogehoge_NEW2",
+									"type": "text"
+								},
+								{
+									"key": "profile_image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "country",
+									"value": "country_01",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "state_01",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "city_01",
+									"type": "text"
+								},
+								{
+									"key": "town",
+									"value": "town_01",
+									"type": "text"
+								},
+								{
+									"key": "hobbies[0]",
+									"value": "hobby_01",
+									"type": "text"
+								},
+								{
+									"key": "hobbies[1]",
+									"value": "hobby_02",
+									"type": "text"
+								},
+								{
+									"key": "hobbies[2]",
+									"value": "hobby_03",
+									"type": "text"
+								},
+								{
+									"key": "careers[0]",
+									"value": "job_01",
+									"type": "text"
+								},
+								{
+									"key": "careers[1]",
+									"value": "job_02",
+									"type": "text"
+								},
+								{
+									"key": "careers[2]",
+									"value": "job_03",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/profile",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]プロフィール削除",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "delete",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/profile",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ログイン/ログアウト",
+			"item": [
+				{
+					"name": "[正常系]ログイン",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"takina\",\n    \"password\": \"Pass123@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/login",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[異常系]ログイン_username",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // \"username\": \"d\",\n    \"password\": \"Test123_\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/login",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[異常系]ログイン_password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"test_user\"\n    // \"password\": \"------------\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/login",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ログアウト",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/logout",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ツイート",
+			"item": [
+				{
+					"name": "[正常系]ツイート投稿",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "test_user_03_tweet_02",
+									"type": "text"
+								},
+								{
+									"key": "media",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/tweets",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]ツイート取得_ユーザー",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/tweets?type=user&page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "user"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]ツイート取得_フォロワー",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/tweets?type=follower&page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "follower"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]ツイート取得_トレンド",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/tweets?type=trend&page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "trend"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "いいね",
+			"item": [
+				{
+					"name": "[正常系]いいね",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"add_like\",\n    \"tweet_id\": 27\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/likes",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]いいね取り消し",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"remove_like\",\n    \"tweet_id\": 15\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/likes",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]いいねしたユーザー取得",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"get_users\",\n    \"tweet_id\": 15\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/likes",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "フォロー",
+			"item": [
+				{
+					"name": "フォロー追加",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"add_follow\",\n    \"followee_id\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/follows",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"follows"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "フォロー削除",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"remove_follow\",\n    \"followee_id\": 21\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/follows",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"follows"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "フォロワー取得",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"get_followers\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/follows",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"follows"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "フォロイー取得",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"get_followees\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/follows",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"follows"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "リプライ",
+			"item": [
+				{
+					"name": "[正常系]リプライ投稿",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "reply_to_29",
+									"type": "text"
+								},
+								{
+									"key": "media",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/tweets/29/replies",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets",
+								"29",
+								"replies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]リプライ取得",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/tweets/15/replies?page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets",
+								"15",
+								"replies"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "リツイート",
+			"item": [
+				{
+					"name": "[正常系]リツイート",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/tweets/30/retweets",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets",
+								"30",
+								"retweets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]リツイート一覧取得",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/tweets/15/retweets",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets",
+								"15",
+								"retweets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DM",
+			"item": [
+				{
+					"name": "DM送信",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "aaaaaa",
+									"type": "text"
+								},
+								{
+									"key": "media",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/messages/20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"messages",
+								"20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DM履歴取得",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/messages/21?page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"messages",
+								"21"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DM履歴削除",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/messages/20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"messages",
+								"20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DM一覧取得",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/messages?page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"messages"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "パスワード再設定",
+			"item": [
+				{
+					"name": "[正常系]再設定用メール送信",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"send_email\",\n    \"username\": \"test_user\",\n    \"email\": \"t9348551@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/reset_password",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"reset_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[異常系]再設定用メール送信_action",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // \"action\": \"send_emai1\",\n    \"username\": \"test_user\",\n    \"email\": \"t9348551@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/reset_password",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"reset_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[異常系]再設定用メール送信_username",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"send_email\",\n    // \"username\": \"1111111\",\n    \"email\": \"t9348551@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/reset_password",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"reset_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[異常系]再設定用メール送信_email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"send_email\",\n    \"username\": \"test_user\"\n    // \"email\": \"t9348551@gmail.commmmm\"  // 存在しない\n    // \"email\": \"invalidemail\"  // メールアドレスのフォーマットに合わない\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/reset_password",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"reset_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]パスワード再設定",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"reset_password\",\n    \"new_password\": \"Test123_\",\n    \"hash\": \"f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/reset_password",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"reset_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[異常系]パスワード再設定_hash",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"reset_password\",\n    \"new_password\": \"test\"\n    // \"hash\": \"f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/reset_password",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"reset_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[異常系]パスワード再設定_password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"reset_password\",\n    // \"new_password\": \"Test1_\",\n    // \"new_password\": \"123\",\n    // \"new_password\": \"Test_++++\",\n    \"hash\": \"f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/reset_password",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"reset_password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "メール認証",
+			"item": [
+				{
+					"name": "[正常系]メール認証",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/validate_email?id=ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"validate_email"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -4,6 +4,7 @@ namespace Services;
 
 use Database\DataAccess\Implementations\RetweetsDAOImpl;
 use Exceptions\InvalidRequestParameterException;
+use Helpers\SessionManager;
 use Http\Request\RetweetsRequest;
 use Models\Retweet;
 
@@ -16,9 +17,8 @@ class RetweetService
         $this->retweetsDAOImpl = $retweetsDAOImpl;
     }
 
-    public function createRetweet(RetweetsRequest $request): void
+    public function createRetweet(RetweetsRequest $request, int $userId): void
     {
-        $userId = $_SESSION['user_id'];
         $tweetId = $request->getTweetId();
         $retweetInTable = $this->retweetsDAOImpl->getRetweet($userId, $tweetId);
         if (!is_null($retweetInTable)) {

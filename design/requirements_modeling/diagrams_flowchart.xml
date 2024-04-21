@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-04-19T08:17:36.033Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="5Em8CyJmcouTFta1p430" version="24.2.5" type="device">
+<mxfile host="app.diagrams.net" modified="2024-04-21T08:48:26.557Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="dmb_R00XFie4xVo7pJ75" version="24.2.5" type="device">
   <diagram name="ページ1" id="jvqJN53400dJCz2KRvl1">
     <mxGraphModel dx="2901" dy="2288" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -44,7 +44,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-9" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.006;exitY=0.509;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" target="fPiDNAXwSVPGr6-VXFNg-5" edge="1" source="vfflkcrHxcgvH3S9TyXe-1">
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-9" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.006;exitY=0.509;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="vfflkcrHxcgvH3S9TyXe-1" target="fPiDNAXwSVPGr6-VXFNg-5" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="970" y="756" as="sourcePoint" />
             <mxPoint x="1110" y="670" as="targetPoint" />
@@ -59,8 +59,8 @@
         <mxCell id="fPiDNAXwSVPGr6-VXFNg-12" value="フォロワー一覧画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
           <mxGeometry x="1535" y="1498.5" width="230" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="fPiDNAXwSVPGr6-VXFNg-13" value="通知一覧画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
-          <mxGeometry x="1520" y="1034.5" width="230" height="115" as="geometry" />
+        <mxCell id="fPiDNAXwSVPGr6-VXFNg-13" value="通知一覧画面&lt;div&gt;通知対象：DM、いいね、リツイート、返信&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1520" y="1034.5" width="280" height="105.5" as="geometry" />
         </mxCell>
         <mxCell id="fPiDNAXwSVPGr6-VXFNg-14" value="投稿画面" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
           <mxGeometry x="1550" y="1718" width="200" height="100" as="geometry" />
@@ -207,7 +207,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="U3b-cSCGvBMcpt9S6771-19" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0;exitDx=230;exitDy=72.5;exitPerimeter=0;dashed=1;strokeColor=#FF0000;strokeWidth=2;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-13" target="fPiDNAXwSVPGr6-VXFNg-16" edge="1">
+        <mxCell id="U3b-cSCGvBMcpt9S6771-19" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0;exitDx=280;exitDy=67.75;exitPerimeter=0;dashed=1;strokeColor=#FF0000;strokeWidth=2;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-13" target="fPiDNAXwSVPGr6-VXFNg-16" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1960" y="965" as="sourcePoint" />
             <mxPoint x="2140" y="950" as="targetPoint" />
@@ -216,7 +216,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="U3b-cSCGvBMcpt9S6771-20" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0;exitDx=230;exitDy=72.5;exitPerimeter=0;dashed=1;strokeColor=#FF0000;strokeWidth=2;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-13" target="fPiDNAXwSVPGr6-VXFNg-17" edge="1">
+        <mxCell id="U3b-cSCGvBMcpt9S6771-20" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0;exitDx=280;exitDy=67.75;exitPerimeter=0;dashed=1;strokeColor=#FF0000;strokeWidth=2;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-13" target="fPiDNAXwSVPGr6-VXFNg-17" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="2090" y="1075" as="sourcePoint" />
             <mxPoint x="2270" y="690" as="targetPoint" />
@@ -243,7 +243,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="U3b-cSCGvBMcpt9S6771-26" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0;entryY=0;entryDx=200;entryDy=65;entryPerimeter=0;exitX=0;exitY=0;exitDx=230;exitDy=72.5;exitPerimeter=0;dashed=1;strokeColor=#FF0000;strokeWidth=2;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-13" target="U3b-cSCGvBMcpt9S6771-22" edge="1">
+        <mxCell id="U3b-cSCGvBMcpt9S6771-26" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0;entryY=0;entryDx=200;entryDy=65;entryPerimeter=0;exitX=0;exitY=0;exitDx=280;exitDy=67.75;exitPerimeter=0;dashed=1;strokeColor=#FF0000;strokeWidth=2;" parent="1" source="fPiDNAXwSVPGr6-VXFNg-13" target="U3b-cSCGvBMcpt9S6771-22" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="2040" y="1010" as="sourcePoint" />
             <mxPoint x="2270" y="1360" as="targetPoint" />
@@ -265,7 +265,7 @@
           <mxGeometry x="970" y="1220" width="410" height="390" as="geometry" />
         </mxCell>
         <mxCell id="MpfklGeY8ykCIYBafUsi-12" value="&lt;div&gt;▼DM一覧取得&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/messages?&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;page=1~N&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;amp;limit=20&lt;/span&gt;&lt;/div&gt;&lt;div&gt;GET&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;{&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;chats&quot;: [&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; {&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;user&quot;: {&quot;id&quot;: users.id,&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;name&quot;: users.name}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;latest_message&quot;: {&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;message&quot;: messages.message&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;media_file_name&quot;: messages.media_file_name&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; ]&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;-------------------------------------------------------------------------------&lt;br&gt;&lt;/div&gt;&lt;div&gt;▼個別DM履歴取得&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/messages/{user_id}&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;?&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;page=1~N&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;amp;limit=20&lt;/span&gt;&lt;/div&gt;&lt;div&gt;GET&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;{&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &quot;messages&quot;: {&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; ＜messageオブジェクト＞,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; ...&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; }&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;-------------------------------------------------------------------------------&lt;br&gt;&lt;/div&gt;&lt;div&gt;▼個別DM送信&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/messages/{user_id}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;POST&lt;/div&gt;&lt;div&gt;multipart/form-data&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&quot;message&quot;=＜DM本文 200文字まで＞&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&quot;media&quot;=＜画像・動画ファイル＞&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;[]&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;-------------------------------------------------------------------------------&lt;br&gt;&lt;/div&gt;&lt;div&gt;▼チャット削除&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;https://sns.haru864.com/api/messages/{user_id}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;DELETE&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;＞ レスポンス&lt;/div&gt;&lt;div&gt;&lt;div&gt;application/json&lt;/div&gt;&lt;div&gt;[]&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="1060" y="2050" width="600" height="760" as="geometry" />
+          <mxGeometry x="2410" y="1600" width="600" height="760" as="geometry" />
         </mxCell>
         <mxCell id="c9x4zdmZLx5BV9fpw1Kt-3" value="ログアウト" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
           <mxGeometry x="1550" y="1200" width="110" height="48" as="geometry" />
@@ -344,6 +344,27 @@
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="250" y="270" as="sourcePoint" />
             <mxPoint x="343" y="271" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="E2qn_JuRDx1uFyB4QPU6-1" value="アプリバー" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1120" y="2190" width="210" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="E2qn_JuRDx1uFyB4QPU6-2" value="検索" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1490" y="2216" width="110" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="E2qn_JuRDx1uFyB4QPU6-4" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.995;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="E2qn_JuRDx1uFyB4QPU6-1" target="E2qn_JuRDx1uFyB4QPU6-2" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1350" y="2240.5" as="sourcePoint" />
+            <mxPoint x="1481" y="2239.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="E2qn_JuRDx1uFyB4QPU6-5" value="検索結果一覧&lt;div&gt;タブ１：キーワードを名前に含むユーザー&lt;/div&gt;&lt;div&gt;タブ２：キーワードを含むツイート&lt;/div&gt;&lt;div&gt;タブ３：キーワードを住所に含むユーザー&lt;/div&gt;&lt;div&gt;タブ４：キーワードを趣味に含むユーザー&lt;/div&gt;&lt;div&gt;タブ５：キーワードを職歴に含むユーザー&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1755" y="2149" width="290" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="E2qn_JuRDx1uFyB4QPU6-7" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="E2qn_JuRDx1uFyB4QPU6-5" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1600" y="2238" as="sourcePoint" />
+            <mxPoint x="1755" y="2246" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>

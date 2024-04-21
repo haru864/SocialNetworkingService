@@ -5,6 +5,7 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
+use Helpers\SessionManager;
 use Http\Request\RetweetsRequest;
 use Services\RetweetService;
 
@@ -35,7 +36,7 @@ class RetweetController implements ControllerInterface
 
     public function postRetweet(RetweetsRequest $request): JSONRenderer
     {
-        $this->retweetService->createRetweet($request);
+        $this->retweetService->createRetweet($request, SessionManager::get('user_id'));
         return new JSONRenderer(200, []);
     }
 }

@@ -6,6 +6,7 @@ use Database\DataAccess\Implementations\MessagesDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
+use Helpers\SessionManager;
 use Helpers\ValidationHelper;
 use Http\Request\GetMessagesRequest;
 use Http\Request\PostMessageRequest;
@@ -58,7 +59,7 @@ class MessageService
         }
         $message = new Message(
             id: null,
-            senderId: $_SESSION['user_id'],
+            senderId: SessionManager::get('user_id'),
             recipientId: $request->getRecipientUserId(),
             message: $request->getMessage(),
             mediaFileName: $mediaFileName,

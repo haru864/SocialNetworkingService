@@ -6,6 +6,7 @@ use Database\DataAccess\Implementations\TweetsDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
+use Helpers\SessionManager;
 use Helpers\ValidationHelper;
 use Http\Request\GetTweetsRequest;
 use Http\Request\LoginRequest;
@@ -62,7 +63,7 @@ class TweetService
         $tweet = new Tweet(
             id: null,
             replyToId: null,
-            userId: $_SESSION['user_id'],
+            userId: SessionManager::get('user_id'),
             message: $tweetMessage,
             mediaFileName: $mediaFileName,
             mediaType: $mimeType,
@@ -74,7 +75,7 @@ class TweetService
 
     public function getTweetsByUser(GetTweetsRequest $request): ?array
     {
-        $userId = $_SESSION['user_id'];
+        $userId = SessionManager::get('user_id');
         $page = $request->getPage();
         $limit = $request->getLimit();
         $offset = ($page - 1) * $limit;
@@ -101,7 +102,7 @@ class TweetService
 
     public function getTweetsByFollows(GetTweetsRequest $request): ?array
     {
-        $userId = $_SESSION['user_id'];
+        $userId = SessionManager::get('user_id');
         $page = $request->getPage();
         $limit = $request->getLimit();
         $offset = ($page - 1) * $limit;

@@ -81,6 +81,7 @@ $URL_DIR_PATTERN_FOLLOWS = '/^\/api\/follows$/';
 $URL_DIR_PATTERN_PROFILE = '/^\/api\/profile$/';
 $URL_DIR_PATTERN_MESSAGES = '/^\/api\/messages(\/\d+)?$/';
 
+// TODO Nginxのauth_requestモジュールでリクエストを認証用PHPスクリプトに送り、メディアファイルアクセスを許可または拒否する
 return [
     $URL_DIR_PATTERN_LOGIN => [
         'controller' => $loginController,

@@ -5,6 +5,7 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
+use Helpers\SessionManager;
 use Http\Request\GetProfileRequest;
 use Http\Request\PostProfileRequest;
 use Services\ProfileService;
@@ -42,27 +43,26 @@ class ProfileController implements ControllerInterface
 
     private function getProfile(): JSONRenderer
     {
-        $userId = $_SESSION['user_id'];
+        $userId = SessionManager::get('user_id');
         $profile = $this->profileService->getUserInfo($userId);
         return new JSONRenderer(200, ['profile' => $profile]);
     }
 
     private function updateProfile(PostProfileRequest $request): JSONRenderer
     {
-        $newUser = $this->profileService->updateUser($request, $_SESSION['user_id']);
+        $newUser = $this->profileService->updateUser($request, SessionManager::get('user_id'));
         if (is_null($newUser->getEmailVerifiedAt())) {
             $this->signupService->sendVerificationEmail($newUser);
         } else {
-            session_start();
-            $_SESSION['user_id'] = $newUser->getId();
-            $_SESSION['user_name'] = $newUser->getName();
+            SessionManager::set('user_id', $newUser->getId());
+            SessionManager::set('user_name', $newUser->getName());
         }
         return new JSONRenderer(200, []);
     }
 
     private function deleteProfile(): JSONRenderer
     {
-        $userId = $_SESSION['user_id'];
+        $userId = SessionManager::get('user_id');
         $this->profileService->deleteUser($userId);
         return new JSONRenderer(200, []);
     }

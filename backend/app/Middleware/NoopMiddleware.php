@@ -6,7 +6,6 @@ use Controllers\Interface\ControllerInterface;
 use Middleware\Interface\MiddlewareInterface;
 use Render\interface\HTTPRenderer;
 use Render\JSONRenderer;
-use Settings\Settings;
 
 class NoopMiddleware implements MiddlewareInterface
 {

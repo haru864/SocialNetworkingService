@@ -5,6 +5,7 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
+use Helpers\SessionManager;
 use Http\Request\DeleteMessagesRequest;
 use Http\Request\GetMessagesRequest;
 use Http\Request\PostMessageRequest;
@@ -36,7 +37,7 @@ class MessageController implements ControllerInterface
 
     private function getMessages(GetMessagesRequest $request): JSONRenderer
     {
-        $userId = $_SESSION['user_id'];
+        $userId = SessionManager::get('user_id');
         $recipientUserId = $request->getRecipientUserId();
         $limit = $request->getLimit();
         $offset = ($request->getPage() - 1) * $limit;
@@ -58,7 +59,7 @@ class MessageController implements ControllerInterface
 
     private function deleteMessages(DeleteMessagesRequest $request): JSONRenderer
     {
-        $this->messageService->deleteChat($_SESSION['user_id'], $request->getRecipientUserId());
+        $this->messageService->deleteChat(SessionManager::get('user_id'), $request->getRecipientUserId());
         return new JSONRenderer(200, []);
     }
 }

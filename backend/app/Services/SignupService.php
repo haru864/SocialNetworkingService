@@ -74,15 +74,24 @@ class SignupService
             );
             $userInTable = null;
             $userInTable = $this->usersDAOImpl->create($user);
-            $address = new Address(
-                id: null,
-                userId: $userInTable->getId(),
-                country: $request->getCountry(),
-                state: $request->getState(),
-                city: $request->getCity(),
-                town: $request->getTown()
-            );
-            $this->addressesDAOImpl->create($address);
+
+            if (
+                $request->getCountry() !== ''
+                || $request->getState() !== ''
+                || $request->getCity() !== ''
+                || $request->getTown() !== ''
+            ) {
+                $address = new Address(
+                    id: null,
+                    userId: $userInTable->getId(),
+                    country: $request->getCountry(),
+                    state: $request->getState(),
+                    city: $request->getCity(),
+                    town: $request->getTown()
+                );
+                $this->addressesDAOImpl->create($address);
+            }
+
             foreach ($request->getCareers() as $job) {
                 $career = new Career(
                     id: null,
@@ -91,6 +100,7 @@ class SignupService
                 );
                 $this->careersDAOImpl->create($career);
             }
+
             foreach ($request->getHobbies() as $hobby) {
                 $hobbyObj = new Hobby(
                     id: null,
@@ -99,6 +109,7 @@ class SignupService
                 );
                 $this->hobbiesDAOImpl->create($hobbyObj);
             }
+
             return $userInTable;
         } catch (Throwable $t) {
             if (isset($profileImage)) {

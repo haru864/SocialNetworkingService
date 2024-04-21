@@ -14,9 +14,8 @@ class LikeService
         $this->likesDAOImpl = $likesDAOImpl;
     }
 
-    public function addLike(int $tweetId): void
+    public function addLike(int $userId, int $tweetId): void
     {
-        $userId = $_SESSION['user_id'];
         $like = new Like(
             id: null,
             userId: $userId,
@@ -27,9 +26,8 @@ class LikeService
         return;
     }
 
-    public function removeLike(int $tweetId): void
+    public function removeLike(int $userId, int $tweetId): void
     {
-        $userId = $_SESSION['user_id'];
         $this->likesDAOImpl->delete($userId, $tweetId);
         return;
     }

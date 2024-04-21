@@ -5,6 +5,7 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
+use Helpers\SessionManager;
 use Http\Request\SignupRequest;
 use Http\Request\ValidateEmailRequest;
 use Services\SignupService;
@@ -44,9 +45,8 @@ class SignupController implements ControllerInterface
     private function validateEmail(ValidateEmailRequest $request): JSONRenderer
     {
         $user = $this->signupService->validateEmail($request->getId());
-        session_start();
-        $_SESSION['user_id'] = $user->getId();
-        $_SESSION['user_name'] = $user->getName();
+        SessionManager::set('user_id', $user->getId());
+        SessionManager::set('user_name', $user->getName());
         return new JSONRenderer(200, []);
     }
 }

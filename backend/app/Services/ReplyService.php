@@ -5,6 +5,7 @@ namespace Services;
 use Database\DataAccess\Implementations\TweetsDAOImpl;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
+use Helpers\SessionManager;
 use Helpers\ValidationHelper;
 use Http\Request\GetRepliesRequest;
 use Http\Request\PostReplyRequest;
@@ -59,7 +60,7 @@ class ReplyService
         $tweet = new Tweet(
             id: null,
             replyToId: $request->getTweetId(),
-            userId: $_SESSION['user_id'],
+            userId: SessionManager::get('user_id'),
             message: $tweetMessage,
             mediaFileName: $mediaFileName,
             mediaType: $mimeType,

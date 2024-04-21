@@ -5,6 +5,7 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
+use Helpers\SessionManager;
 use Http\Request\LikeRequest;
 use Services\LikeService;
 
@@ -39,13 +40,13 @@ class LikeController implements ControllerInterface
 
     private function addLike(LikeRequest $request): JSONRenderer
     {
-        $this->likeService->addLike($request->getTweetId());
+        $this->likeService->addLike(SessionManager::get('user_id'), $request->getTweetId());
         return new JSONRenderer(200, []);
     }
 
     private function removeLike(LikeRequest $request): JSONRenderer
     {
-        $this->likeService->removeLike($request->getTweetId());
+        $this->likeService->removeLike(SessionManager::get('user_id'), $request->getTweetId());
         return new JSONRenderer(200, []);
     }
 

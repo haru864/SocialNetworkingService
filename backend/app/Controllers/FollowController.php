@@ -5,6 +5,7 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
+use Helpers\SessionManager;
 use Http\Request\FollowRequest;
 use Services\FollowService;
 
@@ -42,7 +43,7 @@ class FollowController implements ControllerInterface
     private function addFollow(FollowRequest $request): JSONRenderer
     {
         $resp = [];
-        $userId = $_SESSION['user_id'];
+        $userId = SessionManager::get('user_id');
         $this->followService->addFollow($userId, $request->getFolloweeId());
         return new JSONRenderer(200, $resp);
     }
@@ -50,7 +51,7 @@ class FollowController implements ControllerInterface
     private function removeFollow(FollowRequest $request): JSONRenderer
     {
         $resp = [];
-        $userId = $_SESSION['user_id'];
+        $userId = SessionManager::get('user_id');
         $this->followService->removeFollow($userId, $request->getFolloweeId());
         return new JSONRenderer(200, $resp);
     }
@@ -58,7 +59,7 @@ class FollowController implements ControllerInterface
     private function getFollowers(FollowRequest $request): JSONRenderer
     {
         $resp = [];
-        $userId = $_SESSION['user_id'];
+        $userId = SessionManager::get('user_id');
         $resp = $this->followService->getFollowers($userId);
         return new JSONRenderer(200, $resp);
     }
@@ -66,7 +67,7 @@ class FollowController implements ControllerInterface
     private function getFollowees(FollowRequest $request): JSONRenderer
     {
         $resp = [];
-        $userId = $_SESSION['user_id'];
+        $userId = SessionManager::get('user_id');
         $resp = $this->followService->getFollowees($userId);
         return new JSONRenderer(200, $resp);
     }

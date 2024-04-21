@@ -5,6 +5,7 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
+use Helpers\SessionManager;
 use Http\Request\LoginRequest;
 use Services\LoginService;
 
@@ -34,9 +35,8 @@ class LoginController implements ControllerInterface
     private function login(LoginRequest $loginRequest): JSONRenderer
     {
         $user = $this->loginService->login($loginRequest);
-        session_start();
-        $_SESSION['user_id'] = $user->getId();
-        $_SESSION['user_name'] = $user->getName();
+        SessionManager::set('user_id', $user->getId());
+        SessionManager::set('user_name', $user->getName());
         return new JSONRenderer(200, []);
     }
 }

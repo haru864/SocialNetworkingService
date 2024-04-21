@@ -36,6 +36,7 @@ class JSONRenderer implements HTTPRenderer
             'Access-Control-Allow-Origin' => $allowedOrigin,
             'Access-Control-Allow-Methods' => $allowedMethods,
             'Access-Control-Allow-Headers' => $allowedHeaders,
+            'Access-Control-Allow-Credentials' => 'true',
         ];
     }
 

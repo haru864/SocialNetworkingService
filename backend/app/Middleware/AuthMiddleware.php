@@ -8,7 +8,7 @@ use Exceptions\InvalidSessionException;
 use Middleware\Interface\MiddlewareInterface;
 use Render\interface\HTTPRenderer;
 use Render\JSONRenderer;
-use Settings\Settings;
+use Helpers\SessionManager;
 
 class AuthMiddleware implements MiddlewareInterface
 {
@@ -17,14 +17,13 @@ class AuthMiddleware implements MiddlewareInterface
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             return new JSONRenderer(200, []);
         }
-        session_start();
-        if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_name'])) {
+        if (is_null(SessionManager::get('user_id')) || is_null(SessionManager::get('user_name'))) {
             throw new InvalidSessionException('Request has no session.');
         }
         $usersDAOImpl = new UsersDAOImpl();
         // TODO インメモリデータベース(Redis)で高速化する
-        $userSelectedById = $usersDAOImpl->getById($_SESSION['user_id']);
-        $userSelectedByName = $usersDAOImpl->getByName($_SESSION['user_name']);
+        $userSelectedById = $usersDAOImpl->getById(SessionManager::get('user_id'));
+        $userSelectedByName = $usersDAOImpl->getByName(SessionManager::get('user_name'));
         if (is_null($userSelectedById) || is_null($userSelectedByName)) {
             throw new InvalidSessionException('Given session has no related user.');
         }

@@ -7,14 +7,20 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
+import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
+import InboxIcon from '@mui/icons-material/Inbox';
+import MailIcon from '@mui/icons-material/Mail';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import PeopleIcon from '@mui/icons-material/People';
+import MessageIcon from '@mui/icons-material/Message';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
@@ -74,7 +80,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 interface CommonLayoutProps {
-    children: React.ReactNode;  // 子コンポーネントを受け取る
+    children: React.ReactNode;
 }
 
 const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
@@ -96,33 +102,31 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
         }
     };
 
+    const menuItems = [
+        { name: 'Home', path: '/home', icon: <InboxIcon /> },
+        { name: 'Profile', path: '/profile', icon: <MailIcon /> },
+        { name: 'Notifications', path: '/notifications', icon: <NotificationsIcon /> },
+        { name: 'Followers', path: '/followers', icon: <PeopleIcon /> },
+        { name: 'Tweet', path: '/tweet', icon: <MessageIcon /> },
+        { name: 'Messages', path: '/messages', icon: <QuestionAnswerIcon /> },
+        { name: 'Log out', path: '/logout', icon: <LogoutIcon /> },
+    ];
     const drawer = (
         <div>
             <Toolbar />
             <Divider />
             <List>
-                {['Home', 'Profile', 'Notifications', 'Followers', 'Tweet', 'Messages'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {['Log out'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
+                {menuItems.map((item) => (
+                    <Link key={item.name} href={item.path} variant="body2">
+                        <ListItem key={item.name} disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    {item.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={item.name} />
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
                 ))}
             </List>
         </div>
