@@ -18,6 +18,10 @@ use Database\DataAccess\Implementations\FollowsDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\LikesDAOImpl;
 use Database\DataAccess\Implementations\MessagesDAOImpl;
+use Database\DataAccess\Implementations\PendingAddressesDAOImpl;
+use Database\DataAccess\Implementations\PendingCareersDAOImpl;
+use Database\DataAccess\Implementations\PendingHobbiesDAOImpl;
+use Database\DataAccess\Implementations\PendingUsersDAOImpl;
 use Database\DataAccess\Implementations\TweetsDAOImpl;
 use Database\DataAccess\Implementations\RetweetsDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
@@ -44,9 +48,23 @@ $retweetsDAOImpl = new RetweetsDAOImpl();
 $likesDAOImpl = new LikesDAOImpl();
 $followsDAOImpl = new FollowsDAOImpl();
 $messagesDAOImpl = new MessagesDAOImpl();
+$pendingUsersDAOImpl = new PendingUsersDAOImpl();
+$pendingAddressesDAOImpl = new PendingAddressesDAOImpl();
+$pendingCareersDAOImpl = new PendingCareersDAOImpl();
+$pendingHobbiesDAOImpl = new PendingHobbiesDAOImpl();
 
 $loginService = new LoginService($usersDAOImpl);
-$signupService = new SignupService($usersDAOImpl, $addressesDAOImpl, $careersDAOImpl, $hobbiesDAOImpl, $emailVerificationDAOImpl);
+$signupService = new SignupService(
+    $usersDAOImpl,
+    $addressesDAOImpl,
+    $careersDAOImpl,
+    $hobbiesDAOImpl,
+    $pendingUsersDAOImpl,
+    $pendingAddressesDAOImpl,
+    $pendingCareersDAOImpl,
+    $pendingHobbiesDAOImpl,
+    $emailVerificationDAOImpl
+);
 $tweetService = new TweetService($tweetsDAOImpl);
 $retweetService = new RetweetService($retweetsDAOImpl);
 $replyService = new ReplyService($tweetsDAOImpl);

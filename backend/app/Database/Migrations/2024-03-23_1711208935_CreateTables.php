@@ -12,8 +12,13 @@ class CreateTables implements Database\SchemaMigration
         return [
             "CREATE TABLE users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                name varchar(30) UNIQUE NOT NULL,
-                self_introduction varchar(50) NOT NULL
+                name varchar(15) UNIQUE NOT NULL,
+                password_hash varchar(255) NOT NULL,
+                email varchar(100) NOT NULL,
+                self_introduction varchar(50),
+                profile_image varchar(80),
+                created_at DATETIME NOT NULL,
+                last_login DATETIME NOT NULL
             )",
             "CREATE TABLE careers (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,8 +51,8 @@ class CreateTables implements Database\SchemaMigration
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 reply_to_id INT,
                 user_id INT NOT NULL,
-                message VARCHAR(255) NOT NULL,
-                media_file_path VARCHAR(255),
+                message VARCHAR(200) NOT NULL,
+                media_file_name VARCHAR(255),
                 media_type VARCHAR(255),
                 posting_datetime DATETIME NOT NULL,
                 FOREIGN KEY (reply_to_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -58,6 +63,7 @@ class CreateTables implements Database\SchemaMigration
                 user_id INT NOT NULL,
                 tweet_id INT NOT NULL,
                 retweet_datetime DATETIME NOT NULL,
+                UNIQUE(user_id, tweet_id),
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 FOREIGN KEY (tweet_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
@@ -73,16 +79,23 @@ class CreateTables implements Database\SchemaMigration
             )",
             "CREATE TABLE likes (
                 id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
                 tweet_id INT NOT NULL,
                 like_datetime DATETIME NOT NULL,
+                UNIQUE(user_id, tweet_id),
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 FOREIGN KEY (tweet_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE messages (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 sender_id INT NOT NULL,
                 recipient_id INT NOT NULL,
-                message varchar(255) NOT NULL,
-                send_datetime DATETIME NOT NULL
+                message varchar(200) NOT NULL,
+                media_file_name VARCHAR(255),
+                media_type VARCHAR(255),
+                send_datetime DATETIME NOT NULL,
+                FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE retweet_notifications (
                 id INT AUTO_INCREMENT PRIMARY KEY,

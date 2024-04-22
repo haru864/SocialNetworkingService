@@ -8,6 +8,7 @@ use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
+use Helpers\MailUtility;
 use Helpers\ValidationHelper;
 use Http\Request\PostProfileRequest;
 use Models\Address;
@@ -36,7 +37,6 @@ class ProfileService
         $this->hobbiesDAOImpl = $hobbiesDAOImpl;
     }
 
-    // TODO 更新回数によってはidが枯渇するので、idカラムの削除などを検討する
     // TODO メールアドレスを誤って変更した場合に認証ができずに詰むため、メール認証が完了するまで変更を反映しないようにする
     public function updateUser(PostProfileRequest $request, int $userId): User
     {
@@ -53,7 +53,6 @@ class ProfileService
         ) {
             throw new InvalidRequestParameterException("Specified username is already used.");
         }
-
         try {
             $profileImage = null;
             if ($request->getProfileImage() !== null) {
@@ -136,6 +135,23 @@ class ProfileService
                 );
             }
         }
+    }
+
+    public function sendVerificationEmail(User $user, string $verificationUrl): void
+    {
+        $url = Settings::env('FRONT_URL') . '/validate_email?id=' . $verificationUrl;
+        $htmlBody = "Hello, " . $user->getName() . ".<br>";
+        $htmlBody .= "Access the following URL to update profile.<br><a href=" . $url . ">Verification Link</a>";
+        $textBody = "Hello, " . $user->getName() . "." . PHP_EOL;
+        $textBody .= "Access the following URL to update profile." . PHP_EOL;
+        $textBody .= $url;
+        MailUtility::sendEmail(
+            recipientEmail: $user->getEmail(),
+            recipientName: $user->getName(),
+            subject: 'Profile Update Email Verification',
+            htmlBody: $htmlBody,
+            textBody: $textBody
+        );
     }
 
     public function getUserInfo(int $userId): array

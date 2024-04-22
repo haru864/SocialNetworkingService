@@ -51,12 +51,12 @@ class ProfileController implements ControllerInterface
     private function updateProfile(PostProfileRequest $request): JSONRenderer
     {
         $newUser = $this->profileService->updateUser($request, SessionManager::get('user_id'));
-        if (is_null($newUser->getEmailVerifiedAt())) {
-            $this->signupService->sendVerificationEmail($newUser);
-        } else {
-            SessionManager::set('user_id', $newUser->getId());
-            SessionManager::set('user_name', $newUser->getName());
+        $verificationUrl = $this->signupService->publishUserVerificationURL($newUser);
+        if (!is_null($newUser->getEmailVerifiedAt())) {
+            $this->profileService->sendVerificationEmail($newUser, $verificationUrl);
         }
+        SessionManager::set('user_id', $newUser->getId());
+        SessionManager::set('user_name', $newUser->getName());
         return new JSONRenderer(200, []);
     }
 

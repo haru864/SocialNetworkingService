@@ -15,37 +15,33 @@ class UsersDAOImpl implements UsersDAO
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
             INSERT INTO users (
-                id,
                 name,
                 password_hash,
                 email,
                 self_introduction,
                 profile_image,
                 created_at,
-                last_login,
-                email_verified_at
+                last_login
             )
             VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?
             )
         SQL;
         $result = $mysqli->prepareAndExecute(
             $query,
-            'issssssss',
+            'sssssss',
             [
-                $user->getId(),
                 $user->getName(),
                 $user->getPasswordHash(),
                 $user->getEmail(),
                 $user->getSelfIntroduction(),
                 $user->getProfileImage(),
                 $user->getCreatedAt(),
-                $user->getLastLogin(),
-                $user->getEmailVerifiedAt()
+                $user->getLastLogin()
             ],
         );
         if (!$result) {
-            throw new QueryFailedException("INSERT INTO 'users' failed.");
+            throw new QueryFailedException("INSERT failed.");
         }
         $user->setId($mysqli->insert_id);
         return $user;
@@ -87,8 +83,7 @@ class UsersDAOImpl implements UsersDAO
                 self_introduction = ?,
                 profile_image = ?,
                 created_at = ?,
-                last_login = ?,
-                email_verified_at = ?
+                last_login = ?
             WHERE
                 id = ?
         SQL;
@@ -103,12 +98,11 @@ class UsersDAOImpl implements UsersDAO
                 $user->getProfileImage(),
                 $user->getCreatedAt(),
                 $user->getLastLogin(),
-                $user->getEmailVerifiedAt(),
                 $user->getId()
             ],
         );
         if (!$result) {
-            throw new QueryFailedException("UPDATE 'users' failed.");
+            throw new QueryFailedException("UPDATE failed.");
         }
         return $mysqli->insert_id;
     }
@@ -141,7 +135,6 @@ class UsersDAOImpl implements UsersDAO
             profile_image: $data['profile_image'],
             created_at: $data['created_at'],
             last_login: $data['last_login'],
-            email_verified_at: $data['email_verified_at']
         );
     }
 }

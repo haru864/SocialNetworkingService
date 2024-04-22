@@ -15,7 +15,7 @@ class EmailVerificationDAOImpl implements EmailVerificationDAO
         $query = <<<SQL
             INSERT INTO email_verification (
                 hash,
-                user_id,
+                pending_user_id,
                 created_at,
                 expired_at
             )
@@ -28,7 +28,7 @@ class EmailVerificationDAOImpl implements EmailVerificationDAO
             'siss',
             [
                 $emailVerification->getHash(),
-                $emailVerification->getUserId(),
+                $emailVerification->getPendingUserId(),
                 $emailVerification->getCreatedAt(),
                 $emailVerification->getExpiredAt()
             ],
@@ -61,21 +61,11 @@ class EmailVerificationDAOImpl implements EmailVerificationDAO
         return $mysqli->prepareAndExecute($sql, '', []);
     }
 
-    private function convertRecordArrayToAdressArray(array $records): array
-    {
-        $emailVerifications = [];
-        foreach ($records as $record) {
-            $emailVerification = $this->convertRecordToEmailVerification($record);
-            array_push($emailVerifications, $emailVerification);
-        }
-        return $emailVerifications;
-    }
-
     private function convertRecordToEmailVerification(array $data): EmailVerification
     {
         return new EmailVerification(
             hash: $data['hash'],
-            userId: $data['user_id'],
+            pendingUserId: $data['pending_user_id'],
             createdAt: $data['created_at'],
             expiredAt: $data['expired_at']
         );

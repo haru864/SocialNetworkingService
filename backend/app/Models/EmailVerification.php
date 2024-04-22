@@ -10,18 +10,18 @@ class EmailVerification implements Model
     use GenericModel;
 
     private string $hash;
-    private int $userId;
+    private int $pendingUserId;
     private string $createdAt;
     private string $expiredAt;
 
     public function __construct(
         string $hash,
-        int $userId,
+        int $pendingUserId,
         string $createdAt,
         string $expiredAt
     ) {
         $this->hash = $hash;
-        $this->userId = $userId;
+        $this->pendingUserId = $pendingUserId;
         $this->createdAt = $createdAt;
         $this->expiredAt = $expiredAt;
     }
@@ -36,14 +36,14 @@ class EmailVerification implements Model
         $this->hash = $hash;
     }
 
-    public function getUserId(): int
+    public function getPendingUserId(): int
     {
-        return $this->userId;
+        return $this->pendingUserId;
     }
 
-    public function setUserId(int $userId): void
+    public function setPendingUserId(int $pendingUserId): void
     {
-        $this->userId = $userId;
+        $this->pendingUserId = $pendingUserId;
     }
 
     public function getCreatedAt(): string

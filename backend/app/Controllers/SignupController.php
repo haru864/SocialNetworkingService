@@ -37,14 +37,15 @@ class SignupController implements ControllerInterface
 
     private function signup(SignupRequest $request): JSONRenderer
     {
-        $user = $this->signupService->createUser($request);
-        $this->signupService->sendVerificationEmail($user);
+        $pendingUser = $this->signupService->createPendingUser($request);
+        $this->signupService->sendVerificationEmail($pendingUser);
         return new JSONRenderer(200, []);
     }
 
     private function validateEmail(ValidateEmailRequest $request): JSONRenderer
     {
-        $user = $this->signupService->validateEmail($request->getId());
+        $this->signupService->validateEmail($request->getId());
+        $user = $this->signupService->createUserByPending($request->getId());
         SessionManager::set('user_id', $user->getId());
         SessionManager::set('user_name', $user->getName());
         return new JSONRenderer(200, []);

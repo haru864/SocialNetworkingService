@@ -5,7 +5,7 @@ namespace Models;
 use Models\Interfaces\Model;
 use Models\Traits\GenericModel;
 
-class User implements Model
+class PendingUser implements Model
 {
     use GenericModel;
 
@@ -15,8 +15,6 @@ class User implements Model
     private string $email;
     private ?string $self_introduction;
     private ?string $profile_image;
-    private string $created_at;
-    private string $last_login;
 
     public function __construct(
         ?int $id,
@@ -25,8 +23,6 @@ class User implements Model
         string $email,
         ?string $self_introduction,
         ?string $profile_image,
-        string $created_at,
-        string $last_login,
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -34,8 +30,6 @@ class User implements Model
         $this->email = $email;
         $this->self_introduction = $self_introduction;
         $this->profile_image = $profile_image;
-        $this->created_at = $created_at;
-        $this->last_login = $last_login;
     }
 
     public function getId(): ?int
@@ -98,26 +92,6 @@ class User implements Model
         $this->profile_image = $profile_image;
     }
 
-    public function getCreatedAt(): string
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(string $created_at): void
-    {
-        $this->created_at = $created_at;
-    }
-
-    public function getLastLogin(): string
-    {
-        return $this->last_login;
-    }
-
-    public function setLastLogin(string $last_login): void
-    {
-        $this->last_login = $last_login;
-    }
-
     public function toArray(): array
     {
         $data = [
@@ -126,9 +100,7 @@ class User implements Model
             "password_hash" => "",
             "email" => $this->getEmail(),
             "self_introduction" => $this->getSelfIntroduction(),
-            "profile_image" => $this->getProfileImage(),
-            "created_at" => $this->getCreatedAt(),
-            "last_login" => $this->getLastLogin()
+            "profile_image" => $this->getProfileImage()
         ];
         return $data;
     }

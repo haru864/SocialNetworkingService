@@ -1,0 +1,62 @@
+<?php
+
+namespace Database\Migrations;
+
+use Database;
+
+class CreatePendingTables implements Database\SchemaMigration
+{
+    public function up(): array
+    {
+        // マイグレーションロジックをここに追加してください
+        return [
+            "CREATE TABLE pending_users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name varchar(15) UNIQUE NOT NULL,
+                password_hash varchar(255) NOT NULL,
+                email varchar(100) NOT NULL,
+                self_introduction varchar(50),
+                profile_image varchar(80)
+            )",
+            "CREATE TABLE pending_careers (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                pending_user_id INT NOT NULL,
+                job VARCHAR(100),
+                FOREIGN KEY (pending_user_id) REFERENCES pending_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+            )",
+            "CREATE TABLE pending_addresses (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                pending_user_id INT NOT NULL,
+                country VARCHAR(100),
+                state VARCHAR(100),
+                city VARCHAR(100),
+                town VARCHAR(100),
+                FOREIGN KEY (pending_user_id) REFERENCES pending_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+            )",
+            "CREATE TABLE pending_hobbies (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                pending_user_id INT NOT NULL,
+                hobby VARCHAR(100),
+                FOREIGN KEY (pending_user_id) REFERENCES pending_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+            )",
+            "CREATE TABLE email_verification (
+                hash varchar(64) PRIMARY KEY,
+                pending_user_id INT NOT NULL,
+                created_at DATETIME NOT NULL,
+                expired_at DATETIME NOT NULL,
+                FOREIGN KEY (pending_user_id) REFERENCES pending_users(id) ON DELETE CASCADE ON UPDATE CASCADE
+            )"
+        ];
+    }
+
+    public function down(): array
+    {
+        // ロールバックロジックを追加してください
+        return [
+            "DROP TABLE pending_users",
+            "DROP TABLE pending_careers",
+            "DROP TABLE pending_addresses",
+            "DROP TABLE pending_hobbies",
+        ];
+    }
+}
