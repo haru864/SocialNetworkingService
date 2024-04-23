@@ -10,6 +10,7 @@ class PendingUser implements Model
     use GenericModel;
 
     private ?int $id;
+    private ?int $userId;
     private string $name;
     private string $password_hash;
     private string $email;
@@ -18,6 +19,7 @@ class PendingUser implements Model
 
     public function __construct(
         ?int $id,
+        ?int $userId,
         string $name,
         string $password_hash,
         string $email,
@@ -25,6 +27,7 @@ class PendingUser implements Model
         ?string $profile_image,
     ) {
         $this->id = $id;
+        $this->userId = $userId;
         $this->name = $name;
         $this->password_hash = $password_hash;
         $this->email = $email;
@@ -40,6 +43,16 @@ class PendingUser implements Model
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
     }
 
     public function getName(): string

@@ -77,11 +77,11 @@ class HobbiesDAOImpl implements HobbiesDAO
         return $mysqli->insert_id;
     }
 
-    public function delete(int $id): bool
+    public function deleteByUserId(int $userId): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();
-        $sql = "DELETE FROM hobbies WHERE id = ?";
-        return $mysqli->prepareAndExecute($sql, 'i', [$id]);
+        $sql = "DELETE FROM hobbies WHERE user_id = ?";
+        return $mysqli->prepareAndExecute($sql, 'i', [$userId]);
     }
 
     private function convertRecordArrayToHobbyArray(array $records): array

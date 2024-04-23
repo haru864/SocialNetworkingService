@@ -68,7 +68,7 @@ class UsersDAOImpl implements UsersDAO
         if ($user->getId() === null) {
             throw new InvalidDataException('User specified has no ID.');
         }
-        $userInTable = $this->getByName($user->getName());
+        $userInTable = $this->getById($user->getId());
         if ($userInTable === null) {
             throw new InvalidDataException(sprintf("User's ID '%s' does not exist.", $user->getId()));
         }
@@ -89,7 +89,7 @@ class UsersDAOImpl implements UsersDAO
         SQL;
         $result = $mysqli->prepareAndExecute(
             $query,
-            'ssssssssi',
+            'sssssssi',
             [
                 $user->getName(),
                 $user->getPasswordHash(),

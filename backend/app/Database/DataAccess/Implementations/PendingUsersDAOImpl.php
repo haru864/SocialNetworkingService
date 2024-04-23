@@ -15,6 +15,7 @@ class PendingUsersDAOImpl implements PendingUsersDAO
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
             INSERT INTO pending_users (
+                user_id,
                 name,
                 password_hash,
                 email,
@@ -22,13 +23,14 @@ class PendingUsersDAOImpl implements PendingUsersDAO
                 profile_image
             )
             VALUES (
-                ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?
             )
         SQL;
         $result = $mysqli->prepareAndExecute(
             $query,
-            'sssss',
+            'isssss',
             [
+                $pendingUser->getUserId(),
                 $pendingUser->getName(),
                 $pendingUser->getPasswordHash(),
                 $pendingUser->getEmail(),
@@ -73,6 +75,7 @@ class PendingUsersDAOImpl implements PendingUsersDAO
             UPDATE
                 pending_users
             SET
+                user_id = ?,
                 name = ?,
                 password_hash = ?,
                 email = ?,
@@ -83,8 +86,9 @@ class PendingUsersDAOImpl implements PendingUsersDAO
         SQL;
         $result = $mysqli->prepareAndExecute(
             $query,
-            'sssssi',
+            'isssssi',
             [
+                $pendingUser->getUserId(),
                 $pendingUser->getName(),
                 $pendingUser->getPasswordHash(),
                 $pendingUser->getEmail(),
@@ -120,6 +124,7 @@ class PendingUsersDAOImpl implements PendingUsersDAO
     {
         return new PendingUser(
             id: $data['id'],
+            userId: $data['user_id'],
             name: $data['name'],
             password_hash: $data['password_hash'],
             email: $data['email'],

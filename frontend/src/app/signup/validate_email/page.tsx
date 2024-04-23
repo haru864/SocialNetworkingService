@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Container, Box, Grid, Button, Typography, Avatar, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSearchParams } from "next/navigation";
-import Copyright from "../common/copyright";
+import Copyright from "../../common/copyright";
 
 async function validateEmail(
     setvalidating: React.Dispatch<React.SetStateAction<boolean>>,
@@ -17,7 +17,7 @@ async function validateEmail(
         if (hash === null) {
             throw new Error('Invalid URL, access from the link attached to the email.');
         }
-        const response = await fetch(`${process.env.API_DOMAIN}/api/validate_email?id=${hash}`, {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/signup/validate_email?id=${hash}`, {
             method: 'GET'
         });
         setvalidating(false);

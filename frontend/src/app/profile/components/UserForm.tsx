@@ -80,7 +80,6 @@ async function updateProfile(
             method: 'POST',
             body: data
         });
-        setLoading(false);
         if (!response.ok) {
             const responseData = await response.json();
             throw new Error(responseData["error_message"]);
@@ -89,12 +88,20 @@ async function updateProfile(
     } catch (error: any) {
         console.error(error);
         alert(error);
+    } finally {
+        setLoading(false);
     }
 }
 
 const UserForm: React.FC = () => {
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        (async () => {
+            const userData = await getUserData();
+            setUserData(userData);
+        })();
+    }, []);
     if (loading) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -102,12 +109,6 @@ const UserForm: React.FC = () => {
             </Box>
         );
     }
-    useEffect(() => {
-        (async () => {
-            const userData = await getUserData();
-            setUserData(userData);
-        })();
-    }, []);
     if (!userData) {
         return <div>Loading...</div>;
     }
@@ -130,7 +131,7 @@ const UserForm: React.FC = () => {
             <TextField name="password" label="Password" />
             <TextField name="password_confirmation" label="Password Confirmation" />
             <TextField name="email" label="Email" type="email" value={userData.email} onChange={handleChange('email')} />
-            <TextField name="self_introduction" label="Self Introduction" multiline minRows={3} maxRows={5} value={userData.selfIntroduction} />
+            <TextField name="self_introduction" label="Self Introduction" multiline minRows={3} maxRows={5} value={userData.selfIntroduction} onChange={handleChange('selfIntroduction')} />
             <Box display="flex" alignItems="center">
                 <Typography>Profile Image:</Typography>
                 <Link href={profileImageOriginalUrl}>
@@ -141,6 +142,7 @@ const UserForm: React.FC = () => {
                 <input
                     accept="image/jpeg, image/png, image/gif"
                     type="file"
+                    id="upload_file_button"
                     name="profile_image"
                     style={{ display: 'none' }}
                 />

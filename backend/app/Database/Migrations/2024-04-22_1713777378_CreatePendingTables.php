@@ -12,11 +12,13 @@ class CreatePendingTables implements Database\SchemaMigration
         return [
             "CREATE TABLE pending_users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT,
                 name varchar(15) UNIQUE NOT NULL,
                 password_hash varchar(255) NOT NULL,
                 email varchar(100) NOT NULL,
                 self_introduction varchar(50),
-                profile_image varchar(80)
+                profile_image varchar(80),
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE pending_careers (
                 id INT AUTO_INCREMENT PRIMARY KEY,

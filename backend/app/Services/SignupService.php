@@ -85,6 +85,7 @@ class SignupService
             }
             $pendingUser = new PendingUser(
                 id: null,
+                userId: null,
                 name: $request->getUsername(),
                 password_hash: password_hash($request->getPassword(), PASSWORD_DEFAULT),
                 email: $request->getEmail(),
@@ -223,7 +224,7 @@ class SignupService
 
     public function sendVerificationEmail(PendingUser $pendingUser): void
     {
-        $url = Settings::env('FRONT_URL') . '/validate_email?id=' . $this->publishUserVerificationURL($pendingUser);
+        $url = Settings::env('FRONT_URL') . '/signup/validate_email?id=' . $this->publishUserVerificationURL($pendingUser);
         $htmlBody = "Hello, " . $pendingUser->getName() . ".<br>";
         $htmlBody .= "Access the following URL to complete Sign-Up.<br><a href=" . $url . ">Verification Link</a>";
         $textBody = "Hello, " . $pendingUser->getName() . "." . PHP_EOL;

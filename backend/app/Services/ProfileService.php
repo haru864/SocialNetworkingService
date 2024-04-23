@@ -4,16 +4,25 @@ namespace Services;
 
 use Database\DataAccess\Implementations\AddressesDAOImpl;
 use Database\DataAccess\Implementations\CareersDAOImpl;
+use Database\DataAccess\Implementations\EmailVerificationDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
+use Database\DataAccess\Implementations\PendingAddressesDAOImpl;
+use Database\DataAccess\Implementations\PendingCareersDAOImpl;
+use Database\DataAccess\Implementations\PendingHobbiesDAOImpl;
+use Database\DataAccess\Implementations\PendingUsersDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
+use Exceptions\InternalServerException;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
 use Helpers\MailUtility;
 use Helpers\ValidationHelper;
 use Http\Request\PostProfileRequest;
-use Models\Address;
 use Models\Career;
 use Models\Hobby;
+use Models\PendingAddress;
+use Models\PendingCareer;
+use Models\PendingHobby;
+use Models\PendingUser;
 use Models\User;
 use Settings\Settings;
 use Throwable;
@@ -24,33 +33,44 @@ class ProfileService
     private AddressesDAOImpl $addressesDAOImpl;
     private CareersDAOImpl $careersDAOImpl;
     private HobbiesDAOImpl $hobbiesDAOImpl;
+    private PendingUsersDAOImpl $pendingUsersDAOImpl;
+    private PendingAddressesDAOImpl $pendingAddressesDAOImpl;
+    private PendingCareersDAOImpl $pendingCareersDAOImpl;
+    private PendingHobbiesDAOImpl $pendingHobbiesDAOImpl;
+    private EmailVerificationDAOImpl $emailVerificationDAOImpl;
 
     public function __construct(
         usersDAOImpl $usersDAOImpl,
         AddressesDAOImpl $addressesDAOImpl,
         CareersDAOImpl $careersDAOImpl,
-        HobbiesDAOImpl $hobbiesDAOImpl
+        HobbiesDAOImpl $hobbiesDAOImpl,
+        PendingUsersDAOImpl $pendingUsersDAOImpl,
+        PendingAddressesDAOImpl $pendingAddressesDAOImpl,
+        PendingCareersDAOImpl $pendingCareersDAOImpl,
+        PendingHobbiesDAOImpl $pendingHobbiesDAOImpl,
+        EmailVerificationDAOImpl $emailVerificationDAOImpl
     ) {
         $this->usersDAOImpl = $usersDAOImpl;
         $this->addressesDAOImpl = $addressesDAOImpl;
         $this->careersDAOImpl = $careersDAOImpl;
         $this->hobbiesDAOImpl = $hobbiesDAOImpl;
+        $this->pendingUsersDAOImpl = $pendingUsersDAOImpl;
+        $this->pendingAddressesDAOImpl = $pendingAddressesDAOImpl;
+        $this->pendingCareersDAOImpl = $pendingCareersDAOImpl;
+        $this->pendingHobbiesDAOImpl = $pendingHobbiesDAOImpl;
+        $this->emailVerificationDAOImpl = $emailVerificationDAOImpl;
     }
 
-    // TODO メールアドレスを誤って変更した場合に認証ができずに詰むため、メール認証が完了するまで変更を反映しないようにする
-    public function updateUser(PostProfileRequest $request, int $userId): User
+    public function createPendingUser(PostProfileRequest $request, int $userId): PendingUser
     {
         $currentUser = $this->usersDAOImpl->getById($userId);
-        $currentAddress = $this->addressesDAOImpl->getByUserId($userId);
-        $currentCareers = $this->careersDAOImpl->getByUserId($userId);
-        $currentHobbies = $this->hobbiesDAOImpl->getByUserId($userId);
         if (is_null($currentUser)) {
-            throw new InvalidRequestParameterException("Specified user does not exist.");
+            throw new InvalidRequestParameterException('User not found.');
         }
-        if (
-            $request->getUsername() !== $currentUser->getName()
-            && $this->usersDAOImpl->getByName($request->getUsername()) !== null
-        ) {
+        $isUsernameChanged = $currentUser->getName() !== $request->getUsername();
+        $isUsernameUsed = ($this->usersDAOImpl->getByName($request->getUsername()) !== null
+            || $this->pendingUsersDAOImpl->getByName($request->getUsername()) !== null);
+        if ($isUsernameChanged && $isUsernameUsed) {
             throw new InvalidRequestParameterException("Specified username is already used.");
         }
         try {
@@ -64,56 +84,54 @@ class ProfileService
                     thumbWidth: 100
                 );
             }
-            $currentEmail = $currentUser->getEmail();
-            $updatedEmail = $request->getEmail();
-            $isEmailChanged = $currentEmail !== $updatedEmail;
-            $updatedUser = new User(
-                id: $userId,
+            $pendingUser = new PendingUser(
+                id: null,
+                userId: $userId,
                 name: $request->getUsername(),
                 password_hash: password_hash($request->getPassword(), PASSWORD_DEFAULT),
                 email: $request->getEmail(),
                 self_introduction: ValidationHelper::isNonEmptyString($request->getSelfIntroduction()) ? $request->getSelfIntroduction() : null,
                 profile_image: $profileImage,
-                created_at: $currentUser->getCreatedAt(),
-                last_login: date('Y-m-d H:i:s'),
-                email_verified_at: $isEmailChanged ? null : $currentUser->getEmailVerifiedAt()
             );
-            $this->usersDAOImpl->update($updatedUser);
+            $pendingUserInTable = null;
+            $pendingUserInTable = $this->pendingUsersDAOImpl->create($pendingUser);
 
-            $updatedAddress = new Address(
-                id: $currentAddress->getId(),
-                userId: $currentAddress->getUserId(),
-                country: $request->getCountry(),
-                state: $request->getState(),
-                city: $request->getCity(),
-                town: $request->getTown()
-            );
-            $this->addressesDAOImpl->update($updatedAddress);
-
-            foreach ($currentCareers as $career) {
-                $this->careersDAOImpl->delete($career->getId());
-            }
-            foreach ($request->getCareers() as $job) {
-                $updatedCareer = new Career(
+            if (
+                $request->getCountry() !== ''
+                || $request->getState() !== ''
+                || $request->getCity() !== ''
+                || $request->getTown() !== ''
+            ) {
+                $pendingAddress = new PendingAddress(
                     id: null,
-                    userId: $userId,
+                    pendingUserId: $pendingUserInTable->getId(),
+                    country: $request->getCountry(),
+                    state: $request->getState(),
+                    city: $request->getCity(),
+                    town: $request->getTown()
+                );
+                $this->pendingAddressesDAOImpl->create($pendingAddress);
+            }
+
+            foreach ($request->getCareers() as $job) {
+                $pendingCareer = new PendingCareer(
+                    id: null,
+                    pendingUserId: $pendingUserInTable->getId(),
                     job: $job
                 );
-                $this->careersDAOImpl->create($updatedCareer);
+                $this->pendingCareersDAOImpl->create($pendingCareer);
             }
 
-            foreach ($currentHobbies as $hobby) {
-                $this->hobbiesDAOImpl->delete($hobby->getId());
-            }
             foreach ($request->getHobbies() as $hobby) {
-                $updatedHobby = new Hobby(
+                $pendingHobby = new PendingHobby(
                     id: null,
-                    userId: $userId,
+                    pendingUserId: $pendingUserInTable->getId(),
                     hobby: $hobby
                 );
-                $this->hobbiesDAOImpl->create($updatedHobby);
+                $this->pendingHobbiesDAOImpl->create($pendingHobby);
             }
-            return $updatedUser;
+
+            return $pendingUserInTable;
         } catch (Throwable $t) {
             if (isset($profileImage)) {
                 FileUtility::deleteImageWithThumbnail(
@@ -122,11 +140,25 @@ class ProfileService
                     imageFileName: $profileImage
                 );
             }
-            if (isset($userInTable)) {
-                $this->usersDAOImpl->delete($userInTable->getId());
+            if (isset($pendingUserInTable)) {
+                $this->pendingUsersDAOImpl->delete($pendingUserInTable->getId());
             }
             throw $t;
-        } finally {
+        }
+    }
+
+    public function updateUserByPending(string $hash): User
+    {
+        $emailVerification = $this->emailVerificationDAOImpl->getByHash($hash);
+        $pendingUserId = $emailVerification->getPendingUserId();
+        $pendingUser = $this->pendingUsersDAOImpl->getById($pendingUserId);
+        if (is_null($pendingUser)) {
+            throw new InternalServerException("PendingUser doesn't exist");
+        }
+        try {
+            $currentDatetime = date('Y-m-d H:i:s');
+            $userId = $pendingUser->getUserId();
+            $currentUser = $this->usersDAOImpl->getById($userId);
             if (!is_null($currentUser->getProfileImage())) {
                 FileUtility::deleteImageWithThumbnail(
                     storeDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_UPLOAD'),
@@ -134,20 +166,67 @@ class ProfileService
                     imageFileName: $currentUser->getProfileImage()
                 );
             }
+            $currentUser->setName($pendingUser->getName());
+            $currentUser->setPasswordHash($pendingUser->getPasswordHash());
+            $currentUser->setEmail($pendingUser->getEmail());
+            $currentUser->setSelfIntroduction($pendingUser->getSelfIntroduction());
+            $currentUser->setProfileImage($pendingUser->getProfileImage());
+            $currentUser->setLastLogin($currentDatetime);
+            $this->usersDAOImpl->update($currentUser);
+
+            $pendingAddress = $this->pendingAddressesDAOImpl->getByUserId($pendingUser->getId());
+            if (is_null($pendingAddress)) {
+                throw new InternalServerException("PendingAddress doesn't exist");
+            }
+            $currentAddress = $this->addressesDAOImpl->getByUserId($userId);
+            $currentAddress->setCountry($pendingAddress->getCountry());
+            $currentAddress->setState($pendingAddress->getState());
+            $currentAddress->setCity($pendingAddress->getCity());
+            $currentAddress->setTown($pendingAddress->getTown());
+            $this->addressesDAOImpl->update($currentAddress);
+
+            $pendingCareers = $this->pendingCareersDAOImpl->getByUserId($pendingUser->getId());
+            $this->careersDAOImpl->deleteByUserId($userId);
+            foreach ($pendingCareers as $pendingCareer) {
+                $career = new Career(
+                    id: null,
+                    userId: $userId,
+                    job: $pendingCareer->getJob()
+                );
+                $this->careersDAOImpl->create($career);
+            }
+
+            $pendingHobbies = $this->pendingHobbiesDAOImpl->getByUserId($pendingUser->getId());
+            $this->hobbiesDAOImpl->deleteByUserId($userId);
+            foreach ($pendingHobbies as $pendingHobby) {
+                $hobby = new Hobby(
+                    id: null,
+                    userId: $userId,
+                    hobby: $pendingHobby->getHobby()
+                );
+                $this->hobbiesDAOImpl->create($hobby);
+            }
+
+            return $currentUser;
+        } catch (Throwable $t) {
+            throw $t;
+        } finally {
+            $this->pendingUsersDAOImpl->delete($pendingUser->getId());
+            $this->emailVerificationDAOImpl->deleteByHash($hash);
         }
     }
 
-    public function sendVerificationEmail(User $user, string $verificationUrl): void
+    public function sendVerificationEmail(PendingUser $pendingUser, string $url): void
     {
-        $url = Settings::env('FRONT_URL') . '/validate_email?id=' . $verificationUrl;
-        $htmlBody = "Hello, " . $user->getName() . ".<br>";
+        $url = Settings::env('FRONT_URL') . '/profile/validate_email?id=' . $url;
+        $htmlBody = "Hello, " . $pendingUser->getName() . ".<br>";
         $htmlBody .= "Access the following URL to update profile.<br><a href=" . $url . ">Verification Link</a>";
-        $textBody = "Hello, " . $user->getName() . "." . PHP_EOL;
+        $textBody = "Hello, " . $pendingUser->getName() . "." . PHP_EOL;
         $textBody .= "Access the following URL to update profile." . PHP_EOL;
         $textBody .= $url;
         MailUtility::sendEmail(
-            recipientEmail: $user->getEmail(),
-            recipientName: $user->getName(),
+            recipientEmail: $pendingUser->getEmail(),
+            recipientName: $pendingUser->getName(),
             subject: 'Profile Update Email Verification',
             htmlBody: $htmlBody,
             textBody: $textBody
@@ -179,6 +258,7 @@ class ProfileService
     public function deleteUser(int $userId): void
     {
         $this->usersDAOImpl->delete($userId);
+        // TODO ユーザーに紐づく画像ファイルを削除する必要がある
         return;
     }
 }

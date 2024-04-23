@@ -64,32 +64,32 @@
 								},
 								{
 									"key": "hobby_1",
-									"value": "hobby_1",
+									"value": "baseball",
 									"type": "text"
 								},
 								{
 									"key": "hobby_2",
-									"value": "",
+									"value": "soccer",
 									"type": "text"
 								},
 								{
 									"key": "hobby_3",
-									"value": "hobby_3",
+									"value": "tennis",
 									"type": "text"
 								},
 								{
 									"key": "career_1",
-									"value": "",
+									"value": "engineer",
 									"type": "text"
 								},
 								{
 									"key": "career_2",
-									"value": "career_2",
+									"value": "soldier",
 									"type": "text"
 								},
 								{
 									"key": "career_3",
-									"value": "",
+									"value": "president",
 									"type": "text"
 								}
 							]
@@ -105,6 +105,34 @@
 							"path": [
 								"api",
 								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]サインアップ_メール認証",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/signup/validate_email?id=7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"signup",
+								"validate_email"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451"
+								}
 							]
 						}
 					},
@@ -263,12 +291,12 @@
 								},
 								{
 									"key": "username",
-									"value": "test_user_dummy",
+									"value": "chisato",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "pass",
+									"value": "Pass123_",
 									"type": "text"
 								},
 								{
@@ -284,56 +312,56 @@
 								{
 									"key": "profile_image",
 									"type": "file",
-									"src": []
+									"src": "/home/haru/Pictures/icon_01 (1).jpg"
 								},
 								{
 									"key": "country",
-									"value": "country_01",
+									"value": "USA",
 									"type": "text"
 								},
 								{
 									"key": "state",
-									"value": "state_01",
+									"value": "LA",
 									"type": "text"
 								},
 								{
 									"key": "city",
-									"value": "city_01",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "town",
-									"value": "town_01",
+									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "hobbies[0]",
-									"value": "hobby_01",
+									"key": "hobby_1",
+									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "hobbies[1]",
-									"value": "hobby_02",
+									"key": "hobby_2",
+									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "hobbies[2]",
-									"value": "hobby_03",
+									"key": "hobby_3",
+									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "careers[0]",
-									"value": "job_01",
+									"key": "career_1",
+									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "careers[1]",
-									"value": "job_02",
+									"key": "career_2",
+									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "careers[2]",
-									"value": "job_03",
+									"key": "career_3",
+									"value": "",
 									"type": "text"
 								}
 							]
@@ -349,6 +377,34 @@
 							"path": [
 								"api",
 								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]プロフィール変更_メール認証",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/profile/validate_email?id=19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"profile",
+								"validate_email"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7"
+								}
 							]
 						}
 					},
@@ -397,7 +453,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"takina\",\n    \"password\": \"Pass123@\"\n}",
+							"raw": "{\n    \"username\": \"chisato\",\n    \"password\": \"Pass123_\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -483,7 +539,7 @@
 				{
 					"name": "ログアウト",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"url": {
 							"raw": "http://sns.test.com/api/logout",
@@ -1349,38 +1405,6 @@
 							"path": [
 								"api",
 								"reset_password"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "メール認証",
-			"item": [
-				{
-					"name": "[正常系]メール認証",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://sns.test.com/api/validate_email?id=ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
-							"protocol": "http",
-							"host": [
-								"sns",
-								"test",
-								"com"
-							],
-							"path": [
-								"api",
-								"validate_email"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
-								}
 							]
 						}
 					},
