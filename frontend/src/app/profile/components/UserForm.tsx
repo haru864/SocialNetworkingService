@@ -29,7 +29,6 @@ async function getUserData(): Promise<UserData | null> {
     }
 }
 
-// TODO Reactエラーが出るので直す
 async function updateProfile(
     event: React.FormEvent<HTMLFormElement>,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>

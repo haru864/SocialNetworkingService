@@ -7,6 +7,8 @@ use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
 use Helpers\SessionManager;
 use Http\Request\FollowRequest;
+use Http\Request\GetFollowRequest;
+use Http\Request\PostFollowRequest;
 use Services\FollowService;
 
 class FollowController implements ControllerInterface
@@ -20,27 +22,55 @@ class FollowController implements ControllerInterface
 
     public function handleRequest(): JSONRenderer
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            throw new InvalidRequestMethodException("Follow request must be 'POST'.");
-        }
-        if ($_SERVER['CONTENT_TYPE'] !== 'application/json') {
-            throw new InvalidRequestMethodException("Follow request must be 'application/json'.");
-        }
-        $jsonData = file_get_contents('php://input');
-        $reqParamMap = json_decode($jsonData, true);
-        $request = new FollowRequest($reqParamMap);
-        if ($request->getAction() === 'add_follow') {
-            return $this->addFollow($request);
-        } else if ($request->getAction() === 'remove_follow') {
-            return $this->removeFollow($request);
-        } else if ($request->getAction() === 'get_followers') {
-            return $this->getFollowers($request);
-        } else if ($request->getAction() === 'get_followees') {
-            return $this->getFollowees($request);
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $request = new GetFollowRequest($_GET);
+            if ($request->getRelation() === 'follower') {
+                return $this->getFollowers($request);
+            } else if ($request->getRelation() === 'followee') {
+                return $this->getFollowees($request);
+            }
+        } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($_SERVER['CONTENT_TYPE'] !== 'application/json') {
+                throw new InvalidRequestMethodException("Post-Follow request must be 'application/json'.");
+            }
+            $jsonData = file_get_contents('php://input');
+            $reqParamMap = json_decode($jsonData, true);
+            $request = new PostFollowRequest($reqParamMap);
+            if ($request->getAction() === 'add') {
+                return $this->addFollow($request);
+            } else if ($request->getAction() === 'remove') {
+                return $this->removeFollow($request);
+            }
+        } else {
+            throw new InvalidRequestMethodException("Follow request must be 'GET' or 'POST'.");
         }
     }
 
-    private function addFollow(FollowRequest $request): JSONRenderer
+    private function getFollowers(GetFollowRequest $request): JSONRenderer
+    {
+        $resp = [];
+        if (is_null($request->getUserId())) {
+            $userId = SessionManager::get('user_id');
+        } else {
+            $userId = $request->getUserId();
+        }
+        $resp = $this->followService->getFollowers($userId);
+        return new JSONRenderer(200, $resp);
+    }
+
+    private function getFollowees(GetFollowRequest $request): JSONRenderer
+    {
+        $resp = [];
+        if (is_null($request->getUserId())) {
+            $userId = SessionManager::get('user_id');
+        } else {
+            $userId = $request->getUserId();
+        }
+        $resp = $this->followService->getFollowees($userId);
+        return new JSONRenderer(200, $resp);
+    }
+
+    private function addFollow(PostFollowRequest $request): JSONRenderer
     {
         $resp = [];
         $userId = SessionManager::get('user_id');
@@ -48,27 +78,11 @@ class FollowController implements ControllerInterface
         return new JSONRenderer(200, $resp);
     }
 
-    private function removeFollow(FollowRequest $request): JSONRenderer
+    private function removeFollow(PostFollowRequest $request): JSONRenderer
     {
         $resp = [];
         $userId = SessionManager::get('user_id');
         $this->followService->removeFollow($userId, $request->getFolloweeId());
-        return new JSONRenderer(200, $resp);
-    }
-
-    private function getFollowers(FollowRequest $request): JSONRenderer
-    {
-        $resp = [];
-        $userId = SessionManager::get('user_id');
-        $resp = $this->followService->getFollowers($userId);
-        return new JSONRenderer(200, $resp);
-    }
-
-    private function getFollowees(FollowRequest $request): JSONRenderer
-    {
-        $resp = [];
-        $userId = SessionManager::get('user_id');
-        $resp = $this->followService->getFollowees($userId);
         return new JSONRenderer(200, $resp);
     }
 }

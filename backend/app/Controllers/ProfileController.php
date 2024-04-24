@@ -39,18 +39,29 @@ class ProfileController implements ControllerInterface
             $isEmailValidation = strpos($_SERVER['REQUEST_URI'], 'validate_email') !== false;
             if ($isEmailValidation) {
                 return $this->validateEmail(new ValidateEmailRequest($_GET));
+            }
+            $request = new GetProfileRequest($_GET);
+            if (is_null($request->getUserId())) {
+                return $this->getProfileBySession();
             } else {
-                return $this->getProfile(new GetProfileRequest());
+                return $this->getProfileByUserId($request);
             }
         } else {
             throw new InvalidRequestMethodException("SignUp request must be 'POST', email verification request must be 'GET'.");
         }
     }
 
-    private function getProfile(): JSONRenderer
+    private function getProfileBySession(): JSONRenderer
     {
         $userId = SessionManager::get('user_id');
-        $profile = $this->profileService->getUserInfo($userId);
+        $profile = $this->profileService->getUserInfo($userId, false);
+        return new JSONRenderer(200, ['profile' => $profile]);
+    }
+
+    private function getProfileByUserId(GetProfileRequest $request): JSONRenderer
+    {
+        $userId = $request->getUserId();
+        $profile = $this->profileService->getUserInfo($userId, true);
         return new JSONRenderer(200, ['profile' => $profile]);
     }
 

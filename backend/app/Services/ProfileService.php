@@ -233,11 +233,17 @@ class ProfileService
         );
     }
 
-    public function getUserInfo(int $userId): array
+    public function getUserInfo(int $userId, bool $doMask): array
     {
         $user = $this->usersDAOImpl->getById($userId);
         if (is_null($user)) {
             return [];
+        }
+        if ($doMask) {
+            $user->setPasswordHash("");
+            $user->setEmail("");
+            $user->setCreatedAt("");
+            $user->setLastLogin("");
         }
         $address = $this->addressesDAOImpl->getByUserId($userId);
         $hobbies = $this->hobbiesDAOImpl->getByUserId($userId);
