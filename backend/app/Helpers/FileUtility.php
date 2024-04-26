@@ -40,7 +40,7 @@ class FileUtility
         $storedImageFileName = $hash . '.' . $imageFileExtension;
         $storedImageFilePath = $storeDirPath . DIRECTORY_SEPARATOR . $storedImageFileName;
         if (!move_uploaded_file($uploadedTmpFilePath, $storedImageFilePath)) {
-            throw new InternalServerException("Failed to move uploaded file.");
+            throw new InternalServerException("Failed to move uploaded file. ({$uploadedTmpFilePath} => {$storedImageFilePath})");
         }
         FileUtility::createThumbnail($storedImageFilePath, $thumbDirPath, $thumbWidth);
         return $storedImageFileName;
@@ -115,13 +115,16 @@ class FileUtility
         $hash = hash('sha256', $data);
         $counter = 0;
         while ($counter < $limit) {
+            $unique = true;
             foreach ($iterator as $fileinfo) {
                 if (!$fileinfo->isDot()) {
                     $filenameWithoutExtension = $fileinfo->getBasename('.' . $fileinfo->getExtension());
                 }
                 if ($hash === $filenameWithoutExtension) {
-                    break;
+                    $unique = false;
                 }
+            }
+            if ($unique) {
                 return $hash;
             }
             $counter++;

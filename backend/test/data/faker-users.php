@@ -5,6 +5,7 @@ use Database\DataAccess\Implementations\CareersDAOImpl;
 use Database\DataAccess\Implementations\FollowsDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
+use Helpers\FileUtility;
 use Models\Address;
 use Models\Career;
 use Models\Follow;
@@ -30,20 +31,29 @@ $addressesDAOImpl = new AddressesDAOImpl();
 $hobbiesDAOImpl = new HobbiesDAOImpl();
 $careersDAOImpl = new CareersDAOImpl();
 $followsDAOImpl = new FollowsDAOImpl();
-$usersCount = 59;
+$usersCount = 5;
 
 for ($i = 0; $i < $usersCount; $i++) {
     $nowDateTime = new DateTime();
     $nowDateTimeStr = $nowDateTime->format('Y-m-d H:i:s');
     $maxNameLength = 15;
     $username = $faker->regexify('[A-Za-z0-9]{1,' . $maxNameLength . '}');
+    $imagePath = __DIR__ . '/images/random_image.png';
+    generateImage($imagePath);
+    $profileImage = storeImageWithThumbnail(
+        storeDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_UPLOAD'),
+        thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_THUMBNAIL'),
+        uploadedTmpFilePath: $imagePath,
+        uploadedFileName: 'random_image.png',
+        thumbWidth: 100
+    );
     $user = new User(
         id: null,
         name: $username,
         password_hash: 'dummy_hash',
         email: $faker->email(),
         self_introduction: $faker->text(50),
-        profile_image: null,
+        profile_image: $profileImage,
         created_at: $nowDateTimeStr,
         last_login: $nowDateTimeStr
     );
@@ -74,16 +84,6 @@ for ($i = 0; $i < $usersCount; $i++) {
 
     $follow = new Follow(null, $userId, 3, $nowDateTimeStr);
     $followsDAOImpl->create($follow);
-
-
-
-    // $imageFilePath = __DIR__ . '/images/random_image.png';
-    // generateImage($imageFilePath);
-    // $mimeType = getMimeType($imageFilePath);
-    // $hashedFileName = preserveUploadedImageFile($postId, $nowDateTimeStr, $imageFilePath);
-    // $post->setImageFileName($hashedFileName);
-    // $post->setImageFileExtension($mimeType);
-    // $postDAO->update($post);
 }
 
 function generateHobby($faker)
@@ -92,6 +92,34 @@ function generateHobby($faker)
         $hobby = $faker->sentence($nbWords = 6, $variableNbWords = true); // 可変長の文章を生成
     } while (strlen($hobby) > 100);
     return $hobby;
+}
+
+function storeImageWithThumbnail(
+    string $storeDirPath,
+    string $thumbDirPath,
+    string $uploadedTmpFilePath,
+    string $uploadedFileName,
+    int $thumbWidth
+): string {
+    $hash = generateUniqueHashWithLimit($storeDirPath, $uploadedFileName);
+    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->file($uploadedTmpFilePath);
+    $validImageMimeTypes = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif'
+    ];
+    if (!array_key_exists($mimeType, $validImageMimeTypes)) {
+        throw new Exception("Invalid Mime-Type: '{$mimeType}'");
+    }
+    $imageFileExtension = $validImageMimeTypes[$mimeType];
+    $storedImageFileName = $hash . '.' . $imageFileExtension;
+    $storedImageFilePath = $storeDirPath . DIRECTORY_SEPARATOR . $storedImageFileName;
+    if (!rename($uploadedTmpFilePath, $storedImageFilePath)) {
+        throw new Exception("Failed to move uploaded file. ({$uploadedTmpFilePath} => {$storedImageFilePath})");
+    }
+    createThumbnail($storedImageFilePath, $thumbDirPath, $thumbWidth);
+    return $storedImageFileName;
 }
 
 function generateImage(string $filePath): void
@@ -107,25 +135,31 @@ function generateImage(string $filePath): void
     imagedestroy($image);
 }
 
-function getMimeType(string $filePath): string
+function generateUniqueHashWithLimit(string $dirPath, string $data, $limit = 100): string
 {
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $mimeType = finfo_file($finfo, $filePath);
-    finfo_close($finfo);
-    return $mimeType;
+    $iterator = new \DirectoryIterator($dirPath);
+    $hash = hash('sha256', $data);
+    $counter = 0;
+    while ($counter < $limit) {
+        $unique = true;
+        foreach ($iterator as $fileinfo) {
+            if (!$fileinfo->isDot()) {
+                $filenameWithoutExtension = $fileinfo->getBasename('.' . $fileinfo->getExtension());
+            }
+            if ($hash === $filenameWithoutExtension) {
+                $unique = false;
+            }
+        }
+        if ($unique) {
+            return $hash;
+        }
+        $counter++;
+        $hash = hash('sha256', $data . $counter);
+    }
+    throw new Exception('Failed to generate unique hash value.');
 }
 
-function preserveUploadedImageFile(int $postId, string $createdAt, string $imageFilePath): string
-{
-    $stringToHash = $postId . $createdAt . $imageFilePath;
-    $hashedFileName = hash('sha256', $stringToHash);
-    $storagedFilePath = Settings::env('UPLOADED_IMAGE_FILE_LOCATION') . '/' . $hashedFileName;
-    rename($imageFilePath, $storagedFilePath);
-    createThumbnail($storagedFilePath);
-    return $hashedFileName;
-}
-
-function createThumbnail(string $imageFilePath, int $thumbWidth = 150): string
+function createThumbnail(string $imageFilePath, string $thumbDirPath, int $thumbWidth = 100): void
 {
     $image = new \Imagick($imageFilePath);
     $width = $image->getImageWidth();
@@ -133,9 +167,9 @@ function createThumbnail(string $imageFilePath, int $thumbWidth = 150): string
     $aspectRatio = $height / $width;
     $thumbHeight = $thumbWidth * $aspectRatio;
     $image->resizeImage($thumbWidth, $thumbHeight, \Imagick::FILTER_LANCZOS, 1);
-    $thumbnailFile = Settings::env('THUMBNAIL_FILE_LOCATION') . '/' . basename($imageFilePath);
+    $thumbnailFile = $thumbDirPath . DIRECTORY_SEPARATOR . basename($imageFilePath);
     $image->writeImage($thumbnailFile);
     $image->clear();
     $image->destroy();
-    return $thumbnailFile;
+    return;
 }

@@ -28,4 +28,13 @@ export class FollowerData {
         this.career_2 = data['careers'].length >= 2 ? data['careers'][1] : '';
         this.career_3 = data['careers'].length >= 3 ? data['careers'][2] : '';
     }
+
+    getThumbnailUrl(): string {
+        return `${process.env.PROFILE_IMAGE_THUMBNAIL_URL}/${this.profileImage}`;
+
+    }
+
+    getUploadedImageUrl(): string {
+        return `${process.env.PROFILE_IMAGE_UPLOAD_URL}/${this.profileImage}`;
+    }
 }
