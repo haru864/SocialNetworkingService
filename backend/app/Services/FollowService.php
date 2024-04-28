@@ -3,19 +3,35 @@
 namespace Services;
 
 use Database\DataAccess\Implementations\FollowsDAOImpl;
+use Database\DataAccess\Implementations\UsersDAOImpl;
+use Exceptions\InvalidRequestParameterException;
 use Models\Follow;
 
 class FollowService
 {
+    private UsersDAOImpl $usersDAOImpl;
     private FollowsDAOImpl $followsDAOImpl;
 
-    public function __construct(FollowsDAOImpl $followsDAOImpl)
+    public function __construct(UsersDAOImpl $usersDAOImpl, FollowsDAOImpl $followsDAOImpl)
     {
         $this->followsDAOImpl = $followsDAOImpl;
+        $this->usersDAOImpl = $usersDAOImpl;
     }
 
     public function addFollow(int $followerId, int $followeeId): void
     {
+        if ($followerId === $followeeId) {
+            throw new InvalidRequestParameterException('Cannot follow yourself.');
+        }
+        if (
+            is_null($this->usersDAOImpl->getById($followerId))
+            || is_null($this->usersDAOImpl->getById($followeeId))
+        ) {
+            throw new InvalidRequestParameterException("Specified user does not exist. (follower:{$followerId}, followee:{$followeeId})");
+        }
+        if (!is_null($this->followsDAOImpl->getFollow($followerId,$followeeId))) {
+            throw new InvalidRequestParameterException("Already following. (follower:{$followerId}, followee:{$followeeId})");
+        }
         $follow = new Follow(
             id: null,
             followerId: $followerId,

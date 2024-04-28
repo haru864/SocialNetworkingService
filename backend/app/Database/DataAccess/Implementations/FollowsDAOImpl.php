@@ -38,6 +38,14 @@ class FollowsDAOImpl implements FollowsDAO
         return $follow;
     }
 
+    public function getFollow(int $followerId, int $followeeId): ?Follow
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = "SELECT * FROM follows WHERE follower_id = ? AND followee_id = ?";
+        $record = $mysqli->prepareAndFetchAll($query, 'ii', [$followerId, $followeeId]);
+        return is_null($record) ? null : $this->convertRecordToFollow($record[0]);
+    }
+
     public function getFollowers(int $followeeId): ?array
     {
         $mysqli = DatabaseManager::getMysqliConnection();

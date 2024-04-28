@@ -1,7 +1,6 @@
-export class UserData {
+export class UserInfo {
+    id: number;
     username: string;
-    password: string;
-    email: string;
     selfIntroduction: string;
     profileImage: string;
     country: string;
@@ -14,11 +13,12 @@ export class UserData {
     career_1: string;
     career_2: string;
     career_3: string;
+    isFollowedBy: boolean;
+    isFollowing: boolean;
 
     constructor(data: any) {
+        this.id = data['id'] as number;
         this.username = data['name'] as string;
-        this.password = '*********';
-        this.email = data['email'] as string;
         this.selfIntroduction = data['self_introduction'] as string;
         this.profileImage = data['profile_image'] as string;
         this.country = data['address']['country'] as string;
@@ -31,5 +31,16 @@ export class UserData {
         this.career_1 = data['careers'].length >= 1 ? data['careers'][0] : '';
         this.career_2 = data['careers'].length >= 2 ? data['careers'][1] : '';
         this.career_3 = data['careers'].length >= 3 ? data['careers'][2] : '';
+        this.isFollowedBy = data['isFollowedBy'] as boolean;
+        this.isFollowing = data['isFollowing'] as boolean;
+    }
+
+    getThumbnailUrl(): string {
+        return `${process.env.PROFILE_IMAGE_THUMBNAIL_URL}/${this.profileImage}`;
+
+    }
+
+    getUploadedImageUrl(): string {
+        return `${process.env.PROFILE_IMAGE_UPLOAD_URL}/${this.profileImage}`;
     }
 }

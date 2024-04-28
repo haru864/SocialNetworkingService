@@ -5,6 +5,7 @@ namespace Services;
 use Database\DataAccess\Implementations\AddressesDAOImpl;
 use Database\DataAccess\Implementations\CareersDAOImpl;
 use Database\DataAccess\Implementations\EmailVerificationDAOImpl;
+use Database\DataAccess\Implementations\FollowsDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
 use Database\DataAccess\Implementations\PendingAddressesDAOImpl;
 use Database\DataAccess\Implementations\PendingCareersDAOImpl;
@@ -15,6 +16,7 @@ use Exceptions\InternalServerException;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
 use Helpers\MailUtility;
+use Helpers\SessionManager;
 use Helpers\ValidationHelper;
 use Http\Request\PostProfileRequest;
 use Models\Career;
@@ -38,6 +40,7 @@ class ProfileService
     private PendingCareersDAOImpl $pendingCareersDAOImpl;
     private PendingHobbiesDAOImpl $pendingHobbiesDAOImpl;
     private EmailVerificationDAOImpl $emailVerificationDAOImpl;
+    private FollowsDAOImpl $followsDAOImpl;
 
     public function __construct(
         usersDAOImpl $usersDAOImpl,
@@ -48,7 +51,8 @@ class ProfileService
         PendingAddressesDAOImpl $pendingAddressesDAOImpl,
         PendingCareersDAOImpl $pendingCareersDAOImpl,
         PendingHobbiesDAOImpl $pendingHobbiesDAOImpl,
-        EmailVerificationDAOImpl $emailVerificationDAOImpl
+        EmailVerificationDAOImpl $emailVerificationDAOImpl,
+        FollowsDAOImpl $followsDAOImpl
     ) {
         $this->usersDAOImpl = $usersDAOImpl;
         $this->addressesDAOImpl = $addressesDAOImpl;
@@ -59,6 +63,7 @@ class ProfileService
         $this->pendingCareersDAOImpl = $pendingCareersDAOImpl;
         $this->pendingHobbiesDAOImpl = $pendingHobbiesDAOImpl;
         $this->emailVerificationDAOImpl = $emailVerificationDAOImpl;
+        $this->followsDAOImpl = $followsDAOImpl;
     }
 
     public function createPendingUser(PostProfileRequest $request, int $userId): PendingUser
@@ -258,6 +263,19 @@ class ProfileService
         foreach ($careers as $career) {
             array_push($profile['careers'], $career->getJob());
         }
+        $loginUserId = SessionManager::get('user_id');
+        $loginUserFollows = $this->followsDAOImpl->getFollowers($loginUserId);
+        $loginUserFollowers = [];
+        foreach ($loginUserFollows as $follow) {
+            array_push($loginUserFollowers, $follow->getFollowerId());
+        }
+        $loginUserFollow = $this->followsDAOImpl->getFollowees($loginUserId);
+        $loginUserFollowees = [];
+        foreach ($loginUserFollow as $follow) {
+            array_push($loginUserFollowees, $follow->getFolloweeId());
+        }
+        $profile['isFollowedBy'] = in_array($userId, $loginUserFollowers);
+        $profile['isFollowing'] = in_array($userId, $loginUserFollowees);
         return $profile;
     }
 

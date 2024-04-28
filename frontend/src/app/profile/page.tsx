@@ -1,13 +1,13 @@
 'use client'
 
 import React from 'react';
-import UserForm from './components/UserForm';
+import ProfileForm from './components/ProfileForm';
 import CommonLayout from '../common/CommonLayout';
 
 const HomePage = () => {
     return (
         <CommonLayout>
-            <UserForm />
+            <ProfileForm />
         </CommonLayout >
     );
 };

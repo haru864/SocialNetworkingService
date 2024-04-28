@@ -8,7 +8,7 @@ import {
     CardMedia,
     CardActionArea,
 } from '@mui/material';
-import { FollowerData } from './FollowerData';
+import { UserInfo } from '../../common/UserInfo';
 import Link from 'next/link';
 
 async function getFollowerIds(): Promise<number[]> {
@@ -33,9 +33,9 @@ async function getFollowerIds(): Promise<number[]> {
     }
 }
 
-async function getFollwerInfo(): Promise<FollowerData[]> {
+async function getFollwerInfo(): Promise<UserInfo[]> {
     try {
-        let followerDataList: FollowerData[] = [];
+        let userInfoList: UserInfo[] = [];
         const follwerIds = await getFollowerIds();
         for (const follwerId of follwerIds) {
             const response = await fetch(`${process.env.API_DOMAIN}/api/profile?id=${follwerId}`, {
@@ -49,11 +49,11 @@ async function getFollwerInfo(): Promise<FollowerData[]> {
             const jsonData = await response.json();
             if (jsonData !== null) {
                 const profile = jsonData['profile'];
-                const followerData = new FollowerData(profile);
-                followerDataList.push(followerData);
+                const followerData = new UserInfo(profile);
+                userInfoList.push(followerData);
             }
         }
-        return followerDataList;
+        return userInfoList;
     } catch (error: any) {
         console.error(error);
         alert(error);
@@ -62,21 +62,21 @@ async function getFollwerInfo(): Promise<FollowerData[]> {
 }
 
 const FollowerList: React.FC = () => {
-    const [followerDataList, setFollowerDataList] = useState<FollowerData[]>([]);
+    const [userInfoList, setUserInfoList] = useState<UserInfo[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
     useEffect(() => {
         loadMoreFollowers();
     }, []);
     const loadMoreFollowers = async () => {
         const followerData = await getFollwerInfo();
-        setFollowerDataList(prev => [...prev, ...followerData]);
+        setUserInfoList(prev => [...prev, ...followerData]);
         if (followerData.length === 0) {
             setHasMore(false);
         }
     };
     return (
         <InfiniteScroll
-            dataLength={setFollowerDataList.length}
+            dataLength={setUserInfoList.length}
             next={loadMoreFollowers}
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
@@ -87,15 +87,15 @@ const FollowerList: React.FC = () => {
             }
         >
             <Grid container spacing={2}>
-                {followerDataList.map(followerData => (
-                    <Grid item key={followerData.username} xs={12} sm={6} md={4}>
-                        <Link href={`/userinfo?username=${followerData.username}`}>
+                {userInfoList.map(userInfo => (
+                    <Grid item key={userInfo.username} xs={12} sm={6} md={4}>
+                        <Link href={`/userinfo?id=${userInfo.id}`}>
                             <Card sx={{ maxWidth: 450 }}>
                                 <CardActionArea>
-                                    <Link href={followerData.getUploadedImageUrl()}>
+                                    <Link href={userInfo.getUploadedImageUrl()}>
                                         <CardMedia
                                             component="img"
-                                            image={followerData.getThumbnailUrl()}
+                                            image={userInfo.getThumbnailUrl()}
                                             alt="profile image"
                                             sx={{
                                                 height: 140,
@@ -106,19 +106,19 @@ const FollowerList: React.FC = () => {
                                     </Link>
                                     <CardContent>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {followerData.username}
+                                            {userInfo.username}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            {followerData.selfIntroduction}
+                                            {userInfo.selfIntroduction}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Country: {followerData.country}, State: {followerData.state}, City: {followerData.city}, Town: {followerData.town}
+                                            Country: {userInfo.country}, State: {userInfo.state}, City: {userInfo.city}, Town: {userInfo.town}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Hobbies: {followerData.hobby_1}, {followerData.hobby_2}, {followerData.hobby_3}
+                                            Hobbies: {userInfo.hobby_1}, {userInfo.hobby_2}, {userInfo.hobby_3}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Careers: {followerData.career_1}, {followerData.career_2}, {followerData.career_3}
+                                            Careers: {userInfo.career_1}, {userInfo.career_2}, {userInfo.career_3}
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>

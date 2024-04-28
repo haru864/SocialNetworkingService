@@ -69,7 +69,7 @@ $tweetService = new TweetService($tweetsDAOImpl);
 $retweetService = new RetweetService($retweetsDAOImpl);
 $replyService = new ReplyService($tweetsDAOImpl);
 $likeService = new LikeService($likesDAOImpl);
-$followService = new FollowService($followsDAOImpl);
+$followService = new FollowService($usersDAOImpl, $followsDAOImpl);
 $profileService = new ProfileService(
     $usersDAOImpl,
     $addressesDAOImpl,
@@ -79,7 +79,8 @@ $profileService = new ProfileService(
     $pendingAddressesDAOImpl,
     $pendingCareersDAOImpl,
     $pendingHobbiesDAOImpl,
-    $emailVerificationDAOImpl
+    $emailVerificationDAOImpl,
+    $followsDAOImpl
 );
 $messageService = new MessageService($messagesDAOImpl, $usersDAOImpl);
 $resetPasswordService = new ResetPasswordService($usersDAOImpl, $emailVerificationDAOImpl);
