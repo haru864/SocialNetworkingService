@@ -31,7 +31,7 @@ class TweetController implements ControllerInterface
         throw new InvalidRequestMethodException("Tweet request must be 'GET' or 'POST'.");
     }
 
-    // TODO リツイートもツイートの一種として取得できるようにしたい
+    // TODO リツイートも返したい
     private function getTweets(GetTweetsRequest $request): JSONRenderer
     {
         if ($request->getType() === "trend") {

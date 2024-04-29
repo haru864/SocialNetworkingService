@@ -29,7 +29,7 @@ class FollowService
         ) {
             throw new InvalidRequestParameterException("Specified user does not exist. (follower:{$followerId}, followee:{$followeeId})");
         }
-        if (!is_null($this->followsDAOImpl->getFollow($followerId,$followeeId))) {
+        if (!is_null($this->followsDAOImpl->getFollow($followerId, $followeeId))) {
             throw new InvalidRequestParameterException("Already following. (follower:{$followerId}, followee:{$followeeId})");
         }
         $follow = new Follow(

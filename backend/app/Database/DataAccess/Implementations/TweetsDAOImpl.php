@@ -61,7 +61,7 @@ class TweetsDAOImpl implements TweetsDAO
         $query = <<<SQL
             SELECT * FROM tweets
             WHERE reply_to_id = ?
-            ORDER BY posting_datetime DESC
+            ORDER BY id DESC
             LIMIT ?
             OFFSET ?
         SQL;
@@ -75,7 +75,7 @@ class TweetsDAOImpl implements TweetsDAO
         $query = <<<SQL
             SELECT * FROM tweets
             WHERE user_id = ?
-            ORDER BY posting_datetime DESC
+            ORDER BY id DESC
             LIMIT ?
             OFFSET ?
         SQL;
@@ -89,7 +89,7 @@ class TweetsDAOImpl implements TweetsDAO
         $query = <<<SQL
             SELECT * FROM tweets
             WHERE user_id IN (SELECT follower_id FROM follows WHERE followee_id = ?)
-            ORDER BY posting_datetime DESC
+            ORDER BY id DESC
             LIMIT ?
             OFFSET ?
         SQL;
@@ -135,7 +135,7 @@ class TweetsDAOImpl implements TweetsDAO
                 GROUP BY reply_to_id
             ) rp ON t.id = rp.reply_to_id
             ORDER BY
-                total_count DESC, t.posting_datetime DESC
+                total_count DESC, t.id DESC
             LIMIT ?
             OFFSET ?
         SQL;

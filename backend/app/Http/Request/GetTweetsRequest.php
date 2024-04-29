@@ -8,6 +8,7 @@ use Helpers\ValidationHelper;
 class GetTweetsRequest
 {
     private string $type;
+    private ?int $userId;
     private int $page;
     private int $limit;
 
@@ -31,6 +32,7 @@ class GetTweetsRequest
             throw new InvalidRequestParameterException("'page' and 'limit' must be positive integer string.");
         }
         $this->type = $getData['type'];
+        $this->userId = $getData['id'];
         $this->page = $getData['page'];
         $this->limit = $getData['limit'];
     }
@@ -38,6 +40,11 @@ class GetTweetsRequest
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
     }
 
     public function getPage(): int

@@ -75,7 +75,11 @@ class TweetService
 
     public function getTweetsByUser(GetTweetsRequest $request): ?array
     {
-        $userId = SessionManager::get('user_id');
+        if (is_null($request->getUserId())) {
+            $userId = SessionManager::get('user_id');
+        } else {
+            $userId = $request->getUserId();
+        }
         $page = $request->getPage();
         $limit = $request->getLimit();
         $offset = ($page - 1) * $limit;

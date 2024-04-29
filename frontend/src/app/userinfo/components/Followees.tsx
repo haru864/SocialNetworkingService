@@ -62,6 +62,7 @@ async function getFollweeInfoList(userId: number): Promise<UserInfo[]> {
     }
 }
 
+// BUG 無限スクロールになってない
 const Followees: React.FC = () => {
     const [followeeInfoList, setFolloweeInfoList] = useState<UserInfo[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);

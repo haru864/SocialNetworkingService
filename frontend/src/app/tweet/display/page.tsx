@@ -1,13 +1,12 @@
 'use client'
 
 import React from 'react';
-import CommonLayout from '../common/CommonLayout';
-import UserProfile from './components/UserProfile';
+import CommonLayout from '../../common/CommonLayout';
 
 const HomePage = () => {
     return (
         <CommonLayout>
-            <UserProfile />
+            {/* <UserProfile /> */}
         </CommonLayout >
     );
 };
