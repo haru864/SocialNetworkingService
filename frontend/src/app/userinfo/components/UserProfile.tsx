@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { UserInfo } from '../../common/UserInfo';
 import { Box, Typography, CircularProgress, Button } from '@mui/material';
 import Link from 'next/link';
@@ -28,9 +29,19 @@ async function getUserinfo(userId: number): Promise<UserInfo> {
     }
 }
 
+async function followUser(userId: number): Promise<void> {
+    console.log(`Following user with ID: ${userId}`);
+}
+
+async function unfollowUser(userId: number): Promise<void> {
+    console.log(`Unfollowing user with ID: ${userId}`);
+}
+
 const UserProfile: React.FC = () => {
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const searchParams = useSearchParams();
+    const query = searchParams.get('id');
     useEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -39,11 +50,25 @@ const UserProfile: React.FC = () => {
             const parsedId = parseInt(idString, 10);
             loadUserInfo(parsedId);
         }
-    }, []);
+    }, [query]);
     const loadUserInfo = async (id: number) => {
         const userInfo = await getUserinfo(id);
         setUserInfo(userInfo);
         setIsLoading(false);
+    };
+    const handleFollow = async () => {
+        if (userInfo === null) {
+            return;
+        }
+        await followUser(userInfo.id);
+        // フォロー状態を更新するロジックをここに実装
+    };
+    const handleUnfollow = async () => {
+        if (userInfo === null) {
+            return;
+        }
+        await unfollowUser(userInfo.id);
+        // フォロー解除の状態を更新するロジックをここに実装
     };
     if (isLoading) {
         return (
@@ -85,6 +110,23 @@ const UserProfile: React.FC = () => {
                 <Typography variant="body2" color="text.secondary">
                     Careers: {userInfo.career_1}, {userInfo.career_2}, {userInfo.career_3}
                 </Typography>
+                {userInfo.isFollowedBy && (
+                    <Typography variant="body2" color="secondary">
+                        You are followed.
+                    </Typography>
+                )}
+                {userInfo.isFollowing ? (
+                    <>
+                        <Typography variant="body2">You are following.</Typography>
+                        <Button variant="contained" color="secondary" onClick={handleUnfollow}>
+                            Unfollow
+                        </Button>
+                    </>
+                ) : (
+                    <Button variant="contained" color="primary" onClick={handleFollow}>
+                        Follow
+                    </Button>
+                )}
                 <ContentArea />
             </Box>
         );

@@ -14,7 +14,7 @@ const Tweets = () => {
     return (
         <div>
             <Typography variant="h5" gutterBottom>
-                Trends for you
+                List of past tweets
             </Typography>
             <List>
                 {trendsData.map((item, index) => (

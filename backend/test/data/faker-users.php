@@ -31,7 +31,7 @@ $addressesDAOImpl = new AddressesDAOImpl();
 $hobbiesDAOImpl = new HobbiesDAOImpl();
 $careersDAOImpl = new CareersDAOImpl();
 $followsDAOImpl = new FollowsDAOImpl();
-$usersCount = 5;
+$usersCount = 25;
 
 for ($i = 0; $i < $usersCount; $i++) {
     $nowDateTime = new DateTime();

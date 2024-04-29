@@ -70,9 +70,7 @@ const FollowerList: React.FC = () => {
     const loadMoreFollowers = async () => {
         const followerData = await getFollwerInfo();
         setUserInfoList(prev => [...prev, ...followerData]);
-        if (followerData.length === 0) {
-            setHasMore(false);
-        }
+        setHasMore(followerData.length === 20);
     };
     return (
         <InfiniteScroll
