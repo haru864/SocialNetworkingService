@@ -107,7 +107,7 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
         { name: 'Profile', path: '/profile', icon: <MailIcon /> },
         { name: 'Notifications', path: '/notifications', icon: <NotificationsIcon /> },
         { name: 'Followers', path: '/followers', icon: <PeopleIcon /> },
-        { name: 'Tweet', path: '/tweet', icon: <MessageIcon /> },
+        { name: 'Tweet', path: '/tweet/post', icon: <MessageIcon /> },
         { name: 'Messages', path: '/messages', icon: <QuestionAnswerIcon /> },
         { name: 'Log out', path: '/logout', icon: <LogoutIcon /> },
     ];
