@@ -34,9 +34,7 @@ class ReplyController implements ControllerInterface
     public function getReplies(GetRepliesRequest $request): JSONRenderer
     {
         $resp = [];
-        $tweet = $this->replyService->getRepliedTweet($request);
         $replies = $this->replyService->getReplies($request);
-        $resp["tweet"] = $tweet;
         $resp["replies"] = $replies;
         return new JSONRenderer(200, $resp);
     }

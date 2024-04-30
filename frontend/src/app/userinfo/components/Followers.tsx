@@ -97,7 +97,7 @@ const Followers: React.FC = () => {
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
             endMessage={
-                <p style={{ textAlign: 'center' }}>
+                <p style={{ textAlign: 'center', marginTop: '20px' }}>
                     <b>You have seen all followers</b>
                 </p>
             }

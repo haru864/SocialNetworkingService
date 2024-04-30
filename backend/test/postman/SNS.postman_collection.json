@@ -19,12 +19,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "takina",
+									"value": "chisato",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "Pass123@",
+									"value": "Pass123_",
 									"type": "text"
 								},
 								{
@@ -40,7 +40,7 @@
 								{
 									"key": "profile_image",
 									"type": "file",
-									"src": "/home/haru/Pictures/icon_02 (1).jpg"
+									"src": []
 								},
 								{
 									"key": "country",
@@ -116,7 +116,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/signup/validate_email?id=7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451",
+							"raw": "http://sns.test.com/api/signup/validate_email?id=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -131,7 +131,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451"
+									"value": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
 								}
 							]
 						}
@@ -256,7 +256,7 @@
 					"response": []
 				},
 				{
-					"name": "[正常系]プロフィール取得",
+					"name": "[正常系]プロフィール取得_セッション",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -271,6 +271,33 @@
 							"path": [
 								"api",
 								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]プロフィール取得_ユーザーID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/profile?id=3",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3"
+								}
 							]
 						}
 					},
@@ -572,13 +599,54 @@
 							"formdata": [
 								{
 									"key": "message",
-									"value": "test_user_03_tweet_02",
+									"value": "hogehoge",
 									"type": "text"
 								},
 								{
 									"key": "media",
 									"type": "file",
 									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/tweets",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]ツイート投稿_予約",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "sample video mp4",
+									"type": "text"
+								},
+								{
+									"key": "media",
+									"type": "file",
+									"src": "/home/haru/Videos/test.mp4"
+								},
+								{
+									"key": "dateTime",
+									"value": "2024-04-30 14:55:00",
+									"type": "text"
 								}
 							]
 						},
@@ -619,6 +687,12 @@
 								{
 									"key": "type",
 									"value": "user"
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"description": "任意パラメータ",
+									"disabled": true
 								},
 								{
 									"key": "page",
@@ -702,6 +776,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "[正常系]ツイート取得_ツイート単体",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/tweets?type=tweet&tweet_id=9",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "tweet"
+								},
+								{
+									"key": "tweet_id",
+									"value": "9"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -709,13 +814,40 @@
 			"name": "いいね",
 			"item": [
 				{
+					"name": "[正常系]いいねしたユーザー取得",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/likes?tweet_id=9",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"likes"
+							],
+							"query": [
+								{
+									"key": "tweet_id",
+									"value": "9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[正常系]いいね",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"add_like\",\n    \"tweet_id\": 27\n}",
+							"raw": "{\n    \"action\": \"add\",\n    \"tweet_id\": 9\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -745,37 +877,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"remove_like\",\n    \"tweet_id\": 15\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://sns.test.com/api/likes",
-							"protocol": "http",
-							"host": [
-								"sns",
-								"test",
-								"com"
-							],
-							"path": [
-								"api",
-								"likes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[正常系]いいねしたユーザー取得",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"action\": \"get_users\",\n    \"tweet_id\": 15\n}",
+							"raw": "{\n    \"action\": \"remove\",\n    \"tweet_id\": 9\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -810,7 +912,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"add_follow\",\n    \"followee_id\": 20\n}",
+							"raw": "{\n    \"action\": \"add\",\n    \"followee_id\": 140\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -840,7 +942,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"remove_follow\",\n    \"followee_id\": 21\n}",
+							"raw": "{\n    \"action\": \"remove\",\n    \"followee_id\": 20\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -866,19 +968,10 @@
 				{
 					"name": "フォロワー取得",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"action\": \"get_followers\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://sns.test.com/api/follows",
+							"raw": "http://sns.test.com/api/follows?relation=follower",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -888,6 +981,17 @@
 							"path": [
 								"api",
 								"follows"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "66",
+									"disabled": true
+								},
+								{
+									"key": "relation",
+									"value": "follower"
+								}
 							]
 						}
 					},
@@ -896,19 +1000,10 @@
 				{
 					"name": "フォロイー取得",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"action\": \"get_followees\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://sns.test.com/api/follows",
+							"raw": "http://sns.test.com/api/follows?id=66&relation=followee",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -918,6 +1013,16 @@
 							"path": [
 								"api",
 								"follows"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "66"
+								},
+								{
+									"key": "relation",
+									"value": "followee"
+								}
 							]
 						}
 					},
@@ -938,18 +1043,18 @@
 							"formdata": [
 								{
 									"key": "message",
-									"value": "reply_to_29",
+									"value": "hogehoge",
 									"type": "text"
 								},
 								{
 									"key": "media",
-									"value": "",
-									"type": "text"
+									"type": "file",
+									"src": "/home/haru/Pictures/607666.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://sns.test.com/api/tweets/29/replies",
+							"raw": "http://sns.test.com/api/tweets/9/replies",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -959,7 +1064,7 @@
 							"path": [
 								"api",
 								"tweets",
-								"29",
+								"9",
 								"replies"
 							]
 						}
@@ -972,7 +1077,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/tweets/15/replies?page=1&limit=20",
+							"raw": "http://sns.test.com/api/tweets/9/replies?page=1&limit=20",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -982,7 +1087,7 @@
 							"path": [
 								"api",
 								"tweets",
-								"15",
+								"9",
 								"replies"
 							],
 							"query": [

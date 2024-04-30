@@ -117,4 +117,11 @@ class TweetService
         }
         return $tweetArr;
     }
+
+    public function getTweetById(GetTweetsRequest $request): array
+    {
+        $tweetId = $request->getTweetId();
+        $tweet = $this->tweetsDAOImpl->getByTweetId($tweetId);
+        return $tweet->toArray();
+    }
 }

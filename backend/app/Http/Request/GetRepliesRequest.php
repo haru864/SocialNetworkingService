@@ -15,6 +15,9 @@ class GetRepliesRequest
     {
         $uriDir = explode('?', $_SERVER['REQUEST_URI'])[0];
         $this->tweetId = explode('/', $uriDir)[3];
+        if (!ValidationHelper::isPositiveIntegerString($this->tweetId)) {
+            throw new InvalidRequestParameterException("'tweet_id' must be positive integer.");
+        }
         $requiredParams = ['page', 'limit'];
         foreach ($requiredParams as $param) {
             if (is_null($getData[$param])) {

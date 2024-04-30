@@ -26,7 +26,12 @@ class TweetController implements ControllerInterface
     public function handleRequest(): JSONRenderer
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            return $this->getTweets(new GetTweetsRequest($_GET));
+            $request = new GetTweetsRequest($_GET);
+            if ($request->getType() === 'tweet') {
+                return $this->getTweet($request);
+            } else {
+                return $this->getTweets($request);
+            }
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!preg_match('/multipart\/form-data/', $_SERVER['CONTENT_TYPE'])) {
                 throw new InvalidRequestMethodException("Post-Tweet request must be 'multipart/form-data'.");
@@ -47,6 +52,13 @@ class TweetController implements ControllerInterface
             $tweets = $this->tweetService->getTweetsByUser($request);
         }
         $resp = ["tweets" => $tweets];
+        return new JSONRenderer(200, $resp);
+    }
+
+    private function getTweet(GetTweetsRequest $request): JSONRenderer
+    {
+        $tweet = $this->tweetService->getTweetById($request);
+        $resp = ["tweet" => $tweet];
         return new JSONRenderer(200, $resp);
     }
 

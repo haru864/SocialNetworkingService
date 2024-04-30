@@ -9,30 +9,49 @@ class GetTweetsRequest
 {
     private string $type;
     private ?int $userId;
-    private int $page;
-    private int $limit;
+    private ?int $tweetId;
+    private ?int $page;
+    private ?int $limit;
 
     public function __construct(array $getData)
     {
-        $requiredParams = ['type', 'page', 'limit'];
+        $this->type = $getData['type'];
+        $validTypes = ['trend', 'follower', 'user', 'tweet'];
+        if (!in_array($this->type, $validTypes)) {
+            $validTypeStr = implode(",", $validTypes);
+            throw new InvalidRequestParameterException("'type' must be in [{$validTypeStr}].");
+        }
+
+        if (in_array($this->type, ['trend', 'follower', 'user'])) {
+            $requiredParams = ['type', 'page', 'limit'];
+        } else if ($this->type === 'tweet') {
+            $requiredParams = ['type', 'tweet_id'];
+        }
         foreach ($requiredParams as $param) {
             if (is_null($getData[$param])) {
                 throw new InvalidRequestParameterException("'{$param}' must be set in get-tweets request.");
             }
         }
-        $validTypes = ['trend', 'follower', 'user'];
-        if (!in_array($getData['type'], $validTypes)) {
-            $validTypeStr = implode(",", $validTypes);
-            throw new InvalidRequestParameterException("'type' must be in [{$validTypeStr}].");
+
+        if (in_array($this->type, ['trend', 'follower', 'user'])) {
+            if (
+                !ValidationHelper::isPositiveIntegerString($getData['page'])
+                || !ValidationHelper::isPositiveIntegerString($getData['limit'])
+            ) {
+                throw new InvalidRequestParameterException("'page' and 'limit' must be positive integer string.");
+            }
         }
-        if (
-            !ValidationHelper::isPositiveIntegerString($getData['page'])
-            || !ValidationHelper::isPositiveIntegerString($getData['limit'])
-        ) {
-            throw new InvalidRequestParameterException("'page' and 'limit' must be positive integer string.");
+
+        if ($this->type === 'user' && isset($getData['user_id']) && !ValidationHelper::isPositiveIntegerString($getData['user_id'])) {
+            throw new InvalidRequestParameterException("'user_id' must be positive integer string.");
         }
-        $this->type = $getData['type'];
-        $this->userId = $getData['id'];
+
+        if ($this->type === 'tweet' && !ValidationHelper::isPositiveIntegerString($getData['tweet_id'])) {
+            throw new InvalidRequestParameterException("'tweet_id' must be positive integer string.");
+        }
+
+        $this->userId = $getData['user_id'];
+        $this->tweetId = $getData['tweet_id'];
         $this->page = $getData['page'];
         $this->limit = $getData['limit'];
     }
@@ -47,12 +66,17 @@ class GetTweetsRequest
         return $this->userId;
     }
 
-    public function getPage(): int
+    public function getTweetId(): ?int
+    {
+        return $this->tweetId;
+    }
+
+    public function getPage(): ?int
     {
         return $this->page;
     }
 
-    public function getLimit(): string
+    public function getLimit(): ?int
     {
         return $this->limit;
     }

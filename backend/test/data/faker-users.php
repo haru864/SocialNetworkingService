@@ -32,6 +32,7 @@ $hobbiesDAOImpl = new HobbiesDAOImpl();
 $careersDAOImpl = new CareersDAOImpl();
 $followsDAOImpl = new FollowsDAOImpl();
 $usersCount = 25;
+$followeeId = 1;
 
 for ($i = 0; $i < $usersCount; $i++) {
     $nowDateTime = new DateTime();
@@ -82,7 +83,7 @@ for ($i = 0; $i < $usersCount; $i++) {
         $careersDAOImpl->create($career);
     }
 
-    $follow = new Follow(null, $userId, 3, $nowDateTimeStr);
+    $follow = new Follow(null, $userId, $followeeId, $nowDateTimeStr);
     $followsDAOImpl->create($follow);
 }
 
@@ -143,9 +144,10 @@ function generateUniqueHashWithLimit(string $dirPath, string $data, $limit = 100
     while ($counter < $limit) {
         $unique = true;
         foreach ($iterator as $fileinfo) {
-            if (!$fileinfo->isDot()) {
-                $filenameWithoutExtension = $fileinfo->getBasename('.' . $fileinfo->getExtension());
+            if ($fileinfo->isDot()) {
+                continue;
             }
+            $filenameWithoutExtension = $fileinfo->getBasename('.' . $fileinfo->getExtension());
             if ($hash === $filenameWithoutExtension) {
                 $unique = false;
             }

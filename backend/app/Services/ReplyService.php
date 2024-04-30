@@ -70,23 +70,16 @@ class ReplyService
         return;
     }
 
-    public function getRepliedTweet(GetRepliesRequest $request): ?array
-    {
-        $tweetId = $request->getTweetId();
-        $tweet  = $this->tweetsDAOImpl->getByTweetId($tweetId);
-        return is_null($tweet) ? null : $tweet->toArray();
-    }
-
     public function getReplies(GetRepliesRequest $request): array
     {
         $page = $request->getPage();
         $limit = $request->getLimit();
         $offset = ($page - 1) * $limit;
         $replies = $this->tweetsDAOImpl->getByReplyToId($request->getTweetId(), $limit, $offset);
-        $replyArr = ["replies" => []];
+        $repliesArr = [];
         foreach ($replies as $reply) {
-            array_push($replyArr["replies"], $reply->toArray());
+            array_push($repliesArr, $reply->toArray());
         }
-        return $replyArr;
+        return $repliesArr;
     }
 }

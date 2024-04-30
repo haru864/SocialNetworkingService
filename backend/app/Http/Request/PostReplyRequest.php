@@ -15,6 +15,9 @@ class PostReplyRequest
     {
         $uriDir = explode('?', $_SERVER['REQUEST_URI'])[0];
         $this->tweetId = explode('/', $uriDir)[3];
+        if (!ValidationHelper::isPositiveIntegerString($this->tweetId)) {
+            throw new InvalidRequestParameterException("'tweet_id' must be positive integer.");
+        }
         if (is_null($postData['message'])) {
             throw new InvalidRequestParameterException("'message' must be set in post-tweet request.");
         }

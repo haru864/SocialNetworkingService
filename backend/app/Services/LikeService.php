@@ -3,6 +3,7 @@
 namespace Services;
 
 use Database\DataAccess\Implementations\LikesDAOImpl;
+use Exceptions\InvalidRequestParameterException;
 use Models\Like;
 
 class LikeService
@@ -14,8 +15,21 @@ class LikeService
         $this->likesDAOImpl = $likesDAOImpl;
     }
 
+    public function getLikeUsers(int $tweetId): array
+    {
+        $likes = $this->likesDAOImpl->getLikeUsers($tweetId);
+        $userIds = [];
+        foreach ($likes as $like) {
+            array_push($userIds, $like->getUserId());
+        }
+        return $userIds;
+    }
+
     public function addLike(int $userId, int $tweetId): void
     {
+        if (!is_null($this->likesDAOImpl->getLike($userId, $tweetId))) {
+            throw new InvalidRequestParameterException('Tweet has already been liked.');
+        }
         $like = new Like(
             id: null,
             userId: $userId,
@@ -28,17 +42,10 @@ class LikeService
 
     public function removeLike(int $userId, int $tweetId): void
     {
+        if (is_null($this->likesDAOImpl->getLike($userId, $tweetId))) {
+            throw new InvalidRequestParameterException('Tweet has not been liked.');
+        }
         $this->likesDAOImpl->delete($userId, $tweetId);
         return;
-    }
-
-    public function getLikeUsers(int $tweetId): array
-    {
-        $likes = $this->likesDAOImpl->getLikeUsers($tweetId);
-        $userIds = [];
-        foreach ($likes as $like) {
-            array_push($userIds, $like->getUserId());
-        }
-        return $userIds;
     }
 }

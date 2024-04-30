@@ -8,7 +8,11 @@ import {
     Typography,
     CardMedia,
     CardActionArea,
+    IconButton
 } from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import RepeatIcon from '@mui/icons-material/Repeat';
 import Link from 'next/link';
 import { Tweet } from '@/app/common/Tweet';
 
@@ -36,6 +40,40 @@ async function getTweets(userId: number, page: number): Promise<Tweet[]> {
         console.error(error);
         throw error;
     }
+}
+
+async function getLikeCount(tweetId: number): Promise<number> {
+    try {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/likes`, {
+            method: 'GET',
+            credentials: 'include'
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
+        const jsonData = await response.json();
+        let tweets = [];
+        if (jsonData !== null) {
+            const tweetDataList = jsonData['tweets'];
+            for (const tweetData of tweetDataList) {
+                const tweet = new Tweet(tweetData);
+                tweets.push(tweet);
+            }
+        }
+        return tweets;
+    } catch (error: any) {
+        console.error(error);
+        throw error;
+    }
+}
+
+async function getRetweetCount(tweetId: number): Promise<number> {
+
+}
+
+async function getReplyCount(tweetId: number): Promise<number> {
+
 }
 
 const Tweets: React.FC = () => {
@@ -118,6 +156,15 @@ const Tweets: React.FC = () => {
                                             src={tweet.getUploadedVideoUrl()}
                                         />
                                     )}
+                                    <IconButton aria-label="add to favorites">
+                                        <FavoriteBorderIcon /> {tweet.getLikeCount()}
+                                    </IconButton>
+                                    <IconButton aria-label="retweet">
+                                        <RepeatIcon /> {tweet.getRetweetCount()}
+                                    </IconButton>
+                                    <IconButton aria-label="reply">
+                                        <ChatBubbleOutlineIcon /> {tweet.getReplyCount()}
+                                    </IconButton>
                                 </CardActionArea>
                             </Card>
                         </Link>

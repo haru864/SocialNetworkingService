@@ -38,6 +38,14 @@ class LikesDAOImpl implements LikesDAO
         return $like;
     }
 
+    public function getLike(int $userId, int $tweetId): ?Like
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = "SELECT * FROM likes WHERE user_id = ? AND tweet_id = ?";
+        $records = $mysqli->prepareAndFetchAll($query, 'ii', [$userId, $tweetId]);
+        return count($records) === 0 ? null : $this->convertRecordToLike($records[0]);
+    }
+
     public function getLikeUsers(int $tweetId): array
     {
         $mysqli = DatabaseManager::getMysqliConnection();
