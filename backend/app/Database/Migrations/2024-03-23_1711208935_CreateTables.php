@@ -62,6 +62,7 @@ class CreateTables implements Database\SchemaMigration
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL,
                 tweet_id INT NOT NULL,
+                message VARCHAR(200),
                 retweet_datetime DATETIME NOT NULL,
                 UNIQUE(user_id, tweet_id),
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -135,9 +136,10 @@ class CreateTables implements Database\SchemaMigration
             )",
             "CREATE TABLE scheduled_tweets (
                 id INT AUTO_INCREMENT PRIMARY KEY,
+                reply_to_id INT,
                 user_id INT NOT NULL,
-                message VARCHAR(255) NOT NULL,
-                media_file_path VARCHAR(255),
+                message VARCHAR(200) NOT NULL,
+                media_file_name VARCHAR(255),
                 media_type VARCHAR(255),
                 scheduled_datetime DATETIME NOT NULL
             )",

@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Button, TextField, Box, Typography, Grid, CircularProgress } from '@mui/material';
+import {
+    Button,
+    TextField,
+    Box,
+    Typography,
+    Grid,
+    CircularProgress,
+    FormControlLabel,
+    Checkbox
+} from '@mui/material';
 import * as ValidationUtil from "../../../utils/ValidationUtil";
 
 async function postTweet(
@@ -9,6 +18,11 @@ async function postTweet(
     try {
         event.preventDefault();
         const data: FormData = new FormData(event.currentTarget);
+        let dateTime: string | null = data.get('dateTime') as string | null;
+        if (dateTime) {
+            dateTime = dateTime.replace('T', ' ') + ':00';
+            data.set('dateTime', dateTime);
+        }
         const message: string = data.get('message') as string;
         ValidationUtil.validateCharCount(message, "Message", 1, 200);
         setLoading(true);
@@ -29,7 +43,12 @@ async function postTweet(
 }
 
 export default function TweetInput() {
+    const [isChecked, setIsChecked] = useState(false);
+    const [dateTime, setDateTime] = useState('');
     const [loading, setLoading] = useState(false);
+    const handleCheckboxChange = (event: any) => {
+        setIsChecked(event.target.checked);
+    };
     if (loading) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -66,6 +85,24 @@ export default function TweetInput() {
                             Upload Image/Video
                         </Button>
                     </label>
+                </Grid>
+                <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }} sx={{ mt: 1 }}>
+                    <FormControlLabel
+                        control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
+                        label="Specify post date and time"
+                    />
+                    {isChecked && (
+                        <TextField
+                            name="dateTime"
+                            label="Post Date and Time"
+                            type="datetime-local"
+                            value={dateTime}
+                            onChange={e => setDateTime(e.target.value)}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    )}
                 </Grid>
                 <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button type="submit" variant="contained" sx={{ mb: 2 }}>

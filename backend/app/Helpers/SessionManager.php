@@ -22,8 +22,10 @@ class SessionManager
         self::startSession();
 
         // TODO ITテスト後に削除する
-        if ($key == 'user_id') return 3;
+        // -----------------------------------------------
+        if ($key == 'user_id') return 1;
         if ($key == 'user_name') return 'chisato';
+        // -----------------------------------------------
 
         return $_SESSION[$key] ?? null;
     }

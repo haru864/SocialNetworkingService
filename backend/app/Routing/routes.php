@@ -24,6 +24,7 @@ use Database\DataAccess\Implementations\PendingHobbiesDAOImpl;
 use Database\DataAccess\Implementations\PendingUsersDAOImpl;
 use Database\DataAccess\Implementations\TweetsDAOImpl;
 use Database\DataAccess\Implementations\RetweetsDAOImpl;
+use Database\DataAccess\Implementations\ScheduledTweetsDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Middleware\AuthMiddleware;
 use Middleware\NoopMiddleware;
@@ -35,6 +36,7 @@ use Services\ProfileService;
 use Services\ReplyService;
 use Services\ResetPasswordService;
 use Services\RetweetService;
+use Services\ScheduledTweetService;
 use Services\SignupService;
 use Services\TweetService;
 
@@ -52,6 +54,7 @@ $pendingUsersDAOImpl = new PendingUsersDAOImpl();
 $pendingAddressesDAOImpl = new PendingAddressesDAOImpl();
 $pendingCareersDAOImpl = new PendingCareersDAOImpl();
 $pendingHobbiesDAOImpl = new PendingHobbiesDAOImpl();
+$scheduledTweetsDAOImpl = new ScheduledTweetsDAOImpl();
 
 $loginService = new LoginService($usersDAOImpl);
 $signupService = new SignupService(
@@ -66,6 +69,7 @@ $signupService = new SignupService(
     $emailVerificationDAOImpl
 );
 $tweetService = new TweetService($tweetsDAOImpl);
+$scheduledTweetService = new ScheduledTweetService($scheduledTweetsDAOImpl, $tweetsDAOImpl);
 $retweetService = new RetweetService($retweetsDAOImpl);
 $replyService = new ReplyService($tweetsDAOImpl);
 $likeService = new LikeService($likesDAOImpl);
@@ -88,7 +92,7 @@ $resetPasswordService = new ResetPasswordService($usersDAOImpl, $emailVerificati
 $loginController = new LoginController($loginService);
 $signupController = new SignupController($signupService);
 $logoutController = new LogoutController();
-$tweetController = new TweetController($tweetService);
+$tweetController = new TweetController($tweetService, $scheduledTweetService);
 $retweetController = new RetweetController($retweetService);
 $replyController  = new ReplyController($replyService);
 $likeController = new LikeController($likeService);

@@ -9,6 +9,7 @@ class PostTweetRequest
 {
     private string $message;
     private ?array $media;  // $_FILESオブジェクト
+    private ?string $scheduledDatetime;
 
     public function __construct(array $postData, array $fileData)
     {
@@ -30,6 +31,7 @@ class PostTweetRequest
         }
         $this->message = $postData['message'];
         $this->media = $media;
+        $this->scheduledDatetime = $postData['dateTime'];
     }
 
     public function getMessage(): string
@@ -40,5 +42,10 @@ class PostTweetRequest
     public function getMedia(): ?array
     {
         return $this->media;
+    }
+
+    public function getScheduledDatetime(): ?string
+    {
+        return $this->scheduledDatetime;
     }
 }

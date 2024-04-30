@@ -93,6 +93,7 @@ class Logger
         $this->logFilePath = $logFilePathCandidate;
         if (!file_exists($this->logFilePath)) {
             file_put_contents($this->logFilePath, '');
+            chmod($this->logFilePath, 0666);
         }
     }
 

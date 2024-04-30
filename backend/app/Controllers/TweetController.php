@@ -7,15 +7,20 @@ use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
 use Http\Request\GetTweetsRequest;
 use Http\Request\PostTweetRequest;
+use Services\ScheduledTweetService;
 use Services\TweetService;
 
 class TweetController implements ControllerInterface
 {
     private TweetService $tweetService;
+    private ScheduledTweetService $scheduledTweetService;
 
-    public function __construct(TweetService $tweetService)
-    {
+    public function __construct(
+        TweetService $tweetService,
+        ScheduledTweetService $scheduledTweetService
+    ) {
         $this->tweetService = $tweetService;
+        $this->scheduledTweetService = $scheduledTweetService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -47,7 +52,11 @@ class TweetController implements ControllerInterface
 
     private function postTweet(PostTweetRequest $request): JSONRenderer
     {
-        $this->tweetService->createTweet($request);
+        if (is_null($request->getScheduledDatetime())) {
+            $this->tweetService->createTweet($request);
+        } else {
+            $this->scheduledTweetService->createScheduledTweet($request);
+        }
         return new JSONRenderer(200, []);
     }
 }
