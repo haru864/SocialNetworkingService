@@ -5,7 +5,7 @@ namespace Http\Request;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\ValidationHelper;
 
-class GetRepliesRequest
+class GetRepliesPartRequest
 {
     private string $tweetId;
     private int $page;

@@ -18,7 +18,7 @@ import { Tweet } from '@/app/common/Tweet';
 
 async function getTweets(userId: number, page: number): Promise<Tweet[]> {
     try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets?type=user&id=${userId}&page=${page}&limit=20`, {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets?type=user&user_id=${userId}&page=${page}&limit=20`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -31,8 +31,13 @@ async function getTweets(userId: number, page: number): Promise<Tweet[]> {
         if (jsonData !== null) {
             const tweetDataList = jsonData['tweets'];
             for (const tweetData of tweetDataList) {
-                const likeUserIds = await getLikeUserIds(tweetData['id']);
+                tweetData['likeUserIds'] = await getLikeUserIds(tweetData['id']);
+                tweetData['retweetUserIds'] = await getRetweetUserIds(tweetData['id']);
+                tweetData['replyUserIds'] = await getReplyUserIds(tweetData['id']);
 
+                console.log(tweetData['likeUserIds']);
+                console.log(tweetData['retweetUserIds']);
+                console.log(tweetData['replyUserIds']);
 
                 const tweet = new Tweet(tweetData);
                 tweets.push(tweet);
@@ -67,7 +72,7 @@ async function getLikeUserIds(tweetId: number): Promise<number[]> {
     }
 }
 
-async function getRetweetUserIds(tweetId: number): Promise<number> {
+async function getRetweetUserIds(tweetId: number): Promise<number[]> {
     try {
         const response = await fetch(`${process.env.API_DOMAIN}/api/tweets/${tweetId}/retweets`, {
             method: 'GET',
@@ -78,26 +83,49 @@ async function getRetweetUserIds(tweetId: number): Promise<number> {
             throw new Error(responseData["error_message"]);
         }
         const jsonData = await response.json();
-        let retweets = [];
+        let retweetUserIds = [];
         if (jsonData !== null) {
-            likeUserIds = jsonData['user_id'];
+            const retweets = jsonData['retweets'];
+            for (const retweet of retweets) {
+                retweetUserIds.push(retweet['userId']);
+            }
         }
-        return likeUserIds;
+        return retweetUserIds;
     } catch (error: any) {
         console.error(error);
         throw error;
     }
 }
 
-async function getReplies(tweetId: number): Promise<number> {
-
+async function getReplyUserIds(tweetId: number): Promise<number[]> {
+    try {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets/${tweetId}/replies`, {
+            method: 'GET',
+            credentials: 'include'
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
+        const jsonData = await response.json();
+        let replyUserIds = [];
+        if (jsonData !== null) {
+            const replies = jsonData['replies'];
+            for (const reply of replies) {
+                replyUserIds.push(reply['userId']);
+            }
+        }
+        return replyUserIds;
+    } catch (error: any) {
+        console.error(error);
+        throw error;
+    }
 }
 
 const Tweets: React.FC = () => {
     const [tweets, setTweets] = useState<Tweet[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [page, setPage] = useState<number>(1);
-    const router = useRouter();
     const searchParams = useSearchParams();
     const query = searchParams.get('id') as string;
 
@@ -119,9 +147,19 @@ const Tweets: React.FC = () => {
 
     const loadMoreTweets = async (id: number, page: number) => {
         const currentTweets = await getTweets(id, page);
+
+        console.log(currentTweets);
+        console.log(tweets);
+        console.log(id);
+        // console.log(hasMore);
+        // console.log(page);
+
         setTweets(prev => [...prev, ...currentTweets]);
-        setPage(prev => prev + 1);
+        setPage(page + 1);
         setHasMore(currentTweets.length > 0);
+
+        // console.log(currentTweets.length > 0);
+        // console.log(page);
     };
 
     return (

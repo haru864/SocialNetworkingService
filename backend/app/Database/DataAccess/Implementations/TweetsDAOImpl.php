@@ -4,6 +4,7 @@ namespace Database\DataAccess\Implementations;
 
 use Database\DataAccess\Interfaces\TweetsDAO;
 use Database\DatabaseManager;
+use Exceptions\InternalServerException;
 use Models\Tweet;
 use Exceptions\QueryFailedException;
 
@@ -55,17 +56,32 @@ class TweetsDAOImpl implements TweetsDAO
         return $record === null ? null : $this->convertRecordToTweet($record);
     }
 
-    public function getByReplyToId(int $replyToId, int $limit, int $offset): ?array
+    public function getByReplyToId(int $replyToId, int $limit = null, int $offset = null): ?array
     {
+        if (
+            (is_null($limit) && !is_null($offset))
+            || (!is_null($limit) && is_null($offset))
+        ) {
+            throw new InternalServerException('limit and offset can be set both or neither.');
+        }
         $mysqli = DatabaseManager::getMysqliConnection();
-        $query = <<<SQL
-            SELECT * FROM tweets
-            WHERE reply_to_id = ?
-            ORDER BY id DESC
-            LIMIT ?
-            OFFSET ?
-        SQL;
-        $records = $mysqli->prepareAndFetchAll($query, 'iii', [$replyToId, $limit, $offset]);
+        if (is_null($limit) && is_null($offset)) {
+            $query = <<<SQL
+                SELECT * FROM tweets
+                WHERE reply_to_id = ?
+                ORDER BY id DESC
+            SQL;
+            $records = $mysqli->prepareAndFetchAll($query, 'i', [$replyToId]);
+        } else {
+            $query = <<<SQL
+                SELECT * FROM tweets
+                WHERE reply_to_id = ?
+                ORDER BY id DESC
+                LIMIT ?
+                OFFSET ?
+            SQL;
+            $records = $mysqli->prepareAndFetchAll($query, 'iii', [$replyToId, $limit, $offset]);
+        }
         return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
     }
 

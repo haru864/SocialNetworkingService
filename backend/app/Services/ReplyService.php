@@ -7,7 +7,6 @@ use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
 use Helpers\SessionManager;
 use Helpers\ValidationHelper;
-use Http\Request\GetRepliesRequest;
 use Http\Request\PostReplyRequest;
 use Models\Tweet;
 use Settings\Settings;
@@ -70,12 +69,20 @@ class ReplyService
         return;
     }
 
-    public function getReplies(GetRepliesRequest $request): array
+    public function getAllReplies(int $tweetId): array
     {
-        $page = $request->getPage();
-        $limit = $request->getLimit();
+        $replies = $this->tweetsDAOImpl->getByReplyToId($tweetId, null, null);
+        $repliesArr = [];
+        foreach ($replies as $reply) {
+            array_push($repliesArr, $reply->toArray());
+        }
+        return $repliesArr;
+    }
+
+    public function getPartialReplies(int $tweetId, int $page, int $limit): array
+    {
         $offset = ($page - 1) * $limit;
-        $replies = $this->tweetsDAOImpl->getByReplyToId($request->getTweetId(), $limit, $offset);
+        $replies = $this->tweetsDAOImpl->getByReplyToId($tweetId, $limit, $offset);
         $repliesArr = [];
         foreach ($replies as $reply) {
             array_push($repliesArr, $reply->toArray());
