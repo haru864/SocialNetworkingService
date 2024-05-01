@@ -31,6 +31,9 @@ async function getTweets(userId: number, page: number): Promise<Tweet[]> {
         if (jsonData !== null) {
             const tweetDataList = jsonData['tweets'];
             for (const tweetData of tweetDataList) {
+                const likeUserIds = await getLikeUserIds(tweetData['id']);
+
+
                 const tweet = new Tweet(tweetData);
                 tweets.push(tweet);
             }
@@ -42,9 +45,9 @@ async function getTweets(userId: number, page: number): Promise<Tweet[]> {
     }
 }
 
-async function getLikeCount(tweetId: number): Promise<number> {
+async function getLikeUserIds(tweetId: number): Promise<number[]> {
     try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/likes`, {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/likes?tweet_id=${tweetId}`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -53,26 +56,40 @@ async function getLikeCount(tweetId: number): Promise<number> {
             throw new Error(responseData["error_message"]);
         }
         const jsonData = await response.json();
-        let tweets = [];
+        let likeUserIds = [];
         if (jsonData !== null) {
-            const tweetDataList = jsonData['tweets'];
-            for (const tweetData of tweetDataList) {
-                const tweet = new Tweet(tweetData);
-                tweets.push(tweet);
-            }
+            likeUserIds = jsonData['user_id'];
         }
-        return tweets;
+        return likeUserIds;
     } catch (error: any) {
         console.error(error);
         throw error;
     }
 }
 
-async function getRetweetCount(tweetId: number): Promise<number> {
-
+async function getRetweetUserIds(tweetId: number): Promise<number> {
+    try {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets/${tweetId}/retweets`, {
+            method: 'GET',
+            credentials: 'include'
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
+        const jsonData = await response.json();
+        let retweets = [];
+        if (jsonData !== null) {
+            likeUserIds = jsonData['user_id'];
+        }
+        return likeUserIds;
+    } catch (error: any) {
+        console.error(error);
+        throw error;
+    }
 }
 
-async function getReplyCount(tweetId: number): Promise<number> {
+async function getReplies(tweetId: number): Promise<number> {
 
 }
 

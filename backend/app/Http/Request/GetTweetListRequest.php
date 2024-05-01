@@ -5,7 +5,7 @@ namespace Http\Request;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\ValidationHelper;
 
-class GetTweetsRequest
+class GetTweetListRequest
 {
     private string $type;
     private ?int $userId;

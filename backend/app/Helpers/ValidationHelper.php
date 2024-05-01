@@ -34,6 +34,13 @@ class ValidationHelper
         return preg_match('/^[1-9][0-9]*$/', $str) === 1;
     }
 
+    public static function validateStringLength(string $message, string $itemName, int $minLength, int $maxLength): void
+    {
+        if (mb_strlen($message) < $minLength || mb_strlen($message) > $maxLength) {
+            throw new InvalidRequestParameterException("{$itemName} must be between {$minLength} and {$maxLength} characters.");
+        }
+    }
+
     public static function validateUsername(string $username): void
     {
         $pattern = '/^[a-zA-Z0-9]{1,15}$/';

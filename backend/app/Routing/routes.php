@@ -106,14 +106,14 @@ $URL_DIR_PATTERN_RESET_PASSWORD = '/^\/api\/reset_password$/';
 $URL_DIR_PATTERN_SIGNUP = '/^\/api\/signup$/';
 $URL_DIR_PATTERN_VALIDATE_SIGNUP_EMAIL = '/^\/api\/signup\/validate_email$/';
 $URL_DIR_PATTERN_LOGOUT = '/^\/api\/logout$/';
-$URL_DIR_PATTERN_TWEETS = '/^\/api\/tweets$/';
+$URL_DIR_PATTERN_TWEETS = '/^\/api\/tweets(\/([1-9][0-9]*))?$/';
 $URL_DIR_PATTERN_RETWEETS = '/^\/api\/tweets\/(\d+)\/retweets$/';
 $URL_DIR_PATTERN_REPLIES = '/^\/api\/tweets\/(\d+)\/replies$/';
 $URL_DIR_PATTERN_LIKES = '/^\/api\/likes$/';
 $URL_DIR_PATTERN_FOLLOWS = '/^\/api\/follows$/';
 $URL_DIR_PATTERN_PROFILE = '/^\/api\/profile$/';
 $URL_DIR_PATTERN_VALIDATE_UPDATE_EMAIL = '/^\/api\/profile\/validate_email$/';
-$URL_DIR_PATTERN_MESSAGES = '/^\/api\/messages(\/\d+)?$/';
+$URL_DIR_PATTERN_MESSAGES = '/^\/api\/messages(\/([1-9][0-9]*))??$/';
 
 // TODO Nginxのauth_requestモジュールでリクエストを認証用PHPスクリプトに送り、メディアファイルアクセスを許可または拒否する
 return [

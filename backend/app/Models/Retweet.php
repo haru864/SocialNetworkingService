@@ -12,17 +12,20 @@ class Retweet implements Model
     private ?int $id;
     private int $userId;
     private int $tweetId;
+    private ?string $message;
     private string $retweetDatetime;
 
     public function __construct(
         ?int $id,
         int $userId,
         int $tweetId,
+        ?string $message,
         string $retweetDatetime
     ) {
         $this->id = $id;
         $this->userId = $userId;
         $this->tweetId = $tweetId;
+        $this->message = $message;
         $this->retweetDatetime = $retweetDatetime;
     }
 
@@ -56,6 +59,16 @@ class Retweet implements Model
         $this->tweetId = $tweetId;
     }
 
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): void
+    {
+        $this->message = $message;
+    }
+
     public function getRetweetDatetime(): string
     {
         return $this->retweetDatetime;
@@ -72,6 +85,7 @@ class Retweet implements Model
             'id' => $this->getId(),
             'userId' => $this->getUserId(),
             'tweetId' => $this->getTweetId(),
+            'message' => $this->getMessage(),
             'retweetDatetime' => $this->getRetweetDatetime()
         ];
         return $data;

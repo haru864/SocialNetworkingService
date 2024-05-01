@@ -4,8 +4,6 @@ namespace Services;
 
 use Database\DataAccess\Implementations\RetweetsDAOImpl;
 use Exceptions\InvalidRequestParameterException;
-use Helpers\SessionManager;
-use Http\Request\RetweetsRequest;
 use Models\Retweet;
 
 class RetweetService
@@ -17,9 +15,8 @@ class RetweetService
         $this->retweetsDAOImpl = $retweetsDAOImpl;
     }
 
-    public function createRetweet(RetweetsRequest $request, int $userId): void
+    public function createRetweet(int $userId, int $tweetId, ?string $message): void
     {
-        $tweetId = $request->getTweetId();
         $retweetInTable = $this->retweetsDAOImpl->getRetweet($userId, $tweetId);
         if (!is_null($retweetInTable)) {
             throw new InvalidRequestParameterException("Already retweeted.");
@@ -28,15 +25,25 @@ class RetweetService
             id: null,
             userId: $userId,
             tweetId: $tweetId,
+            message: $message,
             retweetDatetime: date('Y-m-d H:i:s')
         );
         $this->retweetsDAOImpl->create($retweet);
         return;
     }
 
-    public function getRetweets(RetweetsRequest $request): ?array
+    public function removeRetweet(int $userId, int $tweetId): void
     {
-        $tweetId = $request->getTweetId();
+        $retweetInTable = $this->retweetsDAOImpl->getRetweet($userId, $tweetId);
+        if (is_null($retweetInTable)) {
+            throw new InvalidRequestParameterException("Not retweeted.");
+        }
+        $this->retweetsDAOImpl->deleteById($retweetInTable->getId());
+        return;
+    }
+
+    public function getRetweets(int $tweetId): ?array
+    {
         $retweets = $this->retweetsDAOImpl->getByTweetId($tweetId);
         $retweetArr = [];
         foreach ($retweets as $retweet) {

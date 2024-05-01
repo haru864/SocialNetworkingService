@@ -73,15 +73,8 @@ class TweetService
         return;
     }
 
-    public function getTweetsByUser(GetTweetsRequest $request): ?array
+    public function getTweetsByUser(int $userId, int $page, int $limit): ?array
     {
-        if (is_null($request->getUserId())) {
-            $userId = SessionManager::get('user_id');
-        } else {
-            $userId = $request->getUserId();
-        }
-        $page = $request->getPage();
-        $limit = $request->getLimit();
         $offset = ($page - 1) * $limit;
         $tweets = $this->tweetsDAOImpl->getByUserId($userId, $limit, $offset);
         $tweetArr = [];
@@ -91,10 +84,8 @@ class TweetService
         return $tweetArr;
     }
 
-    public function getTweetsByPopular(GetTweetsRequest $request): ?array
+    public function getTweetsByPopular(int $page, int $limit): ?array
     {
-        $page = $request->getPage();
-        $limit = $request->getLimit();
         $offset = ($page - 1) * $limit;
         $tweets = $this->tweetsDAOImpl->getByPopular($limit, $offset);
         $tweetArr = [];
@@ -104,11 +95,8 @@ class TweetService
         return $tweetArr;
     }
 
-    public function getTweetsByFollows(GetTweetsRequest $request): ?array
+    public function getTweetsByFollows(int $userId, int $page, int $limit): ?array
     {
-        $userId = SessionManager::get('user_id');
-        $page = $request->getPage();
-        $limit = $request->getLimit();
         $offset = ($page - 1) * $limit;
         $tweets = $this->tweetsDAOImpl->getByFollower($userId, $limit, $offset);
         $tweetArr = [];
@@ -118,10 +106,19 @@ class TweetService
         return $tweetArr;
     }
 
-    public function getTweetById(GetTweetsRequest $request): array
+    public function getTweetById(int $tweetId): array
     {
-        $tweetId = $request->getTweetId();
         $tweet = $this->tweetsDAOImpl->getByTweetId($tweetId);
         return $tweet->toArray();
+    }
+
+    public function deleteTweet(int $tweetId): void
+    {
+        $tweet = $this->tweetsDAOImpl->getByTweetId($tweetId);
+        if (is_null($tweet)) {
+            throw new InvalidRequestParameterException('Tweet does not exist.');
+        }
+        $this->tweetsDAOImpl->deleteById($tweetId);
+        return;
     }
 }

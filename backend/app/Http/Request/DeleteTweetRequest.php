@@ -2,7 +2,9 @@
 
 namespace Http\Request;
 
-class RetweetsRequest
+use Helpers\ValidationHelper;
+
+class DeleteTweetRequest
 {
     private string $tweetId;
 
@@ -10,6 +12,7 @@ class RetweetsRequest
     {
         $uriDir = explode('?', $_SERVER['REQUEST_URI'])[0];
         $this->tweetId = explode('/', $uriDir)[3];
+        ValidationHelper::isPositiveIntegerString($this->tweetId);
     }
 
     public function getTweetId(): string

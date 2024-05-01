@@ -6,7 +6,9 @@ use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
 use Helpers\SessionManager;
-use Http\Request\RetweetsRequest;
+use Http\Request\DeleteRetweetRequest;
+use Http\Request\GetRetweetRequest;
+use Http\Request\PostRetweetRequest;
 use Services\RetweetService;
 
 class RetweetController implements ControllerInterface
@@ -21,22 +23,36 @@ class RetweetController implements ControllerInterface
     public function handleRequest(): JSONRenderer
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            return $this->getRetweets(new RetweetsRequest());
+            return $this->getRetweets(new GetRetweetRequest());
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            return $this->postRetweet(new RetweetsRequest());
+            $jsonData = file_get_contents('php://input');
+            $reqParamMap = json_decode($jsonData, true);
+            return $this->postRetweet(new PostRetweetRequest($reqParamMap));
+        } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            return $this->removeRetweet(new DeleteRetweetRequest());
         }
-        throw new InvalidRequestMethodException("Retweet request must be 'GET' or 'POST'.");
+        throw new InvalidRequestMethodException("Retweet request must be 'GET', 'POST' or 'DELETE'.");
     }
 
-    public function getRetweets(RetweetsRequest $request): JSONRenderer
+    public function getRetweets(GetRetweetRequest $request): JSONRenderer
     {
-        $resp["retweets"] = $this->retweetService->getRetweets($request);
+        $resp["retweets"] = $this->retweetService->getRetweets($request->getTweetId());
         return new JSONRenderer(200, $resp);
     }
 
-    public function postRetweet(RetweetsRequest $request): JSONRenderer
+    public function postRetweet(PostRetweetRequest $request): JSONRenderer
     {
-        $this->retweetService->createRetweet($request, SessionManager::get('user_id'));
+        $this->retweetService->createRetweet(
+            SessionManager::get('user_id'),
+            $request->getTweetId(),
+            $request->getMessage()
+        );
+        return new JSONRenderer(200, []);
+    }
+
+    public function removeRetweet(DeleteRetweetRequest $request): JSONRenderer
+    {
+        $this->retweetService->removeRetweet(SessionManager::get('user_id'), $request->getTweetId());
         return new JSONRenderer(200, []);
     }
 }

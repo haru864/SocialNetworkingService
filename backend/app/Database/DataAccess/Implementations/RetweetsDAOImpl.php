@@ -16,23 +16,25 @@ class RetweetsDAOImpl implements RetweetsDAO
             INSERT INTO retweets (
                 user_id,
                 tweet_id,
+                message,
                 retweet_datetime
             )
             VALUES (
-                ?, ?, ?
+                ?, ?, ?, ?
             )
         SQL;
         $result = $mysqli->prepareAndExecute(
             $query,
-            'iis',
+            'iiss',
             [
                 $retweet->getUserId(),
                 $retweet->getTweetId(),
+                $retweet->getMessage(),
                 $retweet->getRetweetDatetime()
             ],
         );
         if (!$result) {
-            throw new QueryFailedException("INSERT INTO failed.");
+            throw new QueryFailedException("INSERT failed.");
         }
         $retweet->setId($mysqli->insert_id);
         return $retweet;
@@ -87,6 +89,7 @@ class RetweetsDAOImpl implements RetweetsDAO
             id: $data['id'],
             userId: $data['user_id'],
             tweetId: $data['tweet_id'],
+            message: $data['message'],
             retweetDatetime: $data['retweet_datetime']
         );
     }
