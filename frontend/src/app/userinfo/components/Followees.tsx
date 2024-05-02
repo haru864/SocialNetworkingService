@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import {
-    Grid,
-    Card,
-    CardContent,
-    Typography,
-    CardMedia,
-    CardActionArea,
-} from '@mui/material';
+import { Grid } from '@mui/material';
 import { UserInfo } from '../../common/UserInfo';
-import Link from 'next/link';
+import UserInfoCard from '@/app/common/UserInfoCard';
 
 async function getFolloweeIds(userId: number, page: number): Promise<number[]> {
     try {
@@ -106,43 +99,7 @@ const Followees: React.FC = () => {
         >
             <Grid container spacing={2}>
                 {followeeInfoList.map(followeeInfo => (
-                    <Grid item key={followeeInfo.username} xs={12} sm={6} md={4}>
-                        <Link href={`/userinfo?id=${followeeInfo.id}`}>
-                            <Card sx={{ maxWidth: 450 }}>
-                                <CardActionArea>
-                                    <Link href={followeeInfo.getUploadedImageUrl()}>
-                                        <CardMedia
-                                            component="img"
-                                            image={followeeInfo.getThumbnailUrl()}
-                                            alt="profile image"
-                                            sx={{
-                                                height: 140,
-                                                width: 1,
-                                                objectFit: 'contain'
-                                            }}
-                                        />
-                                    </Link>
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="div">
-                                            {followeeInfo.username}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {followeeInfo.selfIntroduction}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Country: {followeeInfo.country}, State: {followeeInfo.state}, City: {followeeInfo.city}, Town: {followeeInfo.town}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Hobbies: {followeeInfo.hobby_1}, {followeeInfo.hobby_2}, {followeeInfo.hobby_3}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Careers: {followeeInfo.career_1}, {followeeInfo.career_2}, {followeeInfo.career_3}
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                        </Link>
-                    </Grid>
+                    <UserInfoCard key={followeeInfo.username} userInfo={followeeInfo} />
                 ))}
             </Grid>
         </InfiniteScroll>

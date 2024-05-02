@@ -43,8 +43,9 @@ class LikeController implements ControllerInterface
 
     private function getLikeUsers(GetLikeRequest $request): JSONRenderer
     {
+        $isLiked = $this->likeService->checkLiked(SessionManager::get('user_id'), $request->getTweetId());
         $userIds = $this->likeService->getLikeUsers($request->getTweetId());
-        return new JSONRenderer(200, ["user_id" => $userIds]);
+        return new JSONRenderer(200, ["is_liked" => $isLiked, "user_id" => $userIds]);
     }
 
     private function addLike(UpdateLikeRequest $request): JSONRenderer

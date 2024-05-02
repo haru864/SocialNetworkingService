@@ -15,6 +15,12 @@ class LikeService
         $this->likesDAOImpl = $likesDAOImpl;
     }
 
+    public function checkLiked(int $userId, int $tweetId): bool
+    {
+        $like =  $this->likesDAOImpl->getLike($userId, $tweetId);
+        return !is_null($like);
+    }
+
     public function getLikeUsers(int $tweetId): array
     {
         $likes = $this->likesDAOImpl->getLikeUsers($tweetId);
