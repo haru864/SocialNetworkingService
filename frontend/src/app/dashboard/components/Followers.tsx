@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
     Grid,
@@ -12,9 +12,9 @@ import {
 import { UserInfo } from '../../common/UserInfo';
 import Link from 'next/link';
 
-async function getFollowerIds(userId: number, page: number): Promise<number[]> {
+async function getFollowerIds(page: number): Promise<number[]> {
     try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/follows/follower?user_id=${userId}&page=${page}&limit=20`, {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/follows/follower?page=${page}&limit=20`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -34,10 +34,10 @@ async function getFollowerIds(userId: number, page: number): Promise<number[]> {
     }
 }
 
-async function getFollwerInfoList(userId: number, page: number): Promise<UserInfo[]> {
+async function getFollwerInfoList(page: number): Promise<UserInfo[]> {
     try {
         let followerInfoList: UserInfo[] = [];
-        const follwerIds = await getFollowerIds(userId, page);
+        const follwerIds = await getFollowerIds(page);
         for (const follwerId of follwerIds) {
             const response = await fetch(`${process.env.API_DOMAIN}/api/profile?id=${follwerId}`, {
                 method: 'GET',
@@ -66,27 +66,20 @@ const Followers: React.FC = () => {
     const [followerInfoList, setFollowerInfoList] = useState<UserInfo[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [page, setPage] = useState<number>(1);
-    const searchParams = useSearchParams();
-    const query = searchParams.get('id') as string;
 
     useEffect(() => {
-        if (query) {
-            const parsedId = parseInt(query, 10);
-            if (!isNaN(parsedId)) {
-                refreshFollowers(parsedId, page);
-            }
-        }
-    }, [query]);
+        refreshFollowers(page);
+    }, []);
 
-    const refreshFollowers = async (id: number, page: number) => {
+    const refreshFollowers = async (page: number) => {
         setFollowerInfoList([]);
         setPage(1);
         setHasMore(true);
-        await loadMoreFollowers(id, page);
+        await loadMoreFollowers(page);
     };
 
-    const loadMoreFollowers = async (id: number, page: number) => {
-        const currentFollowerList = await getFollwerInfoList(id, page);
+    const loadMoreFollowers = async (page: number) => {
+        const currentFollowerList = await getFollwerInfoList(page);
         setFollowerInfoList(prev => [...prev, ...currentFollowerList]);
         setPage(page + 1);
         setHasMore(currentFollowerList.length === 20);
@@ -95,7 +88,7 @@ const Followers: React.FC = () => {
     return (
         <InfiniteScroll
             dataLength={followerInfoList.length}
-            next={() => loadMoreFollowers(parseInt(query), page)}
+            next={() => loadMoreFollowers(page)}
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
             endMessage={

@@ -2,12 +2,12 @@
 
 import React from 'react';
 import CommonLayout from '../common/CommonLayout';
-import FollwerList from './components/FollwerList';
+import UserProfile from './components/UserProfile';
 
 const HomePage = () => {
     return (
         <CommonLayout>
-            <FollwerList />
+            <UserProfile />
         </CommonLayout >
     );
 };

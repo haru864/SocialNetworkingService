@@ -82,7 +82,7 @@ export default function TweetInput() {
                     />
                     <label htmlFor="upload_file_button">
                         <Button variant="contained" component="span">
-                            Upload Image/Video
+                            Upload Image / Video
                         </Button>
                     </label>
                 </Grid>

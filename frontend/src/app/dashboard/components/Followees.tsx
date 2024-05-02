@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
     Grid,
@@ -11,9 +12,9 @@ import {
 import { UserInfo } from '../../common/UserInfo';
 import Link from 'next/link';
 
-async function getFollowerIds(): Promise<number[]> {
+async function getFolloweeIds(page: number): Promise<number[]> {
     try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/follows?relation=follower`, {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/follows/followee?page=${page}&limit=20`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -22,21 +23,21 @@ async function getFollowerIds(): Promise<number[]> {
             throw new Error(responseData["error_message"]);
         }
         const jsonData = await response.json();
-        let followerIds = [];
+        let followeeIds = [];
         if (jsonData !== null) {
-            followerIds = jsonData['user_id'];
+            followeeIds = jsonData['user_id'];
         }
-        return followerIds;
+        return followeeIds;
     } catch (error: any) {
         console.error(error);
         throw error;
     }
 }
 
-async function getFollwerInfo(): Promise<UserInfo[]> {
+async function getFollweeInfoList(page: number): Promise<UserInfo[]> {
     try {
-        let userInfoList: UserInfo[] = [];
-        const follwerIds = await getFollowerIds();
+        let followerInfoList: UserInfo[] = [];
+        const follwerIds = await getFolloweeIds(page);
         for (const follwerId of follwerIds) {
             const response = await fetch(`${process.env.API_DOMAIN}/api/profile?id=${follwerId}`, {
                 method: 'GET',
@@ -50,10 +51,10 @@ async function getFollwerInfo(): Promise<UserInfo[]> {
             if (jsonData !== null) {
                 const profile = jsonData['profile'];
                 const followerData = new UserInfo(profile);
-                userInfoList.push(followerData);
+                followerInfoList.push(followerData);
             }
         }
-        return userInfoList;
+        return followerInfoList;
     } catch (error: any) {
         console.error(error);
         alert(error);
@@ -61,40 +62,51 @@ async function getFollwerInfo(): Promise<UserInfo[]> {
     }
 }
 
-// BUG 無限スクロールになってない
-const FollowerList: React.FC = () => {
-    const [userInfoList, setUserInfoList] = useState<UserInfo[]>([]);
+const Followees: React.FC = () => {
+    const [followeeInfoList, setFolloweeInfoList] = useState<UserInfo[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
+    const [page, setPage] = useState<number>(1);
+
     useEffect(() => {
-        loadMoreFollowers();
+        refreshFollowers(page);
     }, []);
-    const loadMoreFollowers = async () => {
-        const followerData = await getFollwerInfo();
-        setUserInfoList(prev => [...prev, ...followerData]);
-        setHasMore(followerData.length === 20);
+
+    const refreshFollowers = async (page: number) => {
+        setFolloweeInfoList([]);
+        setPage(1);
+        setHasMore(true);
+        await loadMoreFollowers(page);
     };
+
+    const loadMoreFollowers = async (page: number) => {
+        const currentFollowerList = await getFollweeInfoList(page);
+        setFolloweeInfoList(prev => [...prev, ...currentFollowerList]);
+        setPage(page + 1);
+        setHasMore(currentFollowerList.length === 20);
+    };
+
     return (
         <InfiniteScroll
-            dataLength={setUserInfoList.length}
-            next={loadMoreFollowers}
+            dataLength={followeeInfoList.length}
+            next={() => loadMoreFollowers(page)}
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
             endMessage={
                 <p style={{ textAlign: 'center', marginTop: '20px' }}>
-                    <b>You have seen all followers</b>
+                    <b>You have seen all followees</b>
                 </p>
             }
         >
             <Grid container spacing={2}>
-                {userInfoList.map(userInfo => (
-                    <Grid item key={userInfo.username} xs={12} sm={6} md={4}>
-                        <Link href={`/userinfo?id=${userInfo.id}`}>
+                {followeeInfoList.map(followeeInfo => (
+                    <Grid item key={followeeInfo.username} xs={12} sm={6} md={4}>
+                        <Link href={`/userinfo?id=${followeeInfo.id}`}>
                             <Card sx={{ maxWidth: 450 }}>
                                 <CardActionArea>
-                                    <Link href={userInfo.getUploadedImageUrl()}>
+                                    <Link href={followeeInfo.getUploadedImageUrl()}>
                                         <CardMedia
                                             component="img"
-                                            image={userInfo.getThumbnailUrl()}
+                                            image={followeeInfo.getThumbnailUrl()}
                                             alt="profile image"
                                             sx={{
                                                 height: 140,
@@ -105,19 +117,19 @@ const FollowerList: React.FC = () => {
                                     </Link>
                                     <CardContent>
                                         <Typography gutterBottom variant="h5" component="div">
-                                            {userInfo.username}
+                                            {followeeInfo.username}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            {userInfo.selfIntroduction}
+                                            {followeeInfo.selfIntroduction}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Country: {userInfo.country}, State: {userInfo.state}, City: {userInfo.city}, Town: {userInfo.town}
+                                            Country: {followeeInfo.country}, State: {followeeInfo.state}, City: {followeeInfo.city}, Town: {followeeInfo.town}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Hobbies: {userInfo.hobby_1}, {userInfo.hobby_2}, {userInfo.hobby_3}
+                                            Hobbies: {followeeInfo.hobby_1}, {followeeInfo.hobby_2}, {followeeInfo.hobby_3}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Careers: {userInfo.career_1}, {userInfo.career_2}, {userInfo.career_3}
+                                            Careers: {followeeInfo.career_1}, {followeeInfo.career_2}, {followeeInfo.career_3}
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>
@@ -130,4 +142,4 @@ const FollowerList: React.FC = () => {
     );
 };
 
-export default FollowerList;
+export default Followees;

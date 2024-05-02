@@ -13,7 +13,8 @@ class PostFollowRequest
     {
         $validActions = ['add', 'remove'];
         if (!in_array($postData['action'], $validActions)) {
-            throw new InvalidRequestParameterException("Given 'action' is invalid.");
+            $validActionStr = implode(' or ', $validActions);
+            throw new InvalidRequestParameterException("'action' must be {$validActionStr}.");
         }
         if (is_null($postData['followee_id'])) {
             throw new InvalidRequestParameterException("'followee_id' must be set in follow-request.");

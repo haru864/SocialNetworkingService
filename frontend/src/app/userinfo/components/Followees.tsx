@@ -12,9 +12,9 @@ import {
 import { UserInfo } from '../../common/UserInfo';
 import Link from 'next/link';
 
-async function getFolloweeIds(userId: number): Promise<number[]> {
+async function getFolloweeIds(userId: number, page: number): Promise<number[]> {
     try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/follows?id=${userId}&relation=followee`, {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/follows/followee?user_id=${userId}&page=${page}&limit=20`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -34,12 +34,12 @@ async function getFolloweeIds(userId: number): Promise<number[]> {
     }
 }
 
-async function getFollweeInfoList(userId: number): Promise<UserInfo[]> {
+async function getFollweeInfoList(userId: number, page: number): Promise<UserInfo[]> {
     try {
-        let followeeInfoList: UserInfo[] = [];
-        const follweeIds = await getFolloweeIds(userId);
-        for (const follweeId of follweeIds) {
-            const response = await fetch(`${process.env.API_DOMAIN}/api/profile?id=${follweeId}`, {
+        let followerInfoList: UserInfo[] = [];
+        const follwerIds = await getFolloweeIds(userId, page);
+        for (const follwerId of follwerIds) {
+            const response = await fetch(`${process.env.API_DOMAIN}/api/profile?id=${follwerId}`, {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -50,11 +50,11 @@ async function getFollweeInfoList(userId: number): Promise<UserInfo[]> {
             const jsonData = await response.json();
             if (jsonData !== null) {
                 const profile = jsonData['profile'];
-                const followeeData = new UserInfo(profile);
-                followeeInfoList.push(followeeData);
+                const followerData = new UserInfo(profile);
+                followerInfoList.push(followerData);
             }
         }
-        return followeeInfoList;
+        return followerInfoList;
     } catch (error: any) {
         console.error(error);
         alert(error);
@@ -62,11 +62,10 @@ async function getFollweeInfoList(userId: number): Promise<UserInfo[]> {
     }
 }
 
-// BUG 無限スクロールになってない
 const Followees: React.FC = () => {
     const [followeeInfoList, setFolloweeInfoList] = useState<UserInfo[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
-    const router = useRouter();
+    const [page, setPage] = useState<number>(1);
     const searchParams = useSearchParams();
     const query = searchParams.get('id') as string;
 
@@ -74,31 +73,34 @@ const Followees: React.FC = () => {
         if (query) {
             const parsedId = parseInt(query, 10);
             if (!isNaN(parsedId)) {
-                refreshFollowees(parsedId);
+                refreshFollowers(parsedId, page);
             }
         }
     }, [query]);
 
-    const refreshFollowees = async (id: number) => {
+    const refreshFollowers = async (id: number, page: number) => {
         setFolloweeInfoList([]);
-        await loadMoreFollowees(id);
+        setPage(1);
+        setHasMore(true);
+        await loadMoreFollowers(id, page);
     };
 
-    const loadMoreFollowees = async (id: number) => {
-        const followeeList = await getFollweeInfoList(id);
-        setFolloweeInfoList(followeeList);
-        setHasMore(followeeList.length === 20);
+    const loadMoreFollowers = async (id: number, page: number) => {
+        const currentFollowerList = await getFollweeInfoList(id, page);
+        setFolloweeInfoList(prev => [...prev, ...currentFollowerList]);
+        setPage(page + 1);
+        setHasMore(currentFollowerList.length === 20);
     };
 
     return (
         <InfiniteScroll
             dataLength={followeeInfoList.length}
-            next={() => loadMoreFollowees(parseInt(query))}
+            next={() => loadMoreFollowers(parseInt(query), page)}
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
             endMessage={
                 <p style={{ textAlign: 'center', marginTop: '20px' }}>
-                    <b>You have seen all followers</b>
+                    <b>You have seen all followees</b>
                 </p>
             }
         >

@@ -1,11 +1,14 @@
 'use client'
 
 import * as React from 'react';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
+import HomeIcon from '@mui/icons-material/Home';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -14,10 +17,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
-import InboxIcon from '@mui/icons-material/Inbox';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import PeopleIcon from '@mui/icons-material/People';
 import MessageIcon from '@mui/icons-material/Message';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -103,10 +103,10 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
     };
 
     const menuItems = [
-        { name: 'Home', path: '/home', icon: <InboxIcon /> },
-        { name: 'Profile', path: '/profile', icon: <MailIcon /> },
+        { name: 'Home', path: '/home', icon: <HomeIcon /> },
+        { name: 'Profile', path: '/profile', icon: <AccountBoxIcon /> },
         { name: 'Notifications', path: '/notifications', icon: <NotificationsIcon /> },
-        { name: 'Followers', path: '/followers', icon: <PeopleIcon /> },
+        { name: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
         { name: 'Tweet', path: '/tweet/post', icon: <MessageIcon /> },
         { name: 'Messages', path: '/messages', icon: <QuestionAnswerIcon /> },
         { name: 'Log out', path: '/logout', icon: <LogoutIcon /> },

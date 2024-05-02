@@ -48,9 +48,10 @@ class FollowService
         return;
     }
 
-    public function getFollowers(int $followeeId): array
+    public function getFollowers(int $followeeId, int $page, int $limit): array
     {
-        $follows = $this->followsDAOImpl->getFollowers($followeeId);
+        $offset = ($page - 1) * $limit;
+        $follows = $this->followsDAOImpl->getFollowers($followeeId, $limit, $offset);
         if (is_null($follows)) {
             $follows = [];
         }
@@ -62,9 +63,10 @@ class FollowService
         return $userIds;
     }
 
-    public function getFollowees(int $followerId): array
+    public function getFollowees(int $followerId, int $page, int $limit): array
     {
-        $follows = $this->followsDAOImpl->getFollowees($followerId);
+        $offset = ($page - 1) * $limit;
+        $follows = $this->followsDAOImpl->getFollowees($followerId, $limit, $offset);
         if (is_null($follows)) {
             $follows = [];
         }

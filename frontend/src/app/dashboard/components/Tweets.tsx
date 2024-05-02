@@ -16,9 +16,9 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import Link from 'next/link';
 import { Tweet } from '@/app/common/Tweet';
 
-async function getTweets(userId: number, page: number): Promise<Tweet[]> {
+async function getTweets(page: number): Promise<Tweet[]> {
     try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets?type=user&user_id=${userId}&page=${page}&limit=20`, {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets?type=user&page=${page}&limit=20`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -126,27 +126,20 @@ const Tweets: React.FC = () => {
     const [tweets, setTweets] = useState<Tweet[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [page, setPage] = useState<number>(1);
-    const searchParams = useSearchParams();
-    const query = searchParams.get('id') as string;
 
     useEffect(() => {
-        if (query) {
-            const parsedId = parseInt(query, 10);
-            if (!isNaN(parsedId)) {
-                refreshFollowers(parsedId);
-            }
-        }
-    }, [query]);
+        refreshFollowers();
+    }, []);
 
-    const refreshFollowers = async (id: number) => {
+    const refreshFollowers = async () => {
         setTweets([]);
         setPage(1);
         setHasMore(true);
-        await loadMoreTweets(id, page);
+        await loadMoreTweets(page);
     };
 
-    const loadMoreTweets = async (id: number, page: number) => {
-        const currentTweets = await getTweets(id, page);
+    const loadMoreTweets = async (page: number) => {
+        const currentTweets = await getTweets(page);
         setTweets(prev => [...prev, ...currentTweets]);
         setPage(page + 1);
         setHasMore(currentTweets.length > 0);
@@ -155,7 +148,7 @@ const Tweets: React.FC = () => {
     return (
         <InfiniteScroll
             dataLength={tweets.length}
-            next={() => loadMoreTweets(parseInt(query), page)}
+            next={() => loadMoreTweets(page)}
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
             endMessage={

@@ -263,19 +263,23 @@ class ProfileService
         foreach ($careers as $career) {
             array_push($profile['careers'], $career->getJob());
         }
+
         $loginUserId = SessionManager::get('user_id');
-        $loginUserFollows = $this->followsDAOImpl->getFollowers($loginUserId);
         $loginUserFollowers = [];
-        foreach ($loginUserFollows as $follow) {
+        $currentFollowers = $this->followsDAOImpl->getFollowers($loginUserId);
+        foreach ($currentFollowers as $follow) {
             array_push($loginUserFollowers, $follow->getFollowerId());
         }
-        $loginUserFollow = $this->followsDAOImpl->getFollowees($loginUserId);
+
         $loginUserFollowees = [];
-        foreach ($loginUserFollow as $follow) {
+        $currentFollowees = $this->followsDAOImpl->getFollowees($loginUserId);
+        foreach ($currentFollowees as $follow) {
             array_push($loginUserFollowees, $follow->getFolloweeId());
         }
+
         $profile['isFollowedBy'] = in_array($userId, $loginUserFollowers);
         $profile['isFollowing'] = in_array($userId, $loginUserFollowees);
+
         return $profile;
     }
 

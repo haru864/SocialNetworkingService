@@ -39,7 +39,7 @@ async function followUser(
             followee_id: userId
         };
         setIsLoading(true);
-        const response = await fetch(`${process.env.API_DOMAIN}/api/follows`, {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/follows/follower`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -69,7 +69,7 @@ async function unfollowUser(
             followee_id: userId
         };
         setIsLoading(true);
-        const response = await fetch(`${process.env.API_DOMAIN}/api/follows`, {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/follows/follower`, {
             method: 'POST',
             credentials: 'include',
             headers: {
