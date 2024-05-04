@@ -36,7 +36,17 @@ class RetweetController implements ControllerInterface
 
     public function getRetweets(GetRetweetRequest $request): JSONRenderer
     {
-        $resp["retweets"] = $this->retweetService->getRetweets($request->getTweetId());
+        $resp = [];
+        $retweets = $this->retweetService->getRetweets($request->getTweetId());
+        $isRetweeted = false;
+        foreach ($retweets as $retweetArr) {
+            if ($retweetArr['userId'] === SessionManager::get('user_id')) {
+                $isRetweeted = true;
+                break;
+            }
+        }
+        $resp["is_retweeted"] = $isRetweeted;
+        $resp["retweets"] = $retweets;
         return new JSONRenderer(200, $resp);
     }
 

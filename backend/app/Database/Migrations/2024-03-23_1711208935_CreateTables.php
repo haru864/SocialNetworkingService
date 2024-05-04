@@ -62,7 +62,7 @@ class CreateTables implements Database\SchemaMigration
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL,
                 tweet_id INT NOT NULL,
-                message VARCHAR(200),
+                message VARCHAR(200) NOT NULL,
                 retweet_datetime DATETIME NOT NULL,
                 UNIQUE(user_id, tweet_id),
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,

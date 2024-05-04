@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Grid,
-    Card,
-    CardContent,
-    Typography,
-    CardMedia,
-    CardActionArea,
-    IconButton,
-    Box,
-    CircularProgress
+    Grid, Card, CardContent, Typography, CardMedia, CardActionArea,
+    IconButton, Box, CircularProgress, TextField, Button,
+    Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -16,7 +10,9 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Link from 'next/link';
 import { Tweet } from '@/app/common/Tweet';
-import { getTweet, handleLike } from './TweetCardFunctions';
+import {
+    getTweet, handleLike, checkRetweetedOrNot, addRetweet, removeRetweet
+} from './TweetCardFunctions';
 
 interface TweetCardProps {
     tweetId: number;
@@ -24,16 +20,28 @@ interface TweetCardProps {
 
 const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
     const [tweet, setTweet] = useState<Tweet | null>(null);
+    const [retweetMessage, setRetweetMessage] = useState('');
+    const [showRetweetForm, setShowRetweetForm] = useState(false);
 
     useEffect(() => {
         loadTweet(tweetId);
-        console.log('useEffect');
     }, []);
 
     const loadTweet = async (tweetId: number) => {
         const currTweet = await getTweet(tweetId);
         setTweet(currTweet);
     };
+
+    const openRetweetDialog = async (tweetId: number) => {
+        const isRetweeted = await checkRetweetedOrNot(tweetId);
+        if (isRetweeted) {
+            await removeRetweet(tweetId);
+            loadTweet(tweetId);
+        } else {
+            setShowRetweetForm(true);
+        }
+    };
+    const closeRetweetDialog = () => setShowRetweetForm(false);
 
     if (tweet === null) {
         return (
@@ -89,7 +97,7 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                         }>
                             <FavoriteBorderIcon /> {tweet.getLikeCount()}
                         </IconButton>
-                        <IconButton aria-label="retweet">
+                        <IconButton aria-label="retweet" onClick={() => openRetweetDialog(tweetId)}>
                             <RepeatIcon /> {tweet.getRetweetCount()}
                         </IconButton>
                         <IconButton aria-label="reply">
@@ -98,6 +106,36 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                         <IconButton aria-label="delete">
                             <DeleteForeverIcon />
                         </IconButton>
+                        <Dialog open={showRetweetForm} onClose={closeRetweetDialog}>
+                            <DialogTitle>リツイート</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    リツイートにコメントを追加してください。
+                                </DialogContentText>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="retweet_message"
+                                    label="Retweet Message"
+                                    type="text"
+                                    fullWidth
+                                    variant="outlined"
+                                    value={retweetMessage}
+                                    onChange={(e) => setRetweetMessage(e.target.value)}
+                                    multiline
+                                    minRows={3}
+                                    maxRows={5}
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={async () => {
+                                    await addRetweet(tweetId, retweetMessage);
+                                    closeRetweetDialog();
+                                    loadTweet(tweet.id);
+                                }}>Retweet</Button>
+                                <Button onClick={closeRetweetDialog}>Cancel</Button>
+                            </DialogActions>
+                        </Dialog>
                     </CardActionArea>
                 </Card>
             </Grid>
