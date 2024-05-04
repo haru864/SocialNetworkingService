@@ -1,4 +1,5 @@
 import { Tweet } from '@/app/common/Tweet';
+import * as ValidationUtil from "../utils/ValidationUtil";
 
 export const getTweet = async (tweetId: number): Promise<Tweet> => {
     try {
@@ -236,5 +237,28 @@ export const removeRetweet = async (tweetId: number): Promise<void> => {
         console.error(error);
         alert(error);
         throw error;
+    }
+}
+
+export const addReply = async (tweetId: number, replyText: string, replyFile: File | null): Promise<void> => {
+    try {
+        ValidationUtil.validateCharCount(replyText, "Message", 1, 200);
+        const data: FormData = new FormData();
+        data.append("message", replyText);
+        if (replyFile !== null) {
+            data.append("media", replyFile);
+        }
+        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets/${tweetId}/replies`, {
+            method: 'POST',
+            body: data
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
+        alert('Reply posted.');
+    } catch (error: any) {
+        console.error(error);
+        alert(error);
     }
 }

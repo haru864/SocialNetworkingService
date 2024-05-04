@@ -11,7 +11,8 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Link from 'next/link';
 import { Tweet } from '@/app/common/Tweet';
 import {
-    getTweet, handleLike, checkRetweetedOrNot, addRetweet, removeRetweet
+    getTweet, handleLike, checkRetweetedOrNot, addRetweet, removeRetweet,
+    addReply
 } from './TweetCardFunctions';
 
 interface TweetCardProps {
@@ -20,8 +21,11 @@ interface TweetCardProps {
 
 const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
     const [tweet, setTweet] = useState<Tweet | null>(null);
-    const [retweetMessage, setRetweetMessage] = useState('');
-    const [showRetweetForm, setShowRetweetForm] = useState(false);
+    const [retweetMessage, setRetweetMessage] = useState<string>('');
+    const [showRetweetForm, setShowRetweetForm] = useState<boolean>(false);
+    const [replyText, setReplyText] = useState<string>('');
+    const [replyFile, setReplyFile] = useState<File | null>(null);
+    const [showReplyForm, setShowReplyForm] = useState<boolean>(false);
 
     useEffect(() => {
         loadTweet(tweetId);
@@ -42,6 +46,18 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
         }
     };
     const closeRetweetDialog = () => setShowRetweetForm(false);
+
+    const openReplyDialog = () => setShowReplyForm(true);
+    const closeReplyDialog = () => setShowReplyForm(false);
+
+    const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setReplyText(event.target.value);
+    };
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            setReplyFile(event.target.files[0]);
+        }
+    };
 
     if (tweet === null) {
         return (
@@ -100,17 +116,17 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                         <IconButton aria-label="retweet" onClick={() => openRetweetDialog(tweetId)}>
                             <RepeatIcon /> {tweet.getRetweetCount()}
                         </IconButton>
-                        <IconButton aria-label="reply">
+                        <IconButton aria-label="reply" onClick={openReplyDialog}>
                             <ChatBubbleOutlineIcon /> {tweet.getReplyCount()}
                         </IconButton>
                         <IconButton aria-label="delete">
                             <DeleteForeverIcon />
                         </IconButton>
                         <Dialog open={showRetweetForm} onClose={closeRetweetDialog}>
-                            <DialogTitle>リツイート</DialogTitle>
+                            <DialogTitle>Retweet</DialogTitle>
                             <DialogContent>
                                 <DialogContentText>
-                                    リツイートにコメントを追加してください。
+                                    Write Retweet Message
                                 </DialogContentText>
                                 <TextField
                                     autoFocus
@@ -134,6 +150,48 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                                     loadTweet(tweet.id);
                                 }}>Retweet</Button>
                                 <Button onClick={closeRetweetDialog}>Cancel</Button>
+                            </DialogActions>
+                        </Dialog>
+                        <Dialog open={showReplyForm} onClose={closeReplyDialog}>
+                            <DialogTitle>Reply</DialogTitle>
+                            <DialogContent>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        name="message"
+                                        label="Message"
+                                        id="message"
+                                        autoComplete=""
+                                        multiline
+                                        minRows={3}
+                                        maxRows={5}
+                                        value={replyText}
+                                        onChange={handleTextChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <input
+                                        accept="image/jpeg, image/png, image/gif, video/mp4, video/webm, video/ogg"
+                                        type="file"
+                                        id="upload_file_button"
+                                        name="media"
+                                        style={{ display: 'none' }}
+                                        onChange={handleFileChange}
+                                    />
+                                    <label htmlFor="upload_file_button">
+                                        <Button variant="contained" component="span">
+                                            Upload Image / Video
+                                        </Button>
+                                    </label>
+                                </Grid>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={async () => {
+                                    await addReply(tweetId, replyText, replyFile);
+                                    closeReplyDialog();
+                                    loadTweet(tweet.id);
+                                }}>Reply</Button>
+                                <Button onClick={closeReplyDialog}>Cancel</Button>
                             </DialogActions>
                         </Dialog>
                     </CardActionArea>
