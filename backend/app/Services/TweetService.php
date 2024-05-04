@@ -121,4 +121,10 @@ class TweetService
         $this->tweetsDAOImpl->deleteById($tweetId);
         return;
     }
+
+    public function isTweetFromSpecifiedUser(int $userId, int $tweetId): bool
+    {
+        $tweet = $this->tweetsDAOImpl->getByTweetId($tweetId);
+        return $tweet->getUserId() === $userId;
+    }
 }

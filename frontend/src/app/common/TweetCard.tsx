@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { Tweet } from '@/app/common/Tweet';
 import {
     getTweet, handleLike, checkRetweetedOrNot, addRetweet, removeRetweet,
-    addReply
+    addReply, deleteTweet
 } from './TweetCardFunctions';
 
 interface TweetCardProps {
@@ -20,6 +20,7 @@ interface TweetCardProps {
 }
 
 const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
+    const [isVisible, setIsVisible] = useState(true);
     const [tweet, setTweet] = useState<Tweet | null>(null);
     const [retweetMessage, setRetweetMessage] = useState<string>('');
     const [showRetweetForm, setShowRetweetForm] = useState<boolean>(false);
@@ -58,6 +59,10 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
             setReplyFile(event.target.files[0]);
         }
     };
+
+    if (!isVisible) {
+        return null;
+    }
 
     if (tweet === null) {
         return (
@@ -105,6 +110,9 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                                 src={tweet.getUploadedVideoUrl()}
                             />
                         )}
+                        <Typography variant="body1">
+                            Posted at {tweet.postingDatetime}
+                        </Typography>
                         <IconButton aria-label="like" onClick={
                             async () => {
                                 await handleLike(tweet.id);
@@ -119,7 +127,12 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                         <IconButton aria-label="reply" onClick={openReplyDialog}>
                             <ChatBubbleOutlineIcon /> {tweet.getReplyCount()}
                         </IconButton>
-                        <IconButton aria-label="delete">
+                        <IconButton aria-label="delete" onClick={
+                            async () => {
+                                await deleteTweet(tweetId);
+                                setIsVisible(false);
+                            }
+                        }>
                             <DeleteForeverIcon />
                         </IconButton>
                         <Dialog open={showRetweetForm} onClose={closeRetweetDialog}>

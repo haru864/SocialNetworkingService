@@ -250,6 +250,7 @@ export const addReply = async (tweetId: number, replyText: string, replyFile: Fi
         }
         const response = await fetch(`${process.env.API_DOMAIN}/api/tweets/${tweetId}/replies`, {
             method: 'POST',
+            credentials: 'include',
             body: data
         });
         if (!response.ok) {
@@ -257,6 +258,39 @@ export const addReply = async (tweetId: number, replyText: string, replyFile: Fi
             throw new Error(responseData["error_message"]);
         }
         alert('Reply posted.');
+    } catch (error: any) {
+        console.error(error);
+        alert(error);
+    }
+}
+
+export const deleteTweet = async (tweetId: number): Promise<void> => {
+    try {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets/${tweetId}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
+    } catch (error: any) {
+        console.error(error);
+        alert(error);
+    }
+}
+
+// TODO リツイートもツイート一覧に表示できるようにしたらdeleteTweet()と使い分けが必要（そもそも統一すべきかも）
+export const deleteRetweet = async (tweetId: number): Promise<void> => {
+    try {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets/${tweetId}/retweets`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
     } catch (error: any) {
         console.error(error);
         alert(error);

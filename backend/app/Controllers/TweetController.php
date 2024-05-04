@@ -5,6 +5,7 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
+use Exceptions\InvalidRequestParameterException;
 use Helpers\SessionManager;
 use Http\Request\DeleteTweetRequest;
 use Http\Request\GetTweetListRequest;
@@ -94,7 +95,13 @@ class TweetController implements ControllerInterface
 
     private function deleteTweet(DeleteTweetRequest $request): JSONRenderer
     {
-        $this->tweetService->deleteTweet($request->getTweetId());
+        $loginUserId = SessionManager::get('user_id');
+        $tweetId = $request->getTweetId();
+        $isTweetFromloginUser = $this->tweetService->isTweetFromSpecifiedUser($loginUserId, $tweetId);
+        if (!$isTweetFromloginUser) {
+            throw new InvalidRequestParameterException('Only your own tweets can be deleted.');
+        }
+        $this->tweetService->deleteTweet($tweetId);
         return new JSONRenderer(200, []);
     }
 }
