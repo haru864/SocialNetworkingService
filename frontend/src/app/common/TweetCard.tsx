@@ -12,8 +12,10 @@ import Link from 'next/link';
 import { Tweet } from '@/app/common/Tweet';
 import {
     getTweet, handleLike, checkRetweetedOrNot, addRetweet, removeRetweet,
-    addReply, deleteTweet
+    addReply, deleteTweet,
+    getUserInfo
 } from './TweetCardFunctions';
+import { UserInfo } from './UserInfo';
 
 interface TweetCardProps {
     tweetId: number;
@@ -22,11 +24,15 @@ interface TweetCardProps {
 const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
     const [isVisible, setIsVisible] = useState(true);
     const [tweet, setTweet] = useState<Tweet | null>(null);
+
     const [retweetMessage, setRetweetMessage] = useState<string>('');
     const [showRetweetForm, setShowRetweetForm] = useState<boolean>(false);
+
     const [replyText, setReplyText] = useState<string>('');
     const [replyFile, setReplyFile] = useState<File | null>(null);
     const [showReplyForm, setShowReplyForm] = useState<boolean>(false);
+
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
     useEffect(() => {
         loadTweet(tweetId);
@@ -35,6 +41,8 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
     const loadTweet = async (tweetId: number) => {
         const currTweet = await getTweet(tweetId);
         setTweet(currTweet);
+        const currUserInfo = await getUserInfo(currTweet.userId);
+        setUserInfo(currUserInfo);
     };
 
     const openRetweetDialog = async (tweetId: number) => {
@@ -77,9 +85,43 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
             <Grid item key={tweet.id} xs={8}>
                 <Card>
                     <CardActionArea>
+                        {userInfo !== null && (
+                            <Link href={`/userinfo?id=${userInfo.id}`}>
+                                <CardContent sx={{ padding: 1 }}>
+                                    <Grid container alignItems="center" spacing={2}>
+                                        <Grid item>
+                                            <CardMedia
+                                                component="img"
+                                                image={userInfo.getThumbnailUrl()}
+                                                alt="profile image"
+                                                sx={{
+                                                    height: 70,
+                                                    width: 1,
+                                                    objectFit: 'contain'
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <Typography variant="h4" color="text.primary">
+                                                {userInfo.username}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </CardContent>
+                            </Link>
+                        )}
+                        {tweet.replyToId !== null && (
+                            <Link href={`/tweet/display?id=${tweet.replyToId}`}>
+                                <CardContent sx={{ padding: 1 }}>
+                                    <Typography variant="body1" color="primary.main">
+                                        Link: Reply Source Tweet
+                                    </Typography>
+                                </CardContent>
+                            </Link>
+                        )}
                         <Link href={`/tweet/display?id=${tweet.id}`}>
                             <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
+                                <Typography variant="h5" component="div">
                                     {tweet.message}
                                 </Typography>
                             </CardContent>
@@ -110,9 +152,11 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                                 src={tweet.getUploadedVideoUrl()}
                             />
                         )}
-                        <Typography variant="body1">
-                            Posted at {tweet.postingDatetime}
-                        </Typography>
+                        <CardContent>
+                            <Typography variant="body1">
+                                Posted at {tweet.postingDatetime}
+                            </Typography>
+                        </CardContent>
                         <IconButton aria-label="like" onClick={
                             async () => {
                                 await handleLike(tweet.id);

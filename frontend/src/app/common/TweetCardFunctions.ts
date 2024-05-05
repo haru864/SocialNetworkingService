@@ -1,5 +1,6 @@
 import { Tweet } from '@/app/common/Tweet';
 import * as ValidationUtil from "../utils/ValidationUtil";
+import { UserInfo } from './UserInfo';
 
 export const getTweet = async (tweetId: number): Promise<Tweet> => {
     try {
@@ -294,5 +295,25 @@ export const deleteRetweet = async (tweetId: number): Promise<void> => {
     } catch (error: any) {
         console.error(error);
         alert(error);
+    }
+}
+
+export const getUserInfo = async (userId: number): Promise<UserInfo> => {
+    try {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/profile?id=${userId}`, {
+            method: 'GET',
+            credentials: 'include'
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
+        const jsonData = await response.json();
+        const profileData = jsonData['profile'];
+        return new UserInfo(profileData);
+    } catch (error: any) {
+        console.error(error);
+        alert(error);
+        throw error;
     }
 }
