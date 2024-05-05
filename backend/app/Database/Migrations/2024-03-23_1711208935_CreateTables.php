@@ -11,7 +11,7 @@ class CreateTables implements Database\SchemaMigration
         // マイグレーションロジックをここに追加してください
         return [
             "CREATE TABLE users (
-                id INT AUTO_INCREMENT PRIMARY KEY,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
                 name varchar(15) UNIQUE NOT NULL,
                 password_hash varchar(255) NOT NULL,
                 email varchar(100) NOT NULL,
@@ -21,57 +21,43 @@ class CreateTables implements Database\SchemaMigration
                 last_login DATETIME NOT NULL
             )",
             "CREATE TABLE careers (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
                 job VARCHAR(100),
-                FOREIGN KEY (user_id) REFERENCES users(id)
-                ON DELETE CASCADE
-                ON UPDATE CASCADE
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE addresses (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
                 country VARCHAR(100),
                 state VARCHAR(100),
                 city VARCHAR(100),
                 town VARCHAR(100),
-                FOREIGN KEY (user_id) REFERENCES users(id)
-                ON DELETE CASCADE
-                ON UPDATE CASCADE
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE hobbies (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
                 hobby VARCHAR(100),
-                FOREIGN KEY (user_id) REFERENCES users(id)
-                ON DELETE CASCADE
-                ON UPDATE CASCADE
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE tweets (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                reply_to_id INT,
-                user_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                reply_to_id BIGINT,
+                retweet_to_id BIGINT,
+                user_id BIGINT NOT NULL,
                 message VARCHAR(200) NOT NULL,
                 media_file_name VARCHAR(255),
                 media_type VARCHAR(255),
                 posting_datetime DATETIME NOT NULL,
                 FOREIGN KEY (reply_to_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                FOREIGN KEY (retweet_to_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
-            "CREATE TABLE retweets (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                tweet_id INT NOT NULL,
-                message VARCHAR(200) NOT NULL,
-                retweet_datetime DATETIME NOT NULL,
-                UNIQUE(user_id, tweet_id),
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                FOREIGN KEY (tweet_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE
-            )",
             "CREATE TABLE follows (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                follower_id INT NOT NULL,
-                followee_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                follower_id BIGINT NOT NULL,
+                followee_id BIGINT NOT NULL,
                 follow_datetime DATETIME NOT NULL,
                 UNIQUE (follower_id, followee_id),
                 INDEX (follower_id),
@@ -79,18 +65,18 @@ class CreateTables implements Database\SchemaMigration
                 FOREIGN KEY (followee_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE likes (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                tweet_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
+                tweet_id BIGINT NOT NULL,
                 like_datetime DATETIME NOT NULL,
                 UNIQUE(user_id, tweet_id),
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 FOREIGN KEY (tweet_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE messages (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                sender_id INT NOT NULL,
-                recipient_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                sender_id BIGINT NOT NULL,
+                recipient_id BIGINT NOT NULL,
                 message varchar(200) NOT NULL,
                 media_file_name VARCHAR(255),
                 media_type VARCHAR(255),
@@ -98,50 +84,51 @@ class CreateTables implements Database\SchemaMigration
                 FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
-            "CREATE TABLE retweet_notifications (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                retweet_id INT NOT NULL,
+            "CREATE TABLE tweet_notifications (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
+                tweet_id BIGINT NOT NULL,
                 is_confirmed BOOLEAN NOT NULL,
                 created_at DATETIME NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                FOREIGN KEY (retweet_id) REFERENCES retweets(id) ON DELETE CASCADE ON UPDATE CASCADE
+                FOREIGN KEY (tweet_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE follow_notifications (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                follow_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
+                follow_id BIGINT NOT NULL,
                 is_confirmed BOOLEAN NOT NULL,
                 created_at DATETIME NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 FOREIGN KEY (follow_id) REFERENCES follows(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE like_notifications (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                like_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
+                like_id BIGINT NOT NULL,
                 is_confirmed BOOLEAN NOT NULL,
                 created_at DATETIME NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 FOREIGN KEY (like_id) REFERENCES likes(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE message_notifications (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                message_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
+                message_id BIGINT NOT NULL,
                 is_confirmed BOOLEAN NOT NULL,
                 created_at DATETIME NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 FOREIGN KEY (message_id) REFERENCES messages(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
             "CREATE TABLE scheduled_tweets (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                reply_to_id INT,
-                user_id INT NOT NULL,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                reply_to_id BIGINT,
+                user_id BIGINT NOT NULL,
                 message VARCHAR(200) NOT NULL,
                 media_file_name VARCHAR(255),
                 media_type VARCHAR(255),
-                scheduled_datetime DATETIME NOT NULL
+                scheduled_datetime DATETIME NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
             )",
         ];
     }
@@ -155,11 +142,10 @@ class CreateTables implements Database\SchemaMigration
             "DROP TABLE addresses",
             "DROP TABLE hobbies",
             "DROP TABLE tweets",
-            "DROP TABLE retweets",
             "DROP TABLE follows",
             "DROP TABLE likes",
             "DROP TABLE messages",
-            "DROP TABLE retweet_notifications",
+            "DROP TABLE tweet_notifications",
             "DROP TABLE follow_notifications",
             "DROP TABLE like_notifications",
             "DROP TABLE message_notifications",

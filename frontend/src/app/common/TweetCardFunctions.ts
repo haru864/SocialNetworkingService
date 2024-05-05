@@ -281,23 +281,6 @@ export const deleteTweet = async (tweetId: number): Promise<void> => {
     }
 }
 
-// TODO リツイートもツイート一覧に表示できるようにしたらdeleteTweet()と使い分けが必要（そもそも統一すべきかも）
-export const deleteRetweet = async (tweetId: number): Promise<void> => {
-    try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/tweets/${tweetId}/retweets`, {
-            method: 'DELETE',
-            credentials: 'include'
-        });
-        if (!response.ok) {
-            const responseData = await response.json();
-            throw new Error(responseData["error_message"]);
-        }
-    } catch (error: any) {
-        console.error(error);
-        alert(error);
-    }
-}
-
 export const getUserInfo = async (userId: number): Promise<UserInfo> => {
     try {
         const response = await fetch(`${process.env.API_DOMAIN}/api/profile?id=${userId}`, {

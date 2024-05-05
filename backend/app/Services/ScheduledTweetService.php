@@ -85,6 +85,7 @@ class ScheduledTweetService
                 $tweet = new Tweet(
                     id: null,
                     replyToId: $scheduledTweet->getReplyToId(),
+                    retweetToId: null,
                     userId: $scheduledTweet->getUserId(),
                     message: $scheduledTweet->getMessage(),
                     mediaFileName: $scheduledTweet->getMediaFileName(),

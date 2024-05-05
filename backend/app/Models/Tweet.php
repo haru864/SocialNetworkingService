@@ -11,6 +11,7 @@ class Tweet implements Model
 
     private ?int $id;
     private ?int $replyToId;
+    private ?int $retweetToId;
     private int $userId;
     private string $message;
     private ?string $mediaFileName;
@@ -20,6 +21,7 @@ class Tweet implements Model
     public function __construct(
         ?int $id,
         ?int $replyToId,
+        ?int $retweetToId,
         int $userId,
         string $message,
         ?string $mediaFileName,
@@ -28,6 +30,7 @@ class Tweet implements Model
     ) {
         $this->id = $id;
         $this->replyToId = $replyToId;
+        $this->retweetToId = $retweetToId;
         $this->userId = $userId;
         $this->message = $message;
         $this->mediaFileName = $mediaFileName;
@@ -53,6 +56,16 @@ class Tweet implements Model
     public function setReplyToId(?int $replyToId): void
     {
         $this->replyToId = $replyToId;
+    }
+
+    public function getRetweetToId(): ?int
+    {
+        return $this->retweetToId;
+    }
+
+    public function setRetweetToId(?int $retweetToId): void
+    {
+        $this->retweetToId = $retweetToId;
     }
 
     public function getUserId(): int
@@ -110,6 +123,7 @@ class Tweet implements Model
         $data = [
             'id' => $this->getId(),
             'replyToId' => $this->getReplyToId(),
+            'retweetToId' => $this->getRetweetToId(),
             'userId' => $this->getUserId(),
             'message' => $this->getMessage(),
             'mediaFileName' => $this->getMediaFileName(),

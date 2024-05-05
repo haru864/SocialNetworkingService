@@ -63,6 +63,7 @@ class TweetService
         $tweet = new Tweet(
             id: null,
             replyToId: null,
+            retweetToId: null,
             userId: SessionManager::get('user_id'),
             message: $tweetMessage,
             mediaFileName: $mediaFileName,

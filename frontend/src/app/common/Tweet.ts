@@ -1,6 +1,7 @@
 export class Tweet {
     id: number;
     replyToId: number | null;
+    retweetToId: number | null;
     userId: number;
     message: string;
     mediaFileName: string | null;
@@ -13,6 +14,7 @@ export class Tweet {
     constructor(data: any) {
         this.id = data['id'] as number;
         this.replyToId = data['replyToId'] as number | null;
+        this.retweetToId = data['retweetToId'] as number | null;
         this.userId = data['userId'] as number;
         this.message = data['message'] as string;
         this.mediaFileName = data['mediaFileName'] as string | null;

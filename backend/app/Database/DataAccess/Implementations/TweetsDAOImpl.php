@@ -16,6 +16,7 @@ class TweetsDAOImpl implements TweetsDAO
         $query = <<<SQL
             INSERT INTO tweets (
                 reply_to_id,
+                retweet_to_id,
                 user_id,
                 message,
                 media_file_name,
@@ -23,14 +24,15 @@ class TweetsDAOImpl implements TweetsDAO
                 posting_datetime
             )
             VALUES (
-                ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?
             )
         SQL;
         $result = $mysqli->prepareAndExecute(
             $query,
-            'iissss',
+            'iiissss',
             [
                 $tweet->getReplyToId(),
+                $tweet->getRetweetToId(),
                 $tweet->getUserId(),
                 $tweet->getMessage(),
                 $tweet->getMediaFileName(),
@@ -56,7 +58,7 @@ class TweetsDAOImpl implements TweetsDAO
         return $record === null ? null : $this->convertRecordToTweet($record);
     }
 
-    public function getByReplyToId(int $replyToId, int $limit = null, int $offset = null): ?array
+    public function getReplies(int $replyToId, int $limit = null, int $offset = null): ?array
     {
         if (
             (is_null($limit) && !is_null($offset))
@@ -82,6 +84,30 @@ class TweetsDAOImpl implements TweetsDAO
             SQL;
             $records = $mysqli->prepareAndFetchAll($query, 'iii', [$replyToId, $limit, $offset]);
         }
+        return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
+    }
+
+    public function getRetweets(int $tweetId): ?array
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = <<<SQL
+                SELECT * FROM tweets
+                WHERE retweet_to_id = ?
+                ORDER BY id DESC
+            SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'i', [$tweetId]);
+        return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
+    }
+
+    public function getRetweetByUser(int $userId, int $tweetId): ?array
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = <<<SQL
+                SELECT * FROM tweets
+                WHERE retweet_to_id = ? AND user_id = ?
+                ORDER BY id DESC
+            SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'ii', [$tweetId, $userId]);
         return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
     }
 
@@ -121,6 +147,7 @@ class TweetsDAOImpl implements TweetsDAO
             SELECT 
                 t.id,
                 t.reply_to_id,
+                t.retweet_to_id,
                 t.user_id,
                 t.message,
                 t.media_file_name,
@@ -140,10 +167,10 @@ class TweetsDAOImpl implements TweetsDAO
             ) l ON t.id = l.tweet_id
             LEFT JOIN (
                 SELECT tweet_id, COUNT(*) AS retweet_count 
-                FROM retweets 
-                WHERE retweet_datetime > NOW() - INTERVAL 24 HOUR
+                FROM tweets 
+                WHERE posting_datetime > NOW() - INTERVAL 24 HOUR AND reply_to_id IS NOT NULL
                 GROUP BY tweet_id
-            ) rt ON t.id = rt.tweet_id
+            ) rt ON t.id = rt.retweet_to_id
             LEFT JOIN (
                 SELECT reply_to_id, COUNT(*) AS reply_count 
                 FROM tweets 
@@ -181,6 +208,7 @@ class TweetsDAOImpl implements TweetsDAO
         return new Tweet(
             id: $data['id'],
             replyToId: $data['reply_to_id'],
+            retweetToId: $data['retweet_to_id'],
             userId: $data['user_id'],
             message: $data['message'],
             mediaFileName: $data['media_file_name'],

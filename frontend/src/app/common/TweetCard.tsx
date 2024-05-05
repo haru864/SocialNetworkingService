@@ -119,6 +119,15 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                                 </CardContent>
                             </Link>
                         )}
+                        {tweet.retweetToId !== null && (
+                            <Link href={`/tweet/display?id=${tweet.retweetToId}`}>
+                                <CardContent sx={{ padding: 1 }}>
+                                    <Typography variant="body1" color="primary.main">
+                                        Link: Retweet Source Tweet
+                                    </Typography>
+                                </CardContent>
+                            </Link>
+                        )}
                         <Link href={`/tweet/display?id=${tweet.id}`}>
                             <CardContent>
                                 <Typography variant="h5" component="div">

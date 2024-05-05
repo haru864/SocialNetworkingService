@@ -30,12 +30,6 @@ class TweetController implements ControllerInterface
     public function handleRequest(): JSONRenderer
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            // $request = new GetTweetListRequest($_GET);
-            // if ($request->getType() === 'tweet') {
-            //     return $this->getTweet($request);
-            // } else {
-            //     return $this->getTweets($request);
-            // }
             $getSingleTweetPattern = '/^\/api\/tweets\/[1-9][0-9]*$/';
             if (preg_match($getSingleTweetPattern, $_SERVER['REQUEST_URI'])) {
                 return $this->getTweet(new GetTweetRequest());
@@ -53,7 +47,6 @@ class TweetController implements ControllerInterface
         throw new InvalidRequestMethodException("Tweet request must be 'GET', 'POST' or 'DELETE'.");
     }
 
-    // TODO リツイートも返したい
     private function getTweets(GetTweetListRequest $request): JSONRenderer
     {
         $page = $request->getPage();

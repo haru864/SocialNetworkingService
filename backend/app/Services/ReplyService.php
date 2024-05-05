@@ -59,6 +59,7 @@ class ReplyService
         $tweet = new Tweet(
             id: null,
             replyToId: $request->getTweetId(),
+            retweetToId: null,
             userId: SessionManager::get('user_id'),
             message: $tweetMessage,
             mediaFileName: $mediaFileName,
@@ -71,7 +72,7 @@ class ReplyService
 
     public function getAllReplies(int $tweetId): array
     {
-        $replies = $this->tweetsDAOImpl->getByReplyToId($tweetId, null, null);
+        $replies = $this->tweetsDAOImpl->getReplies($tweetId, null, null);
         $repliesArr = [];
         foreach ($replies as $reply) {
             array_push($repliesArr, $reply->toArray());
@@ -82,7 +83,7 @@ class ReplyService
     public function getPartialReplies(int $tweetId, int $page, int $limit): array
     {
         $offset = ($page - 1) * $limit;
-        $replies = $this->tweetsDAOImpl->getByReplyToId($tweetId, $limit, $offset);
+        $replies = $this->tweetsDAOImpl->getReplies($tweetId, $limit, $offset);
         $repliesArr = [];
         foreach ($replies as $reply) {
             array_push($repliesArr, $reply->toArray());

@@ -2,49 +2,57 @@
 
 namespace Services;
 
-use Database\DataAccess\Implementations\RetweetsDAOImpl;
+use Database\DataAccess\Implementations\TweetsDAOImpl;
+use Exceptions\InternalServerException;
 use Exceptions\InvalidRequestParameterException;
-use Models\Retweet;
+use Models\Tweet;
 
 class RetweetService
 {
-    private RetweetsDAOImpl $retweetsDAOImpl;
+    private TweetsDAOImpl $tweetsDAOImpl;
 
-    public function __construct(RetweetsDAOImpl $retweetsDAOImpl)
+    public function __construct(TweetsDAOImpl $tweetsDAOImpl)
     {
-        $this->retweetsDAOImpl = $retweetsDAOImpl;
+        $this->tweetsDAOImpl = $tweetsDAOImpl;
     }
 
     public function createRetweet(int $userId, int $tweetId, ?string $message): void
     {
-        $retweetInTable = $this->retweetsDAOImpl->getRetweet($userId, $tweetId);
-        if (!is_null($retweetInTable)) {
+        $retweetInTable = $this->tweetsDAOImpl->getRetweetByUser($userId, $tweetId);
+        if (count($retweetInTable) === 1) {
             throw new InvalidRequestParameterException("Already retweeted.");
+        } else if (count($retweetInTable) > 1) {
+            throw new InternalServerException("Multiple retweets to the same tweet.");
         }
-        $retweet = new Retweet(
+        $retweet = new Tweet(
             id: null,
+            replyToId: null,
+            retweetToId: $tweetId,
             userId: $userId,
-            tweetId: $tweetId,
             message: $message,
-            retweetDatetime: date('Y-m-d H:i:s')
+            mediaFileName: null,
+            mediaType: null,
+            postingDatetime: date('Y-m-d H:i:s')
         );
-        $this->retweetsDAOImpl->create($retweet);
+        $this->tweetsDAOImpl->create($retweet);
         return;
     }
 
     public function removeRetweet(int $userId, int $tweetId): void
     {
-        $retweetInTable = $this->retweetsDAOImpl->getRetweet($userId, $tweetId);
-        if (is_null($retweetInTable)) {
+        $retweetInTable = $this->tweetsDAOImpl->getRetweetByUser($userId, $tweetId);
+        if (count($retweetInTable) === 0) {
             throw new InvalidRequestParameterException("Not retweeted.");
+        } else if (count($retweetInTable) > 1) {
+            throw new InternalServerException("Multiple retweets to the same tweet.");
         }
-        $this->retweetsDAOImpl->deleteById($retweetInTable->getId());
+        $this->tweetsDAOImpl->deleteById($retweetInTable[0]->getId());
         return;
     }
 
     public function getRetweets(int $tweetId): ?array
     {
-        $retweets = $this->retweetsDAOImpl->getByTweetId($tweetId);
+        $retweets = $this->tweetsDAOImpl->getRetweets($tweetId);
         $retweetArr = [];
         foreach ($retweets as $retweet) {
             array_push($retweetArr, $retweet->toArray());
