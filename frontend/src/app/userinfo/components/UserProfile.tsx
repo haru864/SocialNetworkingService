@@ -1,33 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { UserInfo } from '../../common/UserInfo';
-import { Box, Typography, CircularProgress, Button } from '@mui/material';
+import { getUserinfo } from '../../common/UserInfoFunctions';
+import { Box, Typography, CircularProgress, Button, Stack } from '@mui/material';
 import Link from 'next/link';
 import ContentArea from './ContentArea';
-
-async function getUserinfo(userId: number): Promise<UserInfo> {
-    try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/profile?id=${userId}`, {
-            method: 'GET',
-            credentials: 'include'
-        });
-        if (!response.ok) {
-            const responseData = await response.json();
-            throw new Error(responseData["error_message"]);
-        }
-        const jsonData = await response.json();
-        if (jsonData === null) {
-            throw new Error("Invalid response from server.");
-        }
-        const profile = jsonData['profile'];
-        const userInfo = new UserInfo(profile);
-        return userInfo;
-    } catch (error: any) {
-        console.error(error);
-        alert(error);
-        throw error;
-    }
-}
 
 async function followUser(
     userId: number,
@@ -162,23 +139,35 @@ const UserProfile: React.FC = () => {
                 <Typography variant="body2" color="text.secondary">
                     Careers: {userInfo.career_1}, {userInfo.career_2}, {userInfo.career_3}
                 </Typography>
-                {userInfo.isFollowedBy && (
-                    <Typography variant="body2" color="secondary">
-                        You are followed.
-                    </Typography>
-                )}
-                {userInfo.isFollowing ? (
-                    <>
-                        <Typography variant="body2">You are following.</Typography>
-                        <Button variant="contained" color="secondary" onClick={handleUnfollow}>
-                            Unfollow
+                <Stack direction="column" spacing={1}>
+                    {userInfo.isFollowedBy && (
+                        <Typography variant="body2" color="secondary">
+                            You are followed.
+                        </Typography>
+                    )}
+                    {userInfo.isFollowing ? (
+                        <>
+                            <Typography variant="body2" color="secondary">
+                                You are following.
+                            </Typography>
+                            <Button variant="contained" color="secondary" onClick={handleUnfollow} sx={{ width: 110 }} >
+                                Unfollow
+                            </Button>
+                        </>
+                    ) : (
+                        <Button variant="contained" color="primary" onClick={handleFollow} sx={{ width: 110 }} >
+                            Follow
                         </Button>
-                    </>
-                ) : (
-                    <Button variant="contained" color="primary" onClick={handleFollow}>
-                        Follow
-                    </Button>
-                )}
+                    )}
+                    <Link href={`/messages/chatroom?name=${userInfo.username}`}>
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                        >
+                            Message
+                        </Button>
+                    </Link>
+                </Stack>
                 <ContentArea />
             </Box>
         );

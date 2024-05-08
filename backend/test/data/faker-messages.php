@@ -1,7 +1,7 @@
 <?php
 
-use Database\DataAccess\Implementations\TweetsDAOImpl;
-use Models\Tweet;
+use Database\DataAccess\Implementations\MessagesDAOImpl;
+use Models\Message;
 use Settings\Settings;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -17,33 +17,34 @@ spl_autoload_register(function ($class) {
 
 date_default_timezone_set('Asia/Tokyo');
 $faker = Faker\Factory::create();
-$tweetsDAOImpl = new TweetsDAOImpl();
-$tweetsCount = 50;
-$tweetUserId = 3;
+$messagesDAOImpl = new MessagesDAOImpl();
 
-for ($i = 0; $i < $tweetsCount; $i++) {
+$MESSAGE_COUNT = 30;
+$LOGIN_USER_ID = 1;
+$DM_PARTNER_ID = 2;
+
+for ($i = 0; $i < $MESSAGE_COUNT; $i++) {
     $nowDateTime = new DateTime();
     $nowDateTimeStr = $nowDateTime->format('Y-m-d H:i:s');
     $imagePath = __DIR__ . '/images/random_image.png';
     generateImage($imagePath);
-    $tweetImage = storeImageWithThumbnail(
-        storeDirPath: Settings::env('IMAGE_FILE_LOCATION_TWEET_UPLOAD'),
-        thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_TWEET_THUMBNAIL'),
+    $image = storeImageWithThumbnail(
+        storeDirPath: Settings::env('IMAGE_FILE_LOCATION_DM_UPLOAD'),
+        thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_DM_THUMBNAIL'),
         uploadedTmpFilePath: $imagePath,
         uploadedFileName: 'random_image.png',
         thumbWidth: 200
     );
-    $tweet = new Tweet(
+    $message = new Message(
         id: null,
-        replyToId: null,
-        retweetToId: null,
-        userId: $tweetUserId,
+        senderId: $i % 2 === 0 ? $LOGIN_USER_ID : $DM_PARTNER_ID,
+        recipientId: $i % 2 === 0 ? $DM_PARTNER_ID : $LOGIN_USER_ID,
         message: $faker->text(200),
-        mediaFileName: $tweetImage,
+        mediaFileName: $image,
         mediaType: "image/png",
-        postingDatetime: $nowDateTimeStr
+        sendDatetime: $nowDateTimeStr
     );
-    $tweetsDAOImpl->create($tweet);
+    $messagesDAOImpl->create($message);
 }
 
 function storeImageWithThumbnail(

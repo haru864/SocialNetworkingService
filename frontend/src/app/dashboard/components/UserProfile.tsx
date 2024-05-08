@@ -1,33 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { UserInfo } from '../../common/UserInfo';
+import { getUserinfo } from '../../common/UserInfoFunctions';
 import { Box, Typography, CircularProgress, Button } from '@mui/material';
 import Link from 'next/link';
 import ContentArea from './ContentArea';
-
-async function getUserinfo(): Promise<UserInfo> {
-    try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/profile`, {
-            method: 'GET',
-            credentials: 'include'
-        });
-        if (!response.ok) {
-            const responseData = await response.json();
-            throw new Error(responseData["error_message"]);
-        }
-        const jsonData = await response.json();
-        if (jsonData === null) {
-            throw new Error("Invalid response from server.");
-        }
-        const profile = jsonData['profile'];
-        const userInfo = new UserInfo(profile);
-        return userInfo;
-    } catch (error: any) {
-        console.error(error);
-        alert(error);
-        throw error;
-    }
-}
 
 const UserProfile: React.FC = () => {
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
@@ -36,7 +12,7 @@ const UserProfile: React.FC = () => {
         loadUserInfo();
     }, []);
     const loadUserInfo = async () => {
-        const userInfo = await getUserinfo();
+        const userInfo = await getUserinfo(null);
         setUserInfo(userInfo);
         setIsLoading(false);
     };

@@ -108,7 +108,7 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
         { name: 'Notifications', path: '/notifications', icon: <NotificationsIcon /> },
         { name: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
         { name: 'Tweet', path: '/tweet/post', icon: <MessageIcon /> },
-        { name: 'Messages', path: '/messages', icon: <QuestionAnswerIcon /> },
+        { name: 'Messages', path: '/messages/chatlist', icon: <QuestionAnswerIcon /> },
         { name: 'Log out', path: '/logout', icon: <LogoutIcon /> },
     ];
     const drawer = (

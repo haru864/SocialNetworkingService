@@ -45,12 +45,12 @@ class Message implements Model
         $this->id = $id;
     }
 
-    public function getSenderId(): ?int
+    public function getSenderId(): int
     {
         return $this->senderId;
     }
 
-    public function setSenderId(?int $senderId): void
+    public function setSenderId(int $senderId): void
     {
         $this->senderId = $senderId;
     }

@@ -8,7 +8,6 @@ use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
 use Helpers\SessionManager;
 use Helpers\ValidationHelper;
-use Http\Request\GetMessagesRequest;
 use Http\Request\PostMessageRequest;
 use Models\Message;
 use Settings\Settings;
@@ -89,14 +88,11 @@ class MessageService
             array_push(
                 $chats["chats"],
                 [
-                    "user" => [
+                    "chat_partner" => [
                         "id" => $dmPartner->getId(),
                         "name" => $dmPartner->getName()
                     ],
-                    "latest_message" => [
-                        "message" => $latestMsg->getMessage(),
-                        "media_file_name" => $latestMsg->getMediaFileName()
-                    ]
+                    "latest_message" => $latestMsg->toArray()
                 ]
             );
         }

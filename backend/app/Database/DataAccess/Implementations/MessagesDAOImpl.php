@@ -73,7 +73,7 @@ class MessagesDAOImpl implements MessagesDAO
             SELECT * FROM messages
             WHERE (sender_id = ? AND recipient_id = ?)
                 OR (sender_id = ? AND recipient_id = ?)
-            ORDER BY send_datetime DESC
+            ORDER BY id DESC
             LIMIT ?
             OFFSET ?
         SQL;
