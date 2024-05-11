@@ -103,10 +103,10 @@ class MessageService
     {
         $messages = $this->messagesDAOImpl->getMessageExchanges($userId, $recipientUserId, $limit, $offset);
         $messageJsonList = [];
-        foreach ($messages as $message) {
-            array_push($messageJsonList, $message->toArray());
+        for ($i = count($messages) - 1; $i >= 0; $i--) {
+            array_push($messageJsonList, $messages[$i]->toArray());
         }
-        return ["messages" => $messageJsonList];
+        return $messageJsonList;
     }
 
     public function deleteChat(int $userId, int $recipientUserId): void

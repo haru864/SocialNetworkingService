@@ -10,14 +10,17 @@ use Http\Request\DeleteMessagesRequest;
 use Http\Request\GetMessagesRequest;
 use Http\Request\PostMessageRequest;
 use Services\MessageService;
+use Services\ProfileService;
 
 class MessageController implements ControllerInterface
 {
     private MessageService $messageService;
+    private ProfileService $profileService;
 
-    public function __construct(MessageService $messageService)
+    public function __construct(MessageService $messageService, ProfileService $profileService)
     {
         $this->messageService = $messageService;
+        $this->profileService = $profileService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -46,7 +49,11 @@ class MessageController implements ControllerInterface
         if (is_null($request->getRecipientUserId())) {
             $resp = $this->messageService->getChats($userId);
         } else {
-            $resp = $this->messageService->getIndividualChat($userId, $recipientUserId, $limit, $offset);
+            $loginUserProfile = $this->profileService->getUserInfo($userId, true);
+            $resp['login_user'] = ['id' => $loginUserProfile['id'], 'name' => $loginUserProfile['name']];
+            $chatPartnerProfile = $this->profileService->getUserInfo($recipientUserId, true);
+            $resp['chat_partner'] = ['id' => $chatPartnerProfile['id'], 'name' => $chatPartnerProfile['name']];
+            $resp['messages'] = $this->messageService->getIndividualChat($userId, $recipientUserId, $limit, $offset);
         }
         return new JSONRenderer(200, $resp);
     }

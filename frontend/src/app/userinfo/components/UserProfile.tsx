@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { UserInfo } from '../../common/UserInfo';
 import { getUserinfo } from '../../common/UserInfoFunctions';
 import { Box, Typography, CircularProgress, Button, Stack } from '@mui/material';
@@ -159,7 +159,7 @@ const UserProfile: React.FC = () => {
                             Follow
                         </Button>
                     )}
-                    <Link href={`/messages/chatroom?name=${userInfo.username}`}>
+                    <Link href={`/messages/chatroom?user_id=${userInfo.id}`}>
                         <Button
                             variant="outlined"
                             color="primary"

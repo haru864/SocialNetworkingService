@@ -96,7 +96,7 @@ $replyController  = new ReplyController($replyService);
 $likeController = new LikeController($likeService);
 $followController = new FollowController($followService);
 $profileController = new ProfileController($profileService, $signupService);
-$messageController = new MessageController($messageService);
+$messageController = new MessageController($messageService, $profileService);
 $resetPasswordController = new ResetPasswordController($resetPasswordService);
 
 $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';

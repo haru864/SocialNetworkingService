@@ -35,7 +35,7 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat }) => {
     } else {
         return (
             <Grid item key={chat.chatPartner.id} xs={8}>
-                <Link href={`/messages/chatroom?name=${chat.chatPartner.name}`}>
+                <Link href={`/messages/chatroom?user_id=${chat.chatPartner.id}`}>
                     <Card>
                         <CardActionArea>
                             <CardContent sx={{ padding: 1 }}>
