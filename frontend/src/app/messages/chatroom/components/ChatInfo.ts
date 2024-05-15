@@ -26,6 +26,19 @@ export class Message {
         this.mediaType = data['mediaType'] as string;
         this.sendDatetime = data['sendDatetime'] as string;
     }
+
+    getThumbnailUrl(): string {
+        return `${process.env.MESSAGE_IMAGE_THUMBNAIL_URL}/${this.mediaFileName}`;
+
+    }
+
+    getUploadedImageUrl(): string {
+        return `${process.env.MESSAGE_IMAGE_UPLOAD_URL}/${this.mediaFileName}`;
+    }
+
+    getUploadedVideoUrl(): string {
+        return `${process.env.MESSAGE_VIDEO_UPLOAD_URL}/${this.mediaFileName}`;
+    }
 }
 
 export class ChatInfo {

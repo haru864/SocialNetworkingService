@@ -23,7 +23,7 @@ class MessageService
         $this->usersDAOImpl = $usersDAOImpl;
     }
 
-    public function createMessage(PostMessageRequest $request): void
+    public function createMessage(PostMessageRequest $request): Message
     {
         $currentDatetime = date('Y-m-d H:i:s');
         $maxMsgChars = 200;
@@ -65,8 +65,7 @@ class MessageService
             mediaType: $mimeType,
             sendDatetime: $currentDatetime
         );
-        $this->messagesDAOImpl->create($message);
-        return;
+        return $this->messagesDAOImpl->create($message);
     }
 
     public function getChats(int $userId): ?array

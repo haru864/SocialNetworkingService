@@ -1,78 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-    Box, TextField, Button, List, ListItem, ListItemText, ListItemAvatar,
-    Avatar, Typography, CircularProgress
+    Box, TextField, Button, List, CircularProgress
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useSearchParams } from 'next/navigation';
-import { ChatInfo, ChatUser, Message } from './ChatInfo';
+import { Message } from './ChatInfo';
 import { MessageItem } from './MessageItem';
+import { getUserinfo } from '../../../common/UserInfoFunctions';
+import { UserInfo } from '@/app/common/UserInfo';
+import { getChatInfo, handleSendMessage } from './ChatHistoryFunctions';
 
-async function getChatInfo(chatPartnerId: number, page: number): Promise<ChatInfo> {
-    try {
-        const response = await fetch(`${process.env.API_DOMAIN}/api/messages/${chatPartnerId}?page=${page}&limit=20`, {
-            method: 'GET',
-            credentials: 'include'
-        });
-        if (!response.ok) {
-            const responseData = await response.json();
-            throw new Error(responseData["error_message"]);
-        }
-        const jsonData = await response.json();
-        const loginUserInfo = new ChatUser(jsonData['login_user']);
-        const chatPartnerInfo = new ChatUser(jsonData['chat_partner']);
-        const messageList = jsonData['messages'];
-        let messages: Message[] = [];
-        for (const message of messageList) {
-            messages.push(new Message(message));
-        }
-        return new ChatInfo(loginUserInfo, chatPartnerInfo, messages);
-    } catch (error: any) {
-        console.error(error);
-        throw error;
-    }
-}
-
-async function handleSendMessage(
-    event: React.FormEvent<HTMLFormElement>,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>
-) {
-    try {
-        event.preventDefault();
-        console.log('メッセージ送信');
-        // const data: FormData = new FormData(event.currentTarget);
-        // let dateTime: string | null = data.get('dateTime') as string | null;
-        // if (dateTime) {
-        //     dateTime = dateTime.replace('T', ' ') + ':00';
-        //     data.set('dateTime', dateTime);
-        // }
-        // const message: string = data.get('message') as string;
-        // ValidationUtil.validateCharCount(message, "Message", 1, 200);
-        // setLoading(true);
-        // const response = await fetch(`${process.env.API_DOMAIN}/api/tweets`, {
-        //     method: 'POST',
-        //     body: data
-        // });
-        // setLoading(false);
-        // if (!response.ok) {
-        //     const responseData = await response.json();
-        //     throw new Error(responseData["error_message"]);
-        // }
-        // alert('Tweet posted.');
-    } catch (error: any) {
-        console.error(error);
-        alert(error);
-    }
-}
-
-// TODO 画面表示時にデフォルトで下にスクロールする/チャットっぽい見た目にする/SSE対応
 const ChatHistory: React.FC = () => {
-    const [loginUser, setLoginUser] = useState<ChatUser | null>(null);
-    const [chatPartner, setChatPartner] = useState<ChatUser | null>(null);
+    const [loginUser, setLoginUser] = useState<UserInfo | null>(null);
+    const [chatPartner, setChatPartner] = useState<UserInfo | null>(null);
+
     const [messages, setMessages] = useState<Message[]>([]);
     const [page, setPage] = useState<number>(1);
-    const [hasMore, setHasMore] = useState<boolean>(true);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const didInitialScroll = useRef(false);
     const listRef = useRef<HTMLUListElement>(null);
+    const [heightDifference, setHeightDifference] = useState(0);
+
     const searchParams = useSearchParams();
     const [loading, setLoading] = useState(false);
 
@@ -83,36 +31,75 @@ const ChatHistory: React.FC = () => {
         }
         const chatPartnerId = Number(query);
         initializeChatData(chatPartnerId);
-        scrollToBottom();
     }, []);
+
+    // TODO 受信時にスクロールが最下部のときはそのまま最下部を維持したい
+    useEffect(() => {
+        const eventSource = new EventSource(`http://sns.test.com/api/live/messages/${chatPartner?.id}`);
+        eventSource.onmessage = (event: MessageEvent) => {
+            const data = JSON.parse(event.data);
+            const message = new Message(data);
+            setMessages(prev => [...prev, message]);
+        };
+        eventSource.onerror = (error) => {
+            console.error('EventSource failed:', error);
+            eventSource.close();
+        };
+        return () => {
+            eventSource.close();
+        };
+    }, [chatPartner]);
+
+    useEffect(() => {
+        if (messages.length > 0 && !didInitialScroll.current) {
+            scrollToBottom();
+            didInitialScroll.current = true;
+        }
+        if (listRef.current && heightDifference > 0) {
+            listRef.current.scrollTop += heightDifference;
+        }
+    }, [messages]);
 
     const initializeChatData = async (chatPartnerId: number) => {
         const chatInfo = await getChatInfo(chatPartnerId, page);
-        setLoginUser(chatInfo.loginUser);
-        setChatPartner(chatInfo.chatPartner);
+        const loginUserInfo = await getUserinfo(chatInfo.loginUser.id);
+        const chatPartnerInfo = await getUserinfo(chatInfo.chatPartner.id);
+        setLoginUser(loginUserInfo);
+        setChatPartner(chatPartnerInfo);
         setMessages(chatInfo.messages);
     };
 
-    const loadMoreMessages = async () => {
+    // BUG 追加メッセージ取得時にスクロールが最上部で固定されてしまう
+    const loadMoreMessages = async (): Promise<void> => {
         if (chatPartner === null) {
             return;
         }
+
+        const oldScrollHeight = listRef.current?.scrollHeight ?? 0;
+
         const chatInfo = await getChatInfo(chatPartner.id, page);
         setMessages(prev => [...chatInfo.messages, ...prev]);
         setPage(page + 1);
+
+        const newScrollHeight = listRef.current?.scrollHeight ?? 0;
+        setHeightDifference(newScrollHeight - oldScrollHeight);
+
+
+        console.log('oldScrollHeight ' + oldScrollHeight);
+        console.log('newScrollHeight ' + newScrollHeight);
     };
 
-    const handleScroll = (e: React.UIEvent<HTMLUListElement>) => {
+    const handleScroll = async (e: React.UIEvent<HTMLUListElement>) => {
         if (e.currentTarget.scrollTop === 0) {
-            loadMoreMessages();
+            await loadMoreMessages();
+            if (listRef.current) {
+                listRef.current.scrollTop += heightDifference;
+            }
         }
     };
 
     const scrollToBottom = () => {
-        if (listRef.current) {
-            // listRef.current.scrollTop = listRef.current.scrollHeight;
-            listRef.current.scrollIntoView();
-        }
+        messagesEndRef.current?.scrollIntoView();
     };
 
     if (loading) {
@@ -126,25 +113,13 @@ const ChatHistory: React.FC = () => {
     } else {
         return (
             <Box sx={{ display: 'flex', flexDirection: 'column', height: '90vh' }}>
-                {/* <List ref={listRef} sx={{ flex: 1, overflowY: 'auto' }} onScroll={handleScroll}>
-                {messages.map((message) => (
-                    <ListItem key={message.id} alignItems="flex-start">
-                        <ListItemAvatar>
-                            <Avatar alt={`Sender ${message.senderId}`} />
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={<Typography color="text.primary">{message.message}</Typography>}
-                            secondary={message.sendDatetime}
-                        />
-                    </ListItem>
-                ))}
-            </List> */}
-                <List ref={listRef} sx={{ flex: 1, overflowY: 'auto' }}>
+                <List ref={listRef} sx={{ flex: 1, overflowY: 'auto' }} onScroll={handleScroll}>
                     {messages.map((message) => (
-                        <MessageItem key={message.id} message={message} loginUserId={loginUser.id} chatPartnerId={chatPartner.id} />
+                        <MessageItem key={message.id} message={message} loginUser={loginUser} chatPartner={chatPartner} />
                     ))}
+                    <div ref={messagesEndRef} />
                 </List>
-                <Box component="form" onSubmit={(e) => handleSendMessage(e, setLoading)} sx={{ padding: 2 }}>
+                <Box component="form" onSubmit={(e) => handleSendMessage(e, setLoading, chatPartner.id)} sx={{ padding: 2 }}>
                     <TextField
                         fullWidth
                         name="message"

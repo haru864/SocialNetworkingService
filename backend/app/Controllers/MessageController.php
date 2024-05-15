@@ -9,6 +9,7 @@ use Helpers\SessionManager;
 use Http\Request\DeleteMessagesRequest;
 use Http\Request\GetMessagesRequest;
 use Http\Request\PostMessageRequest;
+use Services\LiveMessageService;
 use Services\MessageService;
 use Services\ProfileService;
 
@@ -16,11 +17,16 @@ class MessageController implements ControllerInterface
 {
     private MessageService $messageService;
     private ProfileService $profileService;
+    private LiveMessageService $liveMessageService;
 
-    public function __construct(MessageService $messageService, ProfileService $profileService)
-    {
+    public function __construct(
+        MessageService $messageService,
+        ProfileService $profileService,
+        LiveMessageService $liveMessageService
+    ) {
         $this->messageService = $messageService;
         $this->profileService = $profileService;
+        $this->liveMessageService = $liveMessageService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -60,7 +66,8 @@ class MessageController implements ControllerInterface
 
     private function postMessage(PostMessageRequest $request): JSONRenderer
     {
-        $this->messageService->createMessage($request);
+        $message = $this->messageService->createMessage($request);
+        $this->liveMessageService->publishMessage($message);
         return new JSONRenderer(200, []);
     }
 

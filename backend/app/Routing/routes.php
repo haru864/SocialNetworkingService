@@ -2,6 +2,7 @@
 
 use Controllers\FollowController;
 use Controllers\LikeController;
+use Controllers\LiveMessageController;
 use Controllers\LoginController;
 use Controllers\LogoutController;
 use Controllers\MessageController;
@@ -29,6 +30,7 @@ use Middleware\AuthMiddleware;
 use Middleware\NoopMiddleware;
 use Services\FollowService;
 use Services\LikeService;
+use Services\LiveMessageService;
 use Services\LoginService;
 use Services\MessageService;
 use Services\ProfileService;
@@ -86,6 +88,7 @@ $profileService = new ProfileService(
 );
 $messageService = new MessageService($messagesDAOImpl, $usersDAOImpl);
 $resetPasswordService = new ResetPasswordService($usersDAOImpl, $emailVerificationDAOImpl);
+$liveMessageService = new LiveMessageService(new Predis\Client());
 
 $loginController = new LoginController($loginService);
 $signupController = new SignupController($signupService);
@@ -96,8 +99,9 @@ $replyController  = new ReplyController($replyService);
 $likeController = new LikeController($likeService);
 $followController = new FollowController($followService);
 $profileController = new ProfileController($profileService, $signupService);
-$messageController = new MessageController($messageService, $profileService);
+$messageController = new MessageController($messageService, $profileService, $liveMessageService);
 $resetPasswordController = new ResetPasswordController($resetPasswordService);
+$liveMessageController = new LiveMessageController($liveMessageService);
 
 $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
 $URL_DIR_PATTERN_RESET_PASSWORD = '/^\/api\/reset_password$/';
@@ -112,6 +116,7 @@ $URL_DIR_PATTERN_FOLLOWS = '/^\/api\/follows\/follow(er|ee)$/';
 $URL_DIR_PATTERN_PROFILE = '/^\/api\/profile$/';
 $URL_DIR_PATTERN_VALIDATE_UPDATE_EMAIL = '/^\/api\/profile\/validate_email$/';
 $URL_DIR_PATTERN_MESSAGES = '/^\/api\/messages(\/([1-9][0-9]*))??$/';
+$URL_DIR_PATTERN_MESSAGES_LIVE = '/^\/api\/live\/messages\/([1-9][0-9]*)$/';
 
 // TODO Nginxのauth_requestモジュールでリクエストを認証用PHPスクリプトに送り、メディアファイルアクセスを許可または拒否する
 return [
@@ -167,6 +172,8 @@ return [
         'controller' => $messageController,
         'middleware' => new AuthMiddleware()
     ],
-    // TODO 通知機能を実装する
-    // TODO 予約投稿機能を実装する
+    $URL_DIR_PATTERN_MESSAGES_LIVE => [
+        'controller' => $liveMessageController,
+        'middleware' => new AuthMiddleware()
+    ],
 ];

@@ -14,6 +14,9 @@ const nextConfig = {
         TWEET_IMAGE_THUMBNAIL_URL: `${apiDomain}/images/tweet/upload`,
         TWEET_IMAGE_UPLOAD_URL: `${apiDomain}/images/tweet/upload`,
         TWEET_VIDEO_UPLOAD_URL: `${apiDomain}/videos/tweet`,
+        MESSAGE_IMAGE_THUMBNAIL_URL: `${apiDomain}/images/dm/upload`,
+        MESSAGE_IMAGE_UPLOAD_URL: `${apiDomain}/images/dm/upload`,
+        MESSAGE_VIDEO_UPLOAD_URL: `${apiDomain}/videos/dm`,
     },
 };
 
