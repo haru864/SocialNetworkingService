@@ -2,6 +2,8 @@
     "require": {
         "phpmailer/phpmailer": "^6.9",
         "fakerphp/faker": "^1.23",
-        "predis/predis": "^2.2"
+        "predis/predis": "^2.2",
+        "react/event-loop": "^1.5",
+        "clue/redis-react": "^2.7"
     }
 }
