@@ -20,6 +20,7 @@ const ChatHistory: React.FC = () => {
     const didInitialScroll = useRef(false);
     const listRef = useRef<HTMLUListElement>(null);
     const [heightDifference, setHeightDifference] = useState(0);
+    const shouldScrollToBottom = useRef(false);
 
     const searchParams = useSearchParams();
     const [loading, setLoading] = useState(false);
@@ -33,13 +34,16 @@ const ChatHistory: React.FC = () => {
         initializeChatData(chatPartnerId);
     }, []);
 
-    // TODO 受信時にスクロールが最下部のときはそのまま最下部を維持したい
     useEffect(() => {
         const eventSource = new EventSource(`http://sns.test.com/api/live/messages/${chatPartner?.id}`);
         eventSource.onmessage = (event: MessageEvent) => {
             const data = JSON.parse(event.data);
             const message = new Message(data);
-            setMessages(prev => [...prev, message]);
+            if (listRef.current) {
+                const isAtBottom = listRef.current.scrollHeight - listRef.current.scrollTop === listRef.current.clientHeight;
+                shouldScrollToBottom.current = isAtBottom;
+                setMessages(prev => [...prev, message]);
+            }
         };
         eventSource.onerror = (error) => {
             console.error('EventSource failed:', error);
@@ -58,6 +62,10 @@ const ChatHistory: React.FC = () => {
         if (listRef.current && heightDifference > 0) {
             listRef.current.scrollTop += heightDifference;
         }
+        if (listRef.current && shouldScrollToBottom.current) {
+            scrollToBottom();
+            shouldScrollToBottom.current = false;
+        }
     }, [messages]);
 
     const initializeChatData = async (chatPartnerId: number) => {
@@ -74,19 +82,12 @@ const ChatHistory: React.FC = () => {
         if (chatPartner === null) {
             return;
         }
-
         const oldScrollHeight = listRef.current?.scrollHeight ?? 0;
-
         const chatInfo = await getChatInfo(chatPartner.id, page);
         setMessages(prev => [...chatInfo.messages, ...prev]);
         setPage(page + 1);
-
         const newScrollHeight = listRef.current?.scrollHeight ?? 0;
         setHeightDifference(newScrollHeight - oldScrollHeight);
-
-
-        console.log('oldScrollHeight ' + oldScrollHeight);
-        console.log('newScrollHeight ' + newScrollHeight);
     };
 
     const handleScroll = async (e: React.UIEvent<HTMLUListElement>) => {

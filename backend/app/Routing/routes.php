@@ -88,14 +88,7 @@ $profileService = new ProfileService(
 );
 $messageService = new MessageService($messagesDAOImpl, $usersDAOImpl);
 $resetPasswordService = new ResetPasswordService($usersDAOImpl, $emailVerificationDAOImpl);
-$liveMessageService = new LiveMessageService(
-    new Predis\Client([
-        'scheme' => 'tcp',
-        'host'   => '127.0.0.1',
-        'port'   => 6379,
-        'read_write_timeout' => -1
-    ])
-);
+$liveMessageService = new LiveMessageService();
 
 $loginController = new LoginController($loginService);
 $signupController = new SignupController($signupService);

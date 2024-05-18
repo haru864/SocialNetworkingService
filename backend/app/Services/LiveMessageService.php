@@ -6,10 +6,6 @@ use Helpers\RedisManager;
 use Helpers\SessionManager;
 use Models\Message;
 use Settings\Settings;
-
-use React\EventLoop\LoopInterface;
-use React\Promise\PromiseInterface;
-
 use React\EventLoop\Loop;
 use Clue\React\Redis\Factory as RedisFactory;
 
@@ -17,9 +13,14 @@ class LiveMessageService
 {
     private $redis;
 
-    public function __construct(\Predis\Client $redis)
+    public function __construct()
     {
-        $this->redis = $redis;
+        $this->redis = new \Predis\Client([
+            'scheme' => 'tcp',
+            'host'   => Settings::env('REDIS_SERVER_ADDRESS'),
+            'port'   => Settings::env('REDIS_SERVER_PORT'),
+            'read_write_timeout' => -1
+        ]);
     }
 
     public function streamMessages(int $messagePartnerUserId): void
@@ -30,35 +31,12 @@ class LiveMessageService
         $this->setHeader();
         set_time_limit(0);
 
-        // /** @var \Consumer $pubsub */
-        // $pubsub = $this->redis->pubSubLoop();
-        // $pubsub->subscribe($channel);
-
-        // foreach ($pubsub as $message) {
-
-        //     $logger = \Logging\Logger::getInstance();
-        //     $logger->logDebug(json_encode($message));
-
-        //     /** @var \Message $message */
-        //     if ($message->kind === 'message') {
-        //         echo "data: {$message->payload}\n\n";
-        //         ob_end_flush();
-        //         flush();
-        //     }
-        //     if (connection_aborted()) {
-        //         $pubsub->unsubscribe();
-        //         break;
-        //     }
-        // }
-
-        // -------------------------------------------
-
         $messages = [];
 
         $loop = Loop::get();
 
         $redisFactory = new RedisFactory($loop);
-        $redis = $redisFactory->createLazyClient('redis://127.0.0.1:6379');
+        $redis = $redisFactory->createLazyClient('redis://' . Settings::env('REDIS_SERVER_ADDRESS') . ':' . Settings::env('REDIS_SERVER_PORT'));
 
         $redis->subscribe($channel);
 
@@ -69,7 +47,7 @@ class LiveMessageService
         $last_heartbeat = time();
 
         $loop->addPeriodicTimer(0.5, function () use (&$last_heartbeat, &$messages) {
-            $HEARTBEAT_PERIOD_SECONDS = 10;
+            $HEARTBEAT_PERIOD_SECONDS = 30;
             if (time() - $last_heartbeat >= $HEARTBEAT_PERIOD_SECONDS) {
                 echo ": heartbeat\n\n";
                 ob_flush();
@@ -78,10 +56,6 @@ class LiveMessageService
             }
             while (!empty($messages)) {
                 $message = array_shift($messages);
-
-                $logger = \Logging\Logger::getInstance();
-                $logger->logDebug(json_encode($message));
-
                 echo "data: {$message}\n\n";
                 ob_flush();
                 flush();
