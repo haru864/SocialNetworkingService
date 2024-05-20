@@ -6,6 +6,7 @@ use Controllers\LiveMessageController;
 use Controllers\LoginController;
 use Controllers\LogoutController;
 use Controllers\MessageController;
+use Controllers\NotificationController;
 use Controllers\ProfileController;
 use Controllers\ReplyController;
 use Controllers\ResetPasswordController;
@@ -15,14 +16,19 @@ use Controllers\TweetController;
 use Database\DataAccess\Implementations\AddressesDAOImpl;
 use Database\DataAccess\Implementations\CareersDAOImpl;
 use Database\DataAccess\Implementations\EmailVerificationDAOImpl;
+use Database\DataAccess\Implementations\FollowNotificationDAOImpl;
 use Database\DataAccess\Implementations\FollowsDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
+use Database\DataAccess\Implementations\LikeNotificationDAOImpl;
 use Database\DataAccess\Implementations\LikesDAOImpl;
+use Database\DataAccess\Implementations\MessageNotificationDAOImpl;
 use Database\DataAccess\Implementations\MessagesDAOImpl;
 use Database\DataAccess\Implementations\PendingAddressesDAOImpl;
 use Database\DataAccess\Implementations\PendingCareersDAOImpl;
 use Database\DataAccess\Implementations\PendingHobbiesDAOImpl;
 use Database\DataAccess\Implementations\PendingUsersDAOImpl;
+use Database\DataAccess\Implementations\ReplyNotificationDAOImpl;
+use Database\DataAccess\Implementations\RetweetNotificationDAOImpl;
 use Database\DataAccess\Implementations\TweetsDAOImpl;
 use Database\DataAccess\Implementations\ScheduledTweetsDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
@@ -33,6 +39,7 @@ use Services\LikeService;
 use Services\LiveMessageService;
 use Services\LoginService;
 use Services\MessageService;
+use Services\NotificationService;
 use Services\ProfileService;
 use Services\ReplyService;
 use Services\ResetPasswordService;
@@ -55,6 +62,11 @@ $pendingAddressesDAOImpl = new PendingAddressesDAOImpl();
 $pendingCareersDAOImpl = new PendingCareersDAOImpl();
 $pendingHobbiesDAOImpl = new PendingHobbiesDAOImpl();
 $scheduledTweetsDAOImpl = new ScheduledTweetsDAOImpl();
+$likeNotificationImpl = new LikeNotificationDAOImpl();
+$followNotificationImpl=new FollowNotificationDAOImpl();
+$messageNotificationDAOImpl=new MessageNotificationDAOImpl();
+$replyNotificationImpl=new ReplyNotificationDAOImpl();
+$retweetNotificationImpl=new RetweetNotificationDAOImpl();
 
 $loginService = new LoginService($usersDAOImpl);
 $signupService = new SignupService(
@@ -89,6 +101,7 @@ $profileService = new ProfileService(
 $messageService = new MessageService($messagesDAOImpl, $usersDAOImpl);
 $resetPasswordService = new ResetPasswordService($usersDAOImpl, $emailVerificationDAOImpl);
 $liveMessageService = new LiveMessageService();
+$notificationService=new NotificationService();
 
 $loginController = new LoginController($loginService);
 $signupController = new SignupController($signupService);
@@ -102,6 +115,7 @@ $profileController = new ProfileController($profileService, $signupService);
 $messageController = new MessageController($messageService, $profileService, $liveMessageService);
 $resetPasswordController = new ResetPasswordController($resetPasswordService);
 $liveMessageController = new LiveMessageController($liveMessageService);
+$notificationController=new NotificationController($notificationService);
 
 $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
 $URL_DIR_PATTERN_RESET_PASSWORD = '/^\/api\/reset_password$/';
@@ -117,6 +131,8 @@ $URL_DIR_PATTERN_PROFILE = '/^\/api\/profile$/';
 $URL_DIR_PATTERN_VALIDATE_UPDATE_EMAIL = '/^\/api\/profile\/validate_email$/';
 $URL_DIR_PATTERN_MESSAGES = '/^\/api\/messages(\/([1-9][0-9]*))??$/';
 $URL_DIR_PATTERN_MESSAGES_LIVE = '/^\/api\/live\/messages\/([1-9][0-9]*)$/';
+$URL_DIR_PATTERN_NOTIFICATIONS = '/^\/api\/notifications$/';
+$URL_DIR_PATTERN_NOTIFICATIONS_LIVE = '/^\/api\/live\/notifications$/';
 
 // TODO Nginxのauth_requestモジュールでリクエストを認証用PHPスクリプトに送り、メディアファイルアクセスを許可または拒否する
 return [
@@ -174,6 +190,14 @@ return [
     ],
     $URL_DIR_PATTERN_MESSAGES_LIVE => [
         'controller' => $liveMessageController,
+        'middleware' => new AuthMiddleware()
+    ],
+    $URL_DIR_PATTERN_NOTIFICATIONS => [
+        'controller' => ,
+        'middleware' => new AuthMiddleware()
+    ],
+    $URL_DIR_PATTERN_NOTIFICATIONS_LIVE => [
+        'controller' => ,
         'middleware' => new AuthMiddleware()
     ],
 ];

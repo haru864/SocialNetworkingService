@@ -10,4 +10,12 @@ class RedisManager
         $min = min($loginUserId, $messagePartnerUserId);
         return "chat:{$min}:{$max}";
     }
+
+    /**
+     * @param int $notifiedUserId 通知を受け取るユーザーのID
+     */
+    public static function getNotificationChannel(int $notifiedUserId): string
+    {
+        return "notification:{$notifiedUserId}";
+    }
 }

@@ -59,6 +59,7 @@ class CreatePendingTables implements Database\SchemaMigration
             "DROP TABLE pending_careers",
             "DROP TABLE pending_addresses",
             "DROP TABLE pending_hobbies",
+            "DROP TABLE email_verification",
         ];
     }
 }
