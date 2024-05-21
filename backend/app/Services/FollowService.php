@@ -18,7 +18,7 @@ class FollowService
         $this->usersDAOImpl = $usersDAOImpl;
     }
 
-    public function addFollow(int $followerId, int $followeeId): void
+    public function addFollow(int $followerId, int $followeeId): Follow
     {
         if ($followerId === $followeeId) {
             throw new InvalidRequestParameterException('Cannot follow yourself.');
@@ -38,8 +38,8 @@ class FollowService
             followeeId: $followeeId,
             followDatetime: date('Y-m-d H:i:s')
         );
-        $this->followsDAOImpl->create($follow);
-        return;
+        $followInTable = $this->followsDAOImpl->create($follow);
+        return $followInTable;
     }
 
     public function removeFollow(int $followerId, int $followeeId): void

@@ -13,11 +13,11 @@ class MessageNotificationDAOImpl implements MessageNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO message_notification (
+            INSERT INTO message_notifications (
                 notified_user_id,
                 message_id,
                 is_confirmed,
-                created_at,
+                created_at
             )
             VALUES (
                 ?, ?, ?, ?
@@ -44,7 +44,7 @@ class MessageNotificationDAOImpl implements MessageNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO message_notification
+            INSERT INTO message_notifications
             SET
                 notified_user_id = ?,
                 message_id = ?,
@@ -73,7 +73,7 @@ class MessageNotificationDAOImpl implements MessageNotificationDAO
     public function delete(int $id): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();
-        $sql = "DELETE FROM message_notification WHERE id = ?";
+        $sql = "DELETE FROM message_notifications WHERE id = ?";
         return $mysqli->prepareAndExecute($sql, 'i', [$id]);
     }
 }

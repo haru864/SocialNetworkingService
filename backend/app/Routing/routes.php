@@ -3,6 +3,7 @@
 use Controllers\FollowController;
 use Controllers\LikeController;
 use Controllers\LiveMessageController;
+use Controllers\LiveNotificationController;
 use Controllers\LoginController;
 use Controllers\LogoutController;
 use Controllers\MessageController;
@@ -23,6 +24,7 @@ use Database\DataAccess\Implementations\LikeNotificationDAOImpl;
 use Database\DataAccess\Implementations\LikesDAOImpl;
 use Database\DataAccess\Implementations\MessageNotificationDAOImpl;
 use Database\DataAccess\Implementations\MessagesDAOImpl;
+use Database\DataAccess\Implementations\NotificationDAOImpl;
 use Database\DataAccess\Implementations\PendingAddressesDAOImpl;
 use Database\DataAccess\Implementations\PendingCareersDAOImpl;
 use Database\DataAccess\Implementations\PendingHobbiesDAOImpl;
@@ -37,6 +39,7 @@ use Middleware\NoopMiddleware;
 use Services\FollowService;
 use Services\LikeService;
 use Services\LiveMessageService;
+use Services\LiveNotificationService;
 use Services\LoginService;
 use Services\MessageService;
 use Services\NotificationService;
@@ -62,11 +65,12 @@ $pendingAddressesDAOImpl = new PendingAddressesDAOImpl();
 $pendingCareersDAOImpl = new PendingCareersDAOImpl();
 $pendingHobbiesDAOImpl = new PendingHobbiesDAOImpl();
 $scheduledTweetsDAOImpl = new ScheduledTweetsDAOImpl();
-$likeNotificationImpl = new LikeNotificationDAOImpl();
-$followNotificationImpl=new FollowNotificationDAOImpl();
-$messageNotificationDAOImpl=new MessageNotificationDAOImpl();
-$replyNotificationImpl=new ReplyNotificationDAOImpl();
-$retweetNotificationImpl=new RetweetNotificationDAOImpl();
+$likeNotificationDAOImpl = new LikeNotificationDAOImpl();
+$followNotificationDAOImpl = new FollowNotificationDAOImpl();
+$messageNotificationDAOImpl = new MessageNotificationDAOImpl();
+$replyNotificationDAOImpl = new ReplyNotificationDAOImpl();
+$retweetNotificationDAOImpl = new RetweetNotificationDAOImpl();
+$notificationDAOImpl = new NotificationDAOImpl();
 
 $loginService = new LoginService($usersDAOImpl);
 $signupService = new SignupService(
@@ -101,21 +105,30 @@ $profileService = new ProfileService(
 $messageService = new MessageService($messagesDAOImpl, $usersDAOImpl);
 $resetPasswordService = new ResetPasswordService($usersDAOImpl, $emailVerificationDAOImpl);
 $liveMessageService = new LiveMessageService();
-$notificationService=new NotificationService();
+$notificationService = new NotificationService($notificationDAOImpl);
+$liveNotificationService = new LiveNotificationService(
+    $likeNotificationDAOImpl,
+    $followNotificationDAOImpl,
+    $messageNotificationDAOImpl,
+    $replyNotificationDAOImpl,
+    $retweetNotificationDAOImpl,
+    $tweetsDAOImpl
+);
 
 $loginController = new LoginController($loginService);
 $signupController = new SignupController($signupService);
 $logoutController = new LogoutController();
 $tweetController = new TweetController($tweetService, $scheduledTweetService);
-$retweetController = new RetweetController($retweetService);
-$replyController  = new ReplyController($replyService);
-$likeController = new LikeController($likeService);
-$followController = new FollowController($followService);
+$retweetController = new RetweetController($retweetService, $liveNotificationService);
+$replyController  = new ReplyController($replyService, $liveNotificationService);
+$likeController = new LikeController($likeService, $liveNotificationService);
+$followController = new FollowController($followService, $liveNotificationService);
 $profileController = new ProfileController($profileService, $signupService);
-$messageController = new MessageController($messageService, $profileService, $liveMessageService);
+$messageController = new MessageController($messageService, $profileService, $liveMessageService, $liveNotificationService);
 $resetPasswordController = new ResetPasswordController($resetPasswordService);
 $liveMessageController = new LiveMessageController($liveMessageService);
-$notificationController=new NotificationController($notificationService);
+$notificationController = new NotificationController($notificationService);
+$liveNotificationController = new LiveNotificationController($liveNotificationService);
 
 $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
 $URL_DIR_PATTERN_RESET_PASSWORD = '/^\/api\/reset_password$/';
@@ -193,11 +206,11 @@ return [
         'middleware' => new AuthMiddleware()
     ],
     $URL_DIR_PATTERN_NOTIFICATIONS => [
-        'controller' => ,
+        'controller' => $notificationController,
         'middleware' => new AuthMiddleware()
     ],
     $URL_DIR_PATTERN_NOTIFICATIONS_LIVE => [
-        'controller' => ,
+        'controller' => $liveNotificationController,
         'middleware' => new AuthMiddleware()
     ],
 ];

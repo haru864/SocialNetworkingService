@@ -6,18 +6,20 @@ use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
 use Helpers\SessionManager;
-use Http\Request\FollowRequest;
 use Http\Request\GetFollowRequest;
 use Http\Request\PostFollowRequest;
 use Services\FollowService;
+use Services\LiveNotificationService;
 
 class FollowController implements ControllerInterface
 {
     private FollowService $followService;
+    private LiveNotificationService $liveNotificationService;
 
-    public function __construct(FollowService $followService)
+    public function __construct(FollowService $followService, LiveNotificationService $liveNotificationService)
     {
         $this->followService = $followService;
+        $this->liveNotificationService = $liveNotificationService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -74,7 +76,8 @@ class FollowController implements ControllerInterface
     {
         $resp = [];
         $userId = SessionManager::get('user_id');
-        $this->followService->addFollow($userId, $request->getFolloweeId());
+        $follow = $this->followService->addFollow($userId, $request->getFolloweeId());
+        $this->liveNotificationService->publishFollowNotification($follow);
         return new JSONRenderer(200, $resp);
     }
 

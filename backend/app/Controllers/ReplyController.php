@@ -8,15 +8,18 @@ use Exceptions\InvalidRequestMethodException;
 use Http\Request\GetRepliesAllRequest;
 use Http\Request\GetRepliesPartRequest;
 use Http\Request\PostReplyRequest;
+use Services\LiveNotificationService;
 use Services\ReplyService;
 
 class ReplyController implements ControllerInterface
 {
     private ReplyService $replyService;
+    private LiveNotificationService $liveNotificationService;
 
-    public function __construct(ReplyService $replyService)
+    public function __construct(ReplyService $replyService, LiveNotificationService $liveNotificationService)
     {
         $this->replyService = $replyService;
+        $this->liveNotificationService = $liveNotificationService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -54,7 +57,8 @@ class ReplyController implements ControllerInterface
 
     public function postReply(PostReplyRequest $request): JSONRenderer
     {
-        $this->replyService->createReply($request);
+        $replyTweet = $this->replyService->createReply($request);
+        $this->liveNotificationService->publishReplyNotification($replyTweet);
         return new JSONRenderer(200, []);
     }
 }

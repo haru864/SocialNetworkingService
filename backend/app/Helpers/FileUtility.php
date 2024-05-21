@@ -111,8 +111,10 @@ class FileUtility
 
     private static function generateUniqueHashWithLimit(string $dirPath, string $data, $limit = 100): string
     {
+        $timestamp = date("Y-m-d H:i:s"); // 現在の日付時刻を取得
+        $data_with_timestamp = $data . $timestamp;
         $iterator = new \DirectoryIterator($dirPath);
-        $hash = hash('sha256', $data);
+        $hash = hash('sha256', $data_with_timestamp);
         $counter = 0;
         while ($counter < $limit) {
             $unique = true;
@@ -128,7 +130,7 @@ class FileUtility
                 return $hash;
             }
             $counter++;
-            $hash = hash('sha256', $data . $counter);
+            $hash = hash('sha256', $data_with_timestamp . $counter);
         }
         throw new InternalServerException('Failed to generate unique hash value.');
     }

@@ -13,11 +13,11 @@ class FollowNotificationDAOImpl implements FollowNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO follow_notification (
+            INSERT INTO follow_notifications (
                 notified_user_id,
                 follow_id,
                 is_confirmed,
-                created_at,
+                created_at
             )
             VALUES (
                 ?, ?, ?, ?
@@ -44,7 +44,7 @@ class FollowNotificationDAOImpl implements FollowNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO follow_notification
+            INSERT INTO follow_notifications
             SET
                 notified_user_id = ?,
                 follow_id = ?,
@@ -73,7 +73,7 @@ class FollowNotificationDAOImpl implements FollowNotificationDAO
     public function delete(int $id): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();
-        $sql = "DELETE FROM follow_notification WHERE id = ?";
+        $sql = "DELETE FROM follow_notifications WHERE id = ?";
         return $mysqli->prepareAndExecute($sql, 'i', [$id]);
     }
 }

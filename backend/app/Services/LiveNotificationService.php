@@ -26,19 +26,19 @@ use Models\Tweet;
 class LiveNotificationService
 {
     private \Predis\Client $redis;
-    private LikeNotificationDAOImpl $likeNotificationImpl;
-    private FollowNotificationDAOImpl $followNotificationImpl;
-    private MessageNotificationDAOImpl $messageNotificationImpl;
-    private ReplyNotificationDAOImpl $replyNotificationImpl;
-    private RetweetNotificationDAOImpl $retweetNotificationImpl;
+    private LikeNotificationDAOImpl $likeNotificationDAOImpl;
+    private FollowNotificationDAOImpl $followNotificationDAOImpl;
+    private MessageNotificationDAOImpl $messageNotificationDAOImpl;
+    private ReplyNotificationDAOImpl $replyNotificationDAOImpl;
+    private RetweetNotificationDAOImpl $retweetNotificationDAOImpl;
     private TweetsDAOImpl $tweetsDAOImpl;
 
     public function __construct(
-        LikeNotificationDAOImpl $likeNotificationImpl,
-        FollowNotificationDAOImpl $followNotificationImpl,
-        MessageNotificationDAOImpl $messageNotificationImpl,
-        ReplyNotificationDAOImpl $replyNotificationImpl,
-        RetweetNotificationDAOImpl $retweetNotificationImpl,
+        LikeNotificationDAOImpl $likeNotificationDAOImpl,
+        FollowNotificationDAOImpl $followNotificationDAOImpl,
+        MessageNotificationDAOImpl $messageNotificationDAOImpl,
+        ReplyNotificationDAOImpl $replyNotificationDAOImpl,
+        RetweetNotificationDAOImpl $retweetNotificationDAOImpl,
         TweetsDAOImpl $tweetsDAOImpl
     ) {
         $this->redis = new \Predis\Client([
@@ -47,12 +47,12 @@ class LiveNotificationService
             'port'   => Settings::env('REDIS_SERVER_PORT'),
             'read_write_timeout' => -1
         ]);
-        $$this->likeNotificationImpl = $likeNotificationImpl;
-        $$this->followNotificationImpl = $followNotificationImpl;
-        $$this->messageNotificationImpl = $messageNotificationImpl;
-        $$this->replyNotificationImpl = $replyNotificationImpl;
-        $$this->retweetNotificationImpl = $retweetNotificationImpl;
-        $$this->tweetsDAOImpl = $tweetsDAOImpl;
+        $this->likeNotificationDAOImpl = $likeNotificationDAOImpl;
+        $this->followNotificationDAOImpl = $followNotificationDAOImpl;
+        $this->messageNotificationDAOImpl = $messageNotificationDAOImpl;
+        $this->replyNotificationDAOImpl = $replyNotificationDAOImpl;
+        $this->retweetNotificationDAOImpl = $retweetNotificationDAOImpl;
+        $this->tweetsDAOImpl = $tweetsDAOImpl;
     }
 
     public function streamNotification(): void
@@ -112,6 +112,7 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
+        $this->likeNotificationDAOImpl->create($likeNotification);
 
         $channel = RedisManager::getNotificationChannel($tweetUserId);
         $msg = json_encode([
@@ -134,6 +135,7 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
+        $this->replyNotificationDAOImpl->create($replyNotification);
 
         $channel = RedisManager::getNotificationChannel($tweetUserId);
         $msg = json_encode([
@@ -156,6 +158,7 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
+        $this->retweetNotificationDAOImpl->create($retweetNotification);
 
         $channel = RedisManager::getNotificationChannel($tweetUserId);
         $msg = json_encode([
@@ -176,6 +179,7 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
+        $this->followNotificationDAOImpl->create($followNotification);
 
         $channel = RedisManager::getNotificationChannel($followeeId);
         $msg = json_encode([
@@ -196,6 +200,7 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
+        $this->messageNotificationDAOImpl->create($messageNotification);
 
         $channel = RedisManager::getNotificationChannel($recipientUserid);
         $msg = json_encode([

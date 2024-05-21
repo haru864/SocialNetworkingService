@@ -16,7 +16,7 @@ class RetweetService
         $this->tweetsDAOImpl = $tweetsDAOImpl;
     }
 
-    public function createRetweet(int $userId, int $tweetId, ?string $message): void
+    public function createRetweet(int $userId, int $tweetId, ?string $message): Tweet
     {
         $retweetInTable = $this->tweetsDAOImpl->getRetweetByUser($userId, $tweetId);
         if (count($retweetInTable) === 1) {
@@ -34,8 +34,8 @@ class RetweetService
             mediaType: null,
             postingDatetime: date('Y-m-d H:i:s')
         );
-        $this->tweetsDAOImpl->create($retweet);
-        return;
+        $retweetInTable = $this->tweetsDAOImpl->create($retweet);
+        return $retweetInTable;
     }
 
     public function removeRetweet(int $userId, int $tweetId): void

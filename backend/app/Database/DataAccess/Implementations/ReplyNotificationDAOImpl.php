@@ -13,11 +13,11 @@ class ReplyNotificationDAOImpl implements ReplyNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO reply_notification (
+            INSERT INTO reply_notifications (
                 notified_user_id,
                 reply_id,
                 is_confirmed,
-                created_at,
+                created_at
             )
             VALUES (
                 ?, ?, ?, ?
@@ -44,7 +44,7 @@ class ReplyNotificationDAOImpl implements ReplyNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO reply_notification
+            INSERT INTO reply_notifications
             SET
                 notified_user_id = ?,
                 reply_id = ?,
@@ -73,7 +73,7 @@ class ReplyNotificationDAOImpl implements ReplyNotificationDAO
     public function delete(int $id): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();
-        $sql = "DELETE FROM reply_notification WHERE id = ?";
+        $sql = "DELETE FROM reply_notifications WHERE id = ?";
         return $mysqli->prepareAndExecute($sql, 'i', [$id]);
     }
 }

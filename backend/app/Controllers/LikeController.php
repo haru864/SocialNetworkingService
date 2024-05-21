@@ -9,14 +9,17 @@ use Helpers\SessionManager;
 use Http\Request\GetLikeRequest;
 use Http\Request\UpdateLikeRequest;
 use Services\LikeService;
+use Services\LiveNotificationService;
 
 class LikeController implements ControllerInterface
 {
     private LikeService $likeService;
+    private LiveNotificationService $liveNotificationService;
 
-    public function __construct(LikeService $likeService)
+    public function __construct(LikeService $likeService, LiveNotificationService $liveNotificationService)
     {
         $this->likeService = $likeService;
+        $this->liveNotificationService = $liveNotificationService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -50,7 +53,8 @@ class LikeController implements ControllerInterface
 
     private function addLike(UpdateLikeRequest $request): JSONRenderer
     {
-        $this->likeService->addLike(SessionManager::get('user_id'), $request->getTweetId());
+        $like = $this->likeService->addLike(SessionManager::get('user_id'), $request->getTweetId());
+        $this->liveNotificationService->publishLikeNotification($like);
         return new JSONRenderer(200, []);
     }
 

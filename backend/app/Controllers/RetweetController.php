@@ -9,15 +9,18 @@ use Helpers\SessionManager;
 use Http\Request\DeleteRetweetRequest;
 use Http\Request\GetRetweetRequest;
 use Http\Request\PostRetweetRequest;
+use Services\LiveNotificationService;
 use Services\RetweetService;
 
 class RetweetController implements ControllerInterface
 {
     private RetweetService $retweetService;
+    private LiveNotificationService $liveNotificationService;
 
-    public function __construct(RetweetService $retweetService)
+    public function __construct(RetweetService $retweetService, LiveNotificationService $liveNotificationService)
     {
         $this->retweetService = $retweetService;
+        $this->liveNotificationService = $liveNotificationService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -52,11 +55,12 @@ class RetweetController implements ControllerInterface
 
     public function postRetweet(PostRetweetRequest $request): JSONRenderer
     {
-        $this->retweetService->createRetweet(
+        $retweet = $this->retweetService->createRetweet(
             SessionManager::get('user_id'),
             $request->getTweetId(),
             $request->getMessage()
         );
+        $this->liveNotificationService->publishRetweetNotification($retweet);
         return new JSONRenderer(200, []);
     }
 

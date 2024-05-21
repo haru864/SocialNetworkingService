@@ -20,7 +20,7 @@ class ReplyService
         $this->tweetsDAOImpl = $tweetsDAOImpl;
     }
 
-    public function createReply(PostReplyRequest $request): void
+    public function createReply(PostReplyRequest $request): Tweet
     {
         $currentDatetime = date('Y-m-d H:i:s');
         $tweetMessage = $request->getMessage();
@@ -66,8 +66,8 @@ class ReplyService
             mediaType: $mimeType,
             postingDatetime: $currentDatetime
         );
-        $this->tweetsDAOImpl->create($tweet);
-        return;
+        $tweetInTable = $this->tweetsDAOImpl->create($tweet);
+        return $tweetInTable;
     }
 
     public function getAllReplies(int $tweetId): array

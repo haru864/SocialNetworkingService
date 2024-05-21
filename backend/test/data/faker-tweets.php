@@ -19,7 +19,10 @@ date_default_timezone_set('Asia/Tokyo');
 $faker = Faker\Factory::create();
 $tweetsDAOImpl = new TweetsDAOImpl();
 $tweetsCount = 50;
-$tweetUserId = 3;
+
+// $options = getopt("", ['userId:']);
+// $tweetUserId = (int)$options['userId'];
+$tweetUserId = 1;
 
 for ($i = 0; $i < $tweetsCount; $i++) {
     $nowDateTime = new DateTime();
@@ -87,7 +90,7 @@ function generateImage(string $filePath): void
     imagedestroy($image);
 }
 
-function generateUniqueHashWithLimit(string $dirPath, string $data, $limit = 100): string
+function generateUniqueHashWithLimit(string $dirPath, string $data, $limit = 1000): string
 {
     $iterator = new \DirectoryIterator($dirPath);
     $hash = hash('sha256', $data);

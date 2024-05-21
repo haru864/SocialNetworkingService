@@ -31,7 +31,7 @@ class LikeService
         return $userIds;
     }
 
-    public function addLike(int $userId, int $tweetId): void
+    public function addLike(int $userId, int $tweetId): Like
     {
         if (!is_null($this->likesDAOImpl->getLike($userId, $tweetId))) {
             throw new InvalidRequestParameterException('Tweet has already been liked.');
@@ -42,8 +42,8 @@ class LikeService
             tweetId: $tweetId,
             likeDatetime: date('Y-m-d H:i:s')
         );
-        $this->likesDAOImpl->create($like);
-        return;
+        $likeInTable = $this->likesDAOImpl->create($like);
+        return $likeInTable;
     }
 
     public function removeLike(int $userId, int $tweetId): void

@@ -13,11 +13,11 @@ class LikeNotificationDAOImpl implements LikeNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO like_notification (
+            INSERT INTO like_notifications (
                 notified_user_id,
                 like_id,
                 is_confirmed,
-                created_at,
+                created_at
             )
             VALUES (
                 ?, ?, ?, ?
@@ -44,7 +44,7 @@ class LikeNotificationDAOImpl implements LikeNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO like_notification
+            INSERT INTO like_notifications
             SET
                 notified_user_id = ?,
                 like_id = ?,
@@ -73,7 +73,7 @@ class LikeNotificationDAOImpl implements LikeNotificationDAO
     public function delete(int $id): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();
-        $sql = "DELETE FROM like_notification WHERE id = ?";
+        $sql = "DELETE FROM like_notifications WHERE id = ?";
         return $mysqli->prepareAndExecute($sql, 'i', [$id]);
     }
 }
