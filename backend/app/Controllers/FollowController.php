@@ -30,6 +30,8 @@ class FollowController implements ControllerInterface
                 return $this->getFollowers($request);
             } else if ($request->getType() === 'followee') {
                 return $this->getFollowees($request);
+            } else if ($request->getType() === 'follow') {
+                return $this->getFollowData($request);
             }
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_SERVER['CONTENT_TYPE'] !== 'application/json') {
@@ -70,6 +72,12 @@ class FollowController implements ControllerInterface
         }
         $resp = $this->followService->getFollowees($userId, $request->getPage(), $request->getLimit());
         return new JSONRenderer(200, $resp);
+    }
+
+    private function getFollowData(GetFollowRequest $request): JSONRenderer
+    {
+        $followData = $this->followService->getFollowData($request->getFollowId());
+        return new JSONRenderer(200, ['follow' => $followData]);
     }
 
     private function addFollow(PostFollowRequest $request): JSONRenderer

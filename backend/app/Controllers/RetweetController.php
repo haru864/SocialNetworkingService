@@ -26,7 +26,12 @@ class RetweetController implements ControllerInterface
     public function handleRequest(): JSONRenderer
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            return $this->getRetweets(new GetRetweetRequest());
+            $request = new GetRetweetRequest($_GET);
+            if (is_null($request->getRetweetId())) {
+                return $this->getRetweets($request);
+            } else {
+                return $this->getRetweetData($request);
+            }
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $jsonData = file_get_contents('php://input');
             $reqParamMap = json_decode($jsonData, true);
@@ -50,6 +55,14 @@ class RetweetController implements ControllerInterface
         }
         $resp["is_retweeted"] = $isRetweeted;
         $resp["retweets"] = $retweets;
+        return new JSONRenderer(200, $resp);
+    }
+
+    public function getRetweetData(GetRetweetRequest $request): JSONRenderer
+    {
+        $resp = [];
+        $retweet = $this->retweetService->getRetweet($request->getRetweetId());
+        $resp["retweet"] = $retweet->toArray();
         return new JSONRenderer(200, $resp);
     }
 

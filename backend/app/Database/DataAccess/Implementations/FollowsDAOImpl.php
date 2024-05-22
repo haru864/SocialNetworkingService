@@ -50,6 +50,16 @@ class FollowsDAOImpl implements FollowsDAO
         return is_null($record) || count($record) === 0 ? null : $this->convertRecordToFollow($record[0]);
     }
 
+    public function getFollowById(int $followId): ?Follow
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = <<<SQL
+            SELECT * FROM follows WHERE id = ?
+        SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'i', [$followId]);
+        return is_null($records) || count($records) === 0 ? null : $this->convertRecordToFollow($records[0]);
+    }
+
     public function getFollowers(int $followeeId, int $limit = null, int $offset = null): ?array
     {
         if (

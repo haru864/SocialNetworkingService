@@ -7,6 +7,7 @@ use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
 use Helpers\SessionManager;
 use Http\Request\DeleteMessagesRequest;
+use Http\Request\GetMessageRequest;
 use Http\Request\GetMessagesRequest;
 use Http\Request\PostMessageRequest;
 use Services\LiveMessageService;
@@ -36,7 +37,11 @@ class MessageController implements ControllerInterface
     public function handleRequest(): JSONRenderer
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            return $this->getMessages(new GetMessagesRequest($_GET));
+            if (!is_null($_GET['message_id'])) {
+                return $this->getMessage(new GetMessageRequest($_GET));
+            } else {
+                return $this->getMessages(new GetMessagesRequest($_GET));
+            }
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!preg_match('/multipart\/form-data/', $_SERVER['CONTENT_TYPE'])) {
                 throw new InvalidRequestMethodException("Request must be 'multipart/form-data'.");
@@ -66,6 +71,13 @@ class MessageController implements ControllerInterface
             $resp['messages'] = $this->messageService->getIndividualChat($userId, $recipientUserId, $limit, $offset);
         }
         return new JSONRenderer(200, $resp);
+    }
+
+    private function getMessage(GetMessageRequest $request): JSONRenderer
+    {
+        $messageId = $request->getMessageId();
+        $message = $this->messageService->getMessage($messageId);
+        return new JSONRenderer(200, ['message' => $message->toArray()]);
     }
 
     private function postMessage(PostMessageRequest $request): JSONRenderer

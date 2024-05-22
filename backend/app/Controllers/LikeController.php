@@ -26,7 +26,11 @@ class LikeController implements ControllerInterface
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $request = new GetLikeRequest($_GET);
-            return $this->getLikeUsers($request);
+            if (!is_null($request->getTweetId())) {
+                return $this->getLikeUsers($request);
+            } else if (!is_null($request->getLikeId())) {
+                return $this->getLikeData($request);
+            }
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_SERVER['CONTENT_TYPE'] !== 'application/json') {
                 throw new InvalidRequestMethodException("Like request must be 'application/json'.");
@@ -49,6 +53,12 @@ class LikeController implements ControllerInterface
         $isLiked = $this->likeService->checkLiked(SessionManager::get('user_id'), $request->getTweetId());
         $userIds = $this->likeService->getLikeUsers($request->getTweetId());
         return new JSONRenderer(200, ["is_liked" => $isLiked, "user_id" => $userIds]);
+    }
+
+    private function getLikeData(GetLikeRequest $request): JSONRenderer
+    {
+        $like = $this->likeService->getLikeData($request->getLikeId());
+        return new JSONRenderer(200, ['like_data' => $like->toArray()]);
     }
 
     private function addLike(UpdateLikeRequest $request): JSONRenderer

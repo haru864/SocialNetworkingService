@@ -108,6 +108,11 @@ class MessageService
         return $messageJsonList;
     }
 
+    public function getMessage(int $messageId): Message
+    {
+        return $this->messagesDAOImpl->getMessageById($messageId);
+    }
+
     public function deleteChat(int $userId, int $recipientUserId): void
     {
         $this->messagesDAOImpl->deleteMessageExchanges($userId, $recipientUserId);

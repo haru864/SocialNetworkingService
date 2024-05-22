@@ -77,4 +77,10 @@ class FollowService
         }
         return $userIds;
     }
+
+    public function getFollowData(int $followId): array
+    {
+        $follow = $this->followsDAOImpl->getFollowById($followId);
+        return is_null($follow) ? [] : $follow->toArray();
+    }
 }

@@ -13,9 +13,9 @@ class NotificationService
         $this->notificationDAOImpl = $notificationDAOImpl;
     }
 
-    public function getAllNotificationsSorted(int $userId): array
+    public function getAllNotificationsSorted(int $userId, int $limit, int $offset): array
     {
-        $notifications = $this->notificationDAOImpl->getAllNotificationsSorted($userId);
+        $notifications = $this->notificationDAOImpl->getAllNotificationsSorted($userId, $limit, $offset);
         if (is_null($notifications)) {
             return [];
         }

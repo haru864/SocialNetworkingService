@@ -44,6 +44,16 @@ class MessagesDAOImpl implements MessagesDAO
         return $message;
     }
 
+    public function getMessageById(int $messageId): ?Message
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = <<<SQL
+            SELECT * FROM messages WHERE id = ?
+        SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'i', [$messageId]);
+        return $records === null ? null : $this->convertRecordToMessage($records[0]);
+    }
+
     public function getSenders(int $userId): ?array
     {
         $mysqli = DatabaseManager::getMysqliConnection();

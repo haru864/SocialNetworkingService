@@ -19,7 +19,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "chisato",
+									"value": "takina",
 									"type": "text"
 								},
 								{
@@ -40,7 +40,7 @@
 								{
 									"key": "profile_image",
 									"type": "file",
-									"src": []
+									"src": "/home/haru/Pictures/icon_02 (1).jpg"
 								},
 								{
 									"key": "country",
@@ -116,7 +116,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/signup/validate_email?id=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+							"raw": "http://sns.test.com/api/signup/validate_email?id=d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -131,7 +131,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+									"value": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35"
 								}
 							]
 						}
@@ -282,7 +282,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/profile?id=3",
+							"raw": "http://sns.test.com/api/profile?id=52",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -296,7 +296,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "3"
+									"value": "52"
 								}
 							]
 						}
@@ -480,7 +480,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"chisato\",\n    \"password\": \"Pass123_\"\n}",
+							"raw": "{\n    // \"username\": \"chisato\",\n    \"username\": \"takina\",\n    \"password\": \"Pass123_\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -599,13 +599,13 @@
 							"formdata": [
 								{
 									"key": "message",
-									"value": "hogehoge",
+									"value": "image tweet from postman",
 									"type": "text"
 								},
 								{
 									"key": "media",
 									"type": "file",
-									"src": []
+									"src": "/home/haru/Pictures/monster_icon_005.png"
 								}
 							]
 						},
@@ -641,11 +641,11 @@
 								{
 									"key": "media",
 									"type": "file",
-									"src": "/home/haru/Videos/test.mp4"
+									"src": "/home/haru/Videos/output.webm"
 								},
 								{
 									"key": "dateTime",
-									"value": "2024-04-30 14:55:00",
+									"value": "2024-05-05 23:40:00",
 									"type": "text"
 								}
 							]
@@ -661,6 +661,43 @@
 							"path": [
 								"api",
 								"tweets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]ツイート削除",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "hogehoge",
+									"type": "text"
+								},
+								{
+									"key": "media",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/tweets/11",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets",
+								"11"
 							]
 						}
 					},
@@ -690,7 +727,7 @@
 								},
 								{
 									"key": "user_id",
-									"value": "1",
+									"value": "30",
 									"description": "任意パラメータ",
 									"disabled": true
 								},
@@ -783,7 +820,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/tweets?type=tweet&tweet_id=9",
+							"raw": "http://sns.test.com/api/tweets/:tweet_id",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -792,16 +829,13 @@
 							],
 							"path": [
 								"api",
-								"tweets"
+								"tweets",
+								":tweet_id"
 							],
-							"query": [
-								{
-									"key": "type",
-									"value": "tweet"
-								},
+							"variable": [
 								{
 									"key": "tweet_id",
-									"value": "9"
+									"value": "158"
 								}
 							]
 						}
@@ -819,7 +853,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/likes?tweet_id=9",
+							"raw": "http://sns.test.com/api/likes?like_id=3",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -833,7 +867,12 @@
 							"query": [
 								{
 									"key": "tweet_id",
-									"value": "9"
+									"value": "155",
+									"disabled": true
+								},
+								{
+									"key": "like_id",
+									"value": "3"
 								}
 							]
 						}
@@ -847,7 +886,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"add\",\n    \"tweet_id\": 9\n}",
+							"raw": "{\n    \"action\": \"add\",\n    \"tweet_id\": 155\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -877,7 +916,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"remove\",\n    \"tweet_id\": 9\n}",
+							"raw": "{\n    \"action\": \"remove\",\n    \"tweet_id\": 155\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -912,7 +951,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"add\",\n    \"followee_id\": 140\n}",
+							"raw": "{\n    \"action\": \"add\",\n    \"followee_id\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -920,7 +959,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://sns.test.com/api/follows",
+							"raw": "http://sns.test.com/api/follows/follower",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -929,7 +968,8 @@
 							],
 							"path": [
 								"api",
-								"follows"
+								"follows",
+								"follower"
 							]
 						}
 					},
@@ -942,7 +982,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"remove\",\n    \"followee_id\": 20\n}",
+							"raw": "{\n    \"action\": \"remove\",\n    \"followee_id\": 52\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -950,7 +990,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://sns.test.com/api/follows",
+							"raw": "http://sns.test.com/api/follows/follower",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -959,7 +999,8 @@
 							],
 							"path": [
 								"api",
-								"follows"
+								"follows",
+								"follower"
 							]
 						}
 					},
@@ -971,7 +1012,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/follows?relation=follower",
+							"raw": "http://sns.test.com/api/follows/follower?page=1&limit=20",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -980,17 +1021,22 @@
 							],
 							"path": [
 								"api",
-								"follows"
+								"follows",
+								"follower"
 							],
 							"query": [
 								{
-									"key": "id",
-									"value": "66",
+									"key": "user_id",
+									"value": "3",
 									"disabled": true
 								},
 								{
-									"key": "relation",
-									"value": "follower"
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
 								}
 							]
 						}
@@ -1003,7 +1049,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/follows?id=66&relation=followee",
+							"raw": "http://sns.test.com/api/follows/followee?page=1&limit=20",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1012,16 +1058,45 @@
 							],
 							"path": [
 								"api",
-								"follows"
+								"follows",
+								"followee"
 							],
 							"query": [
 								{
-									"key": "id",
-									"value": "66"
+									"key": "page",
+									"value": "1"
 								},
 								{
-									"key": "relation",
-									"value": "followee"
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "フォロー情報取得",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/follows/follow?follow_id=1",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"follows",
+								"follow"
+							],
+							"query": [
+								{
+									"key": "follow_id",
+									"value": "1"
 								}
 							]
 						}
@@ -1043,18 +1118,18 @@
 							"formdata": [
 								{
 									"key": "message",
-									"value": "hogehoge",
+									"value": "test reply",
 									"type": "text"
 								},
 								{
 									"key": "media",
 									"type": "file",
-									"src": "/home/haru/Pictures/607666.jpg"
+									"src": []
 								}
 							]
 						},
 						"url": {
-							"raw": "http://sns.test.com/api/tweets/9/replies",
+							"raw": "http://sns.test.com/api/tweets/155/replies",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1064,7 +1139,7 @@
 							"path": [
 								"api",
 								"tweets",
-								"9",
+								"155",
 								"replies"
 							]
 						}
@@ -1072,12 +1147,12 @@
 					"response": []
 				},
 				{
-					"name": "[正常系]リプライ取得",
+					"name": "[正常系]リプライ取得_ページ指定",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/tweets/9/replies?page=1&limit=20",
+							"raw": "http://sns.test.com/api/tweets/9/replies?page=2&limit=20",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1093,12 +1168,35 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "2"
 								},
 								{
 									"key": "limit",
 									"value": "20"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]リプライ取得_一括",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/tweets/1/replies",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets",
+								"1",
+								"replies"
 							]
 						}
 					},
@@ -1110,12 +1208,12 @@
 			"name": "リツイート",
 			"item": [
 				{
-					"name": "[正常系]リツイート",
+					"name": "[正常系]リツイート一覧取得",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/tweets/30/retweets",
+							"raw": "http://sns.test.com/api/tweets/:tweet_id/retweets",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1125,20 +1223,42 @@
 							"path": [
 								"api",
 								"tweets",
-								"30",
+								":tweet_id",
 								"retweets"
+							],
+							"query": [
+								{
+									"key": "retweet_id",
+									"value": "158",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "tweet_id",
+									"value": "155"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "[正常系]リツイート一覧取得",
+					"name": "[正常系]リツイート",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": \"hogehoge\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://sns.test.com/api/tweets/15/retweets",
+							"raw": "http://sns.test.com/api/tweets/:tweet_id/retweets",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1148,8 +1268,43 @@
 							"path": [
 								"api",
 								"tweets",
-								"15",
+								":tweet_id",
 								"retweets"
+							],
+							"variable": [
+								{
+									"key": "tweet_id",
+									"value": "155"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]リツイート取り消し",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/tweets/:tweet_id/retweets",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"tweets",
+								":tweet_id",
+								"retweets"
+							],
+							"variable": [
+								{
+									"key": "tweet_id",
+									"value": "155"
+								}
 							]
 						}
 					},
@@ -1160,108 +1315,6 @@
 		{
 			"name": "DM",
 			"item": [
-				{
-					"name": "DM送信",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "message",
-									"value": "aaaaaa",
-									"type": "text"
-								},
-								{
-									"key": "media",
-									"type": "file",
-									"src": []
-								}
-							]
-						},
-						"url": {
-							"raw": "http://sns.test.com/api/messages/20",
-							"protocol": "http",
-							"host": [
-								"sns",
-								"test",
-								"com"
-							],
-							"path": [
-								"api",
-								"messages",
-								"20"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DM履歴取得",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "http://sns.test.com/api/messages/21?page=1&limit=20",
-							"protocol": "http",
-							"host": [
-								"sns",
-								"test",
-								"com"
-							],
-							"path": [
-								"api",
-								"messages",
-								"21"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DM履歴削除",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "http://sns.test.com/api/messages/20",
-							"protocol": "http",
-							"host": [
-								"sns",
-								"test",
-								"com"
-							],
-							"path": [
-								"api",
-								"messages",
-								"20"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "DM一覧取得",
 					"protocolProfileBehavior": {
@@ -1295,6 +1348,178 @@
 									"key": "limit",
 									"value": "20"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DM履歴取得",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/messages/:dm_partner_id?page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"messages",
+								":dm_partner_id"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							],
+							"variable": [
+								{
+									"key": "dm_partner_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DM内容取得",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/messages?message_id=1",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"messages"
+							],
+							"query": [
+								{
+									"key": "message_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DM受信（SSE）テスト不可",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/live/messages/2",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"live",
+								"messages",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DM送信",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "message",
+									"value": "test text from postman",
+									"type": "text"
+								},
+								{
+									"key": "media",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/messages/1",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"messages",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DM履歴削除",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://sns.test.com/api/messages/20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"messages",
+								"20"
 							]
 						}
 					},
@@ -1510,6 +1735,42 @@
 							"path": [
 								"api",
 								"reset_password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "通知",
+			"item": [
+				{
+					"name": "[正常系]通知一覧取得",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/notifications?page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
 							]
 						}
 					},

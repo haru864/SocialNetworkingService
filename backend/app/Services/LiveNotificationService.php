@@ -154,7 +154,7 @@ class LiveNotificationService
         $retweetNotification = new RetweetNotification(
             id: null,
             notifiedUserId: $tweetUserId,
-            retweetId: $retweetedTweet->getId(),
+            retweetId: $retweet->getId(),
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );

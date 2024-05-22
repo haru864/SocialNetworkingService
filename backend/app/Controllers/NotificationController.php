@@ -20,9 +20,12 @@ class NotificationController implements ControllerInterface
 
     public function handleRequest(): HTTPRenderer
     {
-        $request = new NotificationRequest();
+        $request = new NotificationRequest($_GET);
+        $limit = $request->getLimit();
+        $page = $request->getPage();
+        $offset = ($page - 1) * $limit;
         $userId = SessionManager::get('user_id');
-        $notifications = $this->notificationService->getAllNotificationsSorted($userId);
+        $notifications = $this->notificationService->getAllNotificationsSorted($userId, $limit, $offset);
         return new JSONRenderer(200, ['notifications' => $notifications]);
     }
 }

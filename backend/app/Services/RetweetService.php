@@ -59,4 +59,10 @@ class RetweetService
         }
         return $retweetArr;
     }
+
+    public function getRetweet(int $retweetId): ?Tweet
+    {
+        $retweet = $this->tweetsDAOImpl->getByTweetId($retweetId);
+        return $retweet;
+    }
 }

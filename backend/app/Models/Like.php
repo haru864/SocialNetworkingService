@@ -65,4 +65,15 @@ class Like implements Model
     {
         $this->$likeDatetime = $likeDatetime;
     }
+
+    public function toArray(): array
+    {
+        $data = [
+            'id' => $this->getId(),
+            'userId' => $this->getUserId(),
+            'tweetId' => $this->getTweetId(),
+            'likeDatetime' => $this->getLikeDatetime()
+        ];
+        return $data;
+    }
 }

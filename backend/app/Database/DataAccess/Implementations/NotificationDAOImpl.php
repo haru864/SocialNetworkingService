@@ -8,7 +8,7 @@ use Database\DataTransfer\NotificationDTO;
 
 class NotificationDAOImpl implements NotificationDAO
 {
-    public function getAllNotificationsSorted(int $userId): ?array
+    public function getAllNotificationsSorted(int $userId, int $limit, int $offset): ?array
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
@@ -31,12 +31,15 @@ class NotificationDAOImpl implements NotificationDAO
             SELECT 'retweet' AS notification_type, id, notified_user_id, retweet_id AS entity_id, is_confirmed, created_at
             FROM retweet_notifications
             WHERE notified_user_id = ?
-            ORDER BY created_at ASC;
+            ORDER BY created_at ASC
+            LIMIT ?
+            OFFSET ?
+            ;
         SQL;
         $records = $mysqli->prepareAndFetchAll(
             $query,
-            'iiiii',
-            [$userId, $userId, $userId, $userId, $userId]
+            'iiiiiii',
+            [$userId, $userId, $userId, $userId, $userId, $limit, $offset]
         ) ?? null;
         return $records === null ? null : $this->convertRecordArrayToNotificationDTOArray($records);
     }

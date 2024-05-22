@@ -31,6 +31,12 @@ class LikeService
         return $userIds;
     }
 
+    public function getLikeData(int $likeId): ?Like
+    {
+        $like = $this->likesDAOImpl->getLikeById($likeId);
+        return $like;
+    }
+
     public function addLike(int $userId, int $tweetId): Like
     {
         if (!is_null($this->likesDAOImpl->getLike($userId, $tweetId))) {
