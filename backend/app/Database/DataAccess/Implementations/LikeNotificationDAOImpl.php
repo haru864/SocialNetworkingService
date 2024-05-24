@@ -44,7 +44,7 @@ class LikeNotificationDAOImpl implements LikeNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO like_notifications
+            UPDATE like_notifications
             SET
                 notified_user_id = ?,
                 like_id = ?,

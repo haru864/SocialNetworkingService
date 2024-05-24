@@ -18,7 +18,7 @@ class LiveNotificationController implements ControllerInterface
 
     public function handleRequest(): HTTPRenderer
     {
-        
+        $this->liveNotificationService->streamNotification();
         return new JSONRenderer(200, []);
     }
 }

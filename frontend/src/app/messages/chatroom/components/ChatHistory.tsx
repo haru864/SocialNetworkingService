@@ -35,7 +35,7 @@ const ChatHistory: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        const eventSource = new EventSource(`http://sns.test.com/api/live/messages/${chatPartner?.id}`);
+        const eventSource = new EventSource(`${process.env.API_DOMAIN}/api/live/messages/${chatPartner?.id}`);
         eventSource.onmessage = (event: MessageEvent) => {
             const data = JSON.parse(event.data);
             const message = new Message(data);

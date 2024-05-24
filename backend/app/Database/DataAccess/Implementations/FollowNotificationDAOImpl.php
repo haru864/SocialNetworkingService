@@ -44,7 +44,7 @@ class FollowNotificationDAOImpl implements FollowNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO follow_notifications
+            UPDATE follow_notifications
             SET
                 notified_user_id = ?,
                 follow_id = ?,

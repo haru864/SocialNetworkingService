@@ -12,14 +12,31 @@ const Notifications: React.FC = () => {
 
     useEffect(() => {
         loadNotifications();
+        getNotificationInRealTime();
     }, []);
 
     const loadNotifications = async () => {
         const currNotifications = await getNotifications(page);
-        setNotificationDTOs(currNotifications);
+        setNotificationDTOs(prev => [...prev, ...currNotifications]);
         setPage(page + 1);
         const maxContentsPerPage: number = 20;
         setHasMore(currNotifications.length === maxContentsPerPage);
+    };
+
+    const getNotificationInRealTime = () => {
+        const eventSource = new EventSource(`${process.env.API_DOMAIN}/api/live/notifications`);
+        eventSource.onmessage = (event: MessageEvent) => {
+            const data = JSON.parse(event.data);
+            const notificationDTO = new NotificationDTO(data);
+            setNotificationDTOs(prev => [notificationDTO, ...prev]);
+        };
+        eventSource.onerror = (error) => {
+            console.error('EventSource failed:', error);
+            eventSource.close();
+        };
+        return () => {
+            eventSource.close();
+        };
     };
 
     return (

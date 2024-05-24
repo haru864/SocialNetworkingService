@@ -44,7 +44,7 @@ class MessageNotificationDAOImpl implements MessageNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO message_notifications
+            UPDATE message_notifications
             SET
                 notified_user_id = ?,
                 message_id = ?,

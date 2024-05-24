@@ -105,7 +105,14 @@ $profileService = new ProfileService(
 $messageService = new MessageService($messagesDAOImpl, $usersDAOImpl);
 $resetPasswordService = new ResetPasswordService($usersDAOImpl, $emailVerificationDAOImpl);
 $liveMessageService = new LiveMessageService();
-$notificationService = new NotificationService($notificationDAOImpl);
+$notificationService = new NotificationService(
+    $notificationDAOImpl,
+    $likeNotificationDAOImpl,
+    $followNotificationDAOImpl,
+    $messageNotificationDAOImpl,
+    $replyNotificationDAOImpl,
+    $retweetNotificationDAOImpl
+);
 $liveNotificationService = new LiveNotificationService(
     $likeNotificationDAOImpl,
     $followNotificationDAOImpl,

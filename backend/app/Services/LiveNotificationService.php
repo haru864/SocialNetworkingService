@@ -14,6 +14,7 @@ use Database\DataAccess\Implementations\MessageNotificationDAOImpl;
 use Database\DataAccess\Implementations\ReplyNotificationDAOImpl;
 use Database\DataAccess\Implementations\RetweetNotificationDAOImpl;
 use Database\DataAccess\Implementations\TweetsDAOImpl;
+use Database\DataTransfer\NotificationDTO;
 use Models\Follow;
 use Models\FollowNotification;
 use Models\Like;
@@ -79,7 +80,7 @@ class LiveNotificationService
         $last_heartbeat = time();
 
         $loop->addPeriodicTimer(0.5, function () use (&$last_heartbeat, &$messages) {
-            $HEARTBEAT_PERIOD_SECONDS = 30;
+            $HEARTBEAT_PERIOD_SECONDS = 10;
             if (time() - $last_heartbeat >= $HEARTBEAT_PERIOD_SECONDS) {
                 echo ": heartbeat\n\n";
                 ob_flush();
@@ -104,7 +105,6 @@ class LiveNotificationService
         $likedTweetId = $like->getTweetId();
         $likedTweet = $this->tweetsDAOImpl->getByTweetId($likedTweetId);
         $tweetUserId = $likedTweet->getUserId();
-
         $likeNotification = new LikeNotification(
             id: null,
             notifiedUserId: $tweetUserId,
@@ -112,14 +112,18 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
-        $this->likeNotificationDAOImpl->create($likeNotification);
+        $likeNotificationInTable = $this->likeNotificationDAOImpl->create($likeNotification);
 
         $channel = RedisManager::getNotificationChannel($tweetUserId);
-        $msg = json_encode([
-            'type' => 'like',
-            'notification' => $likeNotification->toArray()
-        ]);
-        $this->redis->publish($channel, $msg);
+        $notificationDTO = new NotificationDTO(
+            notificationType: 'like',
+            id: $likeNotificationInTable->getId(),
+            notifiedUserId: $likeNotificationInTable->getNotifiedUserId(),
+            entityId: $likeNotificationInTable->getLikeId(),
+            isConfirmed: $likeNotificationInTable->getIsConfirmed(),
+            createdAt: $likeNotificationInTable->getCreatedAt()
+        );
+        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
     }
 
     public function publishReplyNotification(Tweet $replyTweet): void
@@ -127,7 +131,6 @@ class LiveNotificationService
         $repliedTweetId = $replyTweet->getReplyToId();
         $repliedTweet = $this->tweetsDAOImpl->getByTweetId($repliedTweetId);
         $tweetUserId = $repliedTweet->getUserId();
-
         $replyNotification = new ReplyNotification(
             id: null,
             notifiedUserId: $tweetUserId,
@@ -135,14 +138,18 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
-        $this->replyNotificationDAOImpl->create($replyNotification);
+        $replyNotificationInTable = $this->replyNotificationDAOImpl->create($replyNotification);
 
         $channel = RedisManager::getNotificationChannel($tweetUserId);
-        $msg = json_encode([
-            'type' => 'reply',
-            'notification' => $replyNotification->toArray()
-        ]);
-        $this->redis->publish($channel, $msg);
+        $notificationDTO = new NotificationDTO(
+            notificationType: 'reply',
+            id: $replyNotificationInTable->getId(),
+            notifiedUserId: $replyNotificationInTable->getNotifiedUserId(),
+            entityId: $replyNotificationInTable->getReplyId(),
+            isConfirmed: $replyNotificationInTable->getIsConfirmed(),
+            createdAt: $replyNotificationInTable->getCreatedAt()
+        );
+        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
     }
 
     public function publishRetweetNotification(Tweet $retweet): void
@@ -150,7 +157,6 @@ class LiveNotificationService
         $retweetedTweetId = $retweet->getRetweetToId();
         $retweetedTweet = $this->tweetsDAOImpl->getByTweetId($retweetedTweetId);
         $tweetUserId = $retweetedTweet->getUserId();
-
         $retweetNotification = new RetweetNotification(
             id: null,
             notifiedUserId: $tweetUserId,
@@ -158,20 +164,23 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
-        $this->retweetNotificationDAOImpl->create($retweetNotification);
+        $retweetNotificationInTable = $this->retweetNotificationDAOImpl->create($retweetNotification);
 
         $channel = RedisManager::getNotificationChannel($tweetUserId);
-        $msg = json_encode([
-            'type' => 'retweet',
-            'notification' => $retweetNotification->toArray()
-        ]);
-        $this->redis->publish($channel, $msg);
+        $notificationDTO = new NotificationDTO(
+            notificationType: 'retweet',
+            id: $retweetNotificationInTable->getId(),
+            notifiedUserId: $retweetNotificationInTable->getNotifiedUserId(),
+            entityId: $retweetNotificationInTable->getRetweetId(),
+            isConfirmed: $retweetNotificationInTable->getIsConfirmed(),
+            createdAt: $retweetNotificationInTable->getCreatedAt()
+        );
+        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
     }
 
     public function publishFollowNotification(Follow $follow): void
     {
         $followeeId = $follow->getFolloweeId();
-
         $followNotification = new FollowNotification(
             id: null,
             notifiedUserId: $followeeId,
@@ -179,20 +188,23 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
-        $this->followNotificationDAOImpl->create($followNotification);
+        $followNotificationInTable = $this->followNotificationDAOImpl->create($followNotification);
 
         $channel = RedisManager::getNotificationChannel($followeeId);
-        $msg = json_encode([
-            'type' => 'follow',
-            'notification' => $followNotification->toArray()
-        ]);
-        $this->redis->publish($channel, $msg);
+        $notificationDTO = new NotificationDTO(
+            notificationType: 'follow',
+            id: $followNotificationInTable->getId(),
+            notifiedUserId: $followNotificationInTable->getNotifiedUserId(),
+            entityId: $followNotificationInTable->getFollowId(),
+            isConfirmed: $followNotificationInTable->getIsConfirmed(),
+            createdAt: $followNotificationInTable->getCreatedAt()
+        );
+        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
     }
 
     public function publishMessageNotification(Message $message): void
     {
         $recipientUserid  = $message->getRecipientId();
-
         $messageNotification = new MessageNotification(
             id: null,
             notifiedUserId: $recipientUserid,
@@ -200,14 +212,18 @@ class LiveNotificationService
             isConfirmed: false,
             createdAt: date('Y-m-d H:i:s')
         );
-        $this->messageNotificationDAOImpl->create($messageNotification);
+        $messageNotificationInTable = $this->messageNotificationDAOImpl->create($messageNotification);
 
         $channel = RedisManager::getNotificationChannel($recipientUserid);
-        $msg = json_encode([
-            'type' => 'message',
-            'notification' => $messageNotification->toArray()
-        ]);
-        $this->redis->publish($channel, $msg);
+        $notificationDTO = new NotificationDTO(
+            notificationType: 'message',
+            id: $messageNotificationInTable->getId(),
+            notifiedUserId: $messageNotificationInTable->getNotifiedUserId(),
+            entityId: $messageNotificationInTable->getMessageId(),
+            isConfirmed: $messageNotificationInTable->getIsConfirmed(),
+            createdAt: $messageNotificationInTable->getCreatedAt()
+        );
+        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
     }
 
     private function setHeader(): void

@@ -31,7 +31,7 @@ class NotificationDAOImpl implements NotificationDAO
             SELECT 'retweet' AS notification_type, id, notified_user_id, retweet_id AS entity_id, is_confirmed, created_at
             FROM retweet_notifications
             WHERE notified_user_id = ?
-            ORDER BY created_at ASC
+            ORDER BY created_at DESC
             LIMIT ?
             OFFSET ?
             ;

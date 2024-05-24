@@ -44,7 +44,7 @@ class RetweetNotificationDAOImpl implements RetweetNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO retweet_notifications
+            UPDATE retweet_notifications
             SET
                 notified_user_id = ?,
                 retweet_id = ?,

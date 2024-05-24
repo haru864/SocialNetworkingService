@@ -44,7 +44,7 @@ class ReplyNotificationDAOImpl implements ReplyNotificationDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
-            INSERT INTO reply_notifications
+            UPDATE reply_notifications
             SET
                 notified_user_id = ?,
                 reply_id = ?,

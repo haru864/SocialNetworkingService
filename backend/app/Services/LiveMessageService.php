@@ -47,7 +47,7 @@ class LiveMessageService
         $last_heartbeat = time();
 
         $loop->addPeriodicTimer(0.5, function () use (&$last_heartbeat, &$messages) {
-            $HEARTBEAT_PERIOD_SECONDS = 30;
+            $HEARTBEAT_PERIOD_SECONDS = 10;
             if (time() - $last_heartbeat >= $HEARTBEAT_PERIOD_SECONDS) {
                 echo ": heartbeat\n\n";
                 ob_flush();
