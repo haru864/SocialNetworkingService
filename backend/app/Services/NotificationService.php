@@ -45,65 +45,40 @@ class NotificationService
         if (is_null($notifications)) {
             return [];
         }
-        foreach ($notifications as $notification) {
-            if ($notification['isConfirmed']) {
-                continue;
-            }
-            switch ($notification['notificationType']) {
-                case 'like':
-                    $likeNotificationConfirmed = new LikeNotification(
-                        id: $notification['id'],
-                        notifiedUserId: $notification['notifiedUserId'],
-                        likeId: $notification['entityId'],
-                        isConfirmed: true,
-                        createdAt: $notification['createdAt']
-                    );
-                    $this->likeNotificationDAOImpl->update($likeNotificationConfirmed);
-                    break;
-                case 'follow':
-                    $followNotificationConfirmed = new FollowNotification(
-                        id: $notification['id'],
-                        notifiedUserId: $notification['notifiedUserId'],
-                        followId: $notification['entityId'],
-                        isConfirmed: true,
-                        createdAt: $notification['createdAt']
-                    );
-                    $this->followNotificationDAOImpl->update($followNotificationConfirmed);
-                    break;
-                case 'message':
-                    $messageNotificationConfirmed = new MessageNotification(
-                        id: $notification['id'],
-                        notifiedUserId: $notification['notifiedUserId'],
-                        messageId: $notification['entityId'],
-                        isConfirmed: true,
-                        createdAt: $notification['createdAt']
-                    );
-                    $this->messageNotificationDAOImpl->update($messageNotificationConfirmed);
-                    break;
-                case 'reply':
-                    $replyNotificationConfirmed = new ReplyNotification(
-                        id: $notification['id'],
-                        notifiedUserId: $notification['notifiedUserId'],
-                        replyId: $notification['entityId'],
-                        isConfirmed: true,
-                        createdAt: $notification['createdAt']
-                    );
-                    $this->replyNotificationDAOImpl->update($replyNotificationConfirmed);
-                    break;
-                case 'retweet':
-                    $retweetNotificationConfirmed = new RetweetNotification(
-                        id: $notification['id'],
-                        notifiedUserId: $notification['notifiedUserId'],
-                        retweetId: $notification['entityId'],
-                        isConfirmed: true,
-                        createdAt: $notification['createdAt']
-                    );
-                    $this->retweetNotificationDAOImpl->update($retweetNotificationConfirmed);
-                    break;
-                default:
-                    break;
-            }
-        }
         return $notifications;
+    }
+
+    public function confirmAllNotifications(int $loginUserId): void
+    {
+        $this->confirmAllLikeNotification($loginUserId);
+        $this->confirmAllFollowNotification($loginUserId);
+        $this->confirmAllMessageNotification($loginUserId);
+        $this->confirmAllReplyNotification($loginUserId);
+        $this->confirmAllRetweetNotification($loginUserId);
+    }
+
+    private function confirmAllLikeNotification(int $userId): void
+    {
+        $this->likeNotificationDAOImpl->confirmAllNotification($userId);
+    }
+
+    private function confirmAllFollowNotification(int $userId): void
+    {
+        $this->followNotificationDAOImpl->confirmAllNotification($userId);
+    }
+
+    private function confirmAllMessageNotification(int $userId): void
+    {
+        $this->messageNotificationDAOImpl->confirmAllNotification($userId);
+    }
+
+    private function confirmAllReplyNotification(int $userId): void
+    {
+        $this->replyNotificationDAOImpl->confirmAllNotification($userId);
+    }
+
+    private function confirmAllRetweetNotification(int $userId): void
+    {
+        $this->retweetNotificationDAOImpl->confirmAllNotification($userId);
     }
 }

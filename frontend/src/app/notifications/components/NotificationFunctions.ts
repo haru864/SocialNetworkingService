@@ -88,3 +88,20 @@ export async function getFollowData(followId: number): Promise<Follow> {
         throw error;
     }
 }
+
+export async function confirmNotifications(): Promise<void> {
+    try {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/notifications/confirm`, {
+            method: 'POST',
+            credentials: 'include'
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData["error_message"]);
+        }
+        return;
+    } catch (error: any) {
+        console.error(error);
+        throw error;
+    }
+}

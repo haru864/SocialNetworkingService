@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Grid } from '@mui/material';
+import { Grid, Box, CircularProgress } from '@mui/material';
 import { NotificationDTO } from './NotificationDTO';
-import { getNotifications } from './NotificationFunctions';
+import { confirmNotifications, getNotifications } from './NotificationFunctions';
 import NotificationCard from './NotificationCard';
 
 const Notifications: React.FC = () => {
     const [notificationDTOs, setNotificationDTOs] = useState<NotificationDTO[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [page, setPage] = useState<number>(1);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadNotifications();
+        confirmNotifications();
         getNotificationInRealTime();
+        setLoading(false);
     }, []);
 
     const loadNotifications = async () => {
@@ -39,25 +42,33 @@ const Notifications: React.FC = () => {
         };
     };
 
-    return (
-        <InfiniteScroll
-            dataLength={notificationDTOs.length}
-            next={loadNotifications}
-            hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
-            endMessage={
-                <p style={{ textAlign: 'center', marginTop: '20px' }}>
-                    <b>You have seen all notifications</b>
-                </p>
-            }
-        >
-            <Grid container spacing={2}>
-                {notificationDTOs.map(notificationDTO => (
-                    <NotificationCard notificationDTO={notificationDTO} />
-                ))}
-            </Grid>
-        </InfiniteScroll>
-    );
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    } else {
+        return (
+            <InfiniteScroll
+                dataLength={notificationDTOs.length}
+                next={loadNotifications}
+                hasMore={hasMore}
+                loader={<h4>Loading...</h4>}
+                endMessage={
+                    <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                        <b>You have seen all notifications</b>
+                    </p>
+                }
+            >
+                <Grid container spacing={2}>
+                    {notificationDTOs.map(notificationDTO => (
+                        <NotificationCard notificationDTO={notificationDTO} />
+                    ))}
+                </Grid>
+            </InfiniteScroll>
+        );
+    }
 };
 
 export default Notifications;

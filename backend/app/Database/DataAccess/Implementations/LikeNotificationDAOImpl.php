@@ -70,6 +70,23 @@ class LikeNotificationDAOImpl implements LikeNotificationDAO
         return $likeNotification;
     }
 
+    public function confirmAllNotification(int $userId): void
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $query = <<<SQL
+            UPDATE like_notifications
+            SET
+                is_confirmed = 1
+            WHERE
+                notified_user_id = ? AND is_confirmed = 0
+        SQL;
+        $result = $mysqli->prepareAndExecute($query, 'i', [$userId],);
+        if (!$result) {
+            throw new QueryFailedException("CONFIRM failed.");
+        }
+        return;
+    }
+
     public function delete(int $id): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();
