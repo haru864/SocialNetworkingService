@@ -18,11 +18,11 @@ spl_autoload_register(function ($class) {
 date_default_timezone_set('Asia/Tokyo');
 $faker = Faker\Factory::create();
 $tweetsDAOImpl = new TweetsDAOImpl();
-$tweetsCount = 50;
+$tweetsCount = 25;
 
 // $options = getopt("", ['userId:']);
 // $tweetUserId = (int)$options['userId'];
-$tweetUserId = 1;
+$tweetUserId = 3;
 
 for ($i = 0; $i < $tweetsCount; $i++) {
     $nowDateTime = new DateTime();

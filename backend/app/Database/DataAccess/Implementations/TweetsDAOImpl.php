@@ -139,46 +139,21 @@ class TweetsDAOImpl implements TweetsDAO
         return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
     }
 
-    // TODO ビューを使う
     public function getByPopular(int $limit, int $offset): ?array
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $query = <<<SQL
             SELECT 
-                t.id,
-                t.reply_to_id,
-                t.retweet_to_id,
-                t.user_id,
-                t.message,
-                t.media_file_name,
-                t.media_type,
-                t.posting_datetime,
-                COALESCE(l.like_count, 0) AS like_count,
-                COALESCE(rt.retweet_count, 0) AS retweet_count,
-                COALESCE(rp.reply_count, 0) AS reply_count,
-                (COALESCE(l.like_count, 0) + COALESCE(rt.retweet_count, 0) + COALESCE(rp.reply_count, 0)) AS total_count
+                id,
+                reply_to_id,
+                retweet_to_id,
+                user_id,
+                message,
+                media_file_name,
+                media_type,
+                posting_datetime
             FROM
-                tweets t
-            LEFT JOIN (
-                SELECT tweet_id, COUNT(*) AS like_count 
-                FROM likes 
-                WHERE like_datetime > NOW() - INTERVAL 24 HOUR
-                GROUP BY tweet_id
-            ) l ON t.id = l.tweet_id
-            LEFT JOIN (
-                SELECT tweet_id, COUNT(*) AS retweet_count 
-                FROM tweets 
-                WHERE posting_datetime > NOW() - INTERVAL 24 HOUR AND reply_to_id IS NOT NULL
-                GROUP BY tweet_id
-            ) rt ON t.id = rt.retweet_to_id
-            LEFT JOIN (
-                SELECT reply_to_id, COUNT(*) AS reply_count 
-                FROM tweets 
-                WHERE posting_datetime > NOW() - INTERVAL 24 HOUR AND reply_to_id IS NOT NULL
-                GROUP BY reply_to_id
-            ) rp ON t.id = rp.reply_to_id
-            ORDER BY
-                total_count DESC, t.id DESC
+                trend_tweets_materialized_view
             LIMIT ?
             OFFSET ?
         SQL;
