@@ -282,7 +282,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/profile?id=52",
+							"raw": "http://sns.test.com/api/profile?id=2",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -296,7 +296,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "52"
+									"value": "2"
 								}
 							]
 						}
@@ -480,7 +480,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    // \"username\": \"chisato\",\n    \"username\": \"takina\",\n    \"password\": \"Pass123_\"\n}",
+							"raw": "{\n    \"username\": \"chisato\",\n    // \"username\": \"takina\",\n    \"password\": \"Pass123_\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -951,7 +951,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"add\",\n    \"followee_id\": 1\n}",
+							"raw": "{\n    \"action\": \"add\",\n    \"followee_id\": 5\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1129,7 +1129,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://sns.test.com/api/tweets/155/replies",
+							"raw": "http://sns.test.com/api/tweets/:tweet_id/replies",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1139,8 +1139,14 @@
 							"path": [
 								"api",
 								"tweets",
-								"155",
+								":tweet_id",
 								"replies"
+							],
+							"variable": [
+								{
+									"key": "tweet_id",
+									"value": "101"
+								}
 							]
 						}
 					},
@@ -1763,6 +1769,189 @@
 								"notifications"
 							],
 							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[正常系]通知確認",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/notifications/confirm",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"confirm"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "検索",
+			"item": [
+				{
+					"name": "ツイート検索",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/search/tweets?query=Tempore&page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"search",
+								"tweets"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "Tempore"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ユーザー検索_名前",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/search/users?query=0&field=name&page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"search",
+								"users"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "0"
+								},
+								{
+									"key": "field",
+									"value": "name"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ユーザー検索_住所",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/search/users?query=Mexico&field=address&page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"search",
+								"users"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "Mexico"
+								},
+								{
+									"key": "field",
+									"value": "address"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ユーザー検索_仕事",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/search/users?query=air&field=job&page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"search",
+								"users"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "air"
+								},
+								{
+									"key": "field",
+									"value": "job"
+								},
 								{
 									"key": "page",
 									"value": "1"

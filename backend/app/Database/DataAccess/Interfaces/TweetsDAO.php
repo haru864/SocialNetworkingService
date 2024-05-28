@@ -14,5 +14,6 @@ interface TweetsDAO
     public function getByUserId(int $userId, int $limit, int $offset): ?array;
     public function getByFollower(int $userId, int $limit, int $offset): ?array;
     public function getByPopular(int $limit, int $offset): ?array;
+    public function getByKeywordMatch(string $keyword, int $limit, int $offset): array;
     public function deleteById(int $id): bool;
 }

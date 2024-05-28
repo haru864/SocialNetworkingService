@@ -63,6 +63,82 @@ class UsersDAOImpl implements UsersDAO
         return $record === null ? null : $this->convertRecordToUser($record);
     }
 
+    public function getByPartialNameMatch(string $name, int $limit, int $offset): array
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $likeTerm = "%" . $name . "%";
+        $query = <<<SQL
+            SELECT
+                *
+            FROM
+                users
+            WHERE
+                name LIKE ?
+            ORDER BY id DESC
+            LIMIT ?
+            OFFSET ?
+        SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'sii', [$likeTerm, $limit, $offset]);
+        return $records === null ? [] : $this->convertRecordArrayToUserArray($records);
+    }
+
+    public function getByPartialAddressMatch(string $address, int $limit, int $offset): array
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $likeTerm = "%" . $address . "%";
+        $query = <<<SQL
+            SELECT
+                *
+            FROM
+                users
+            INNER JOIN (
+                SELECT DISTINCT
+                    user_id
+                FROM
+                    addresses
+                WHERE
+                    country LIKE ?
+                    OR state LIKE ?
+                    OR city LIKE ?
+                    OR town LIKE ?
+            ) addr
+            ON
+                users.id = addr.user_id
+            ORDER BY id DESC
+            LIMIT ?
+            OFFSET ?
+        SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'ssssii', [$likeTerm, $likeTerm, $likeTerm, $likeTerm, $limit, $offset]);
+        return $records === null ? [] : $this->convertRecordArrayToUserArray($records);
+    }
+
+    public function getByPartialJobMatch(string $job, int $limit, int $offset): array
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $likeTerm = "%" . $job . "%";
+        $query = <<<SQL
+            SELECT
+                *
+            FROM
+                users
+            INNER JOIN (
+                SELECT DISTINCT
+                    user_id
+                FROM
+                    careers
+                WHERE
+                    job LIKE ?
+            ) j
+            ON
+                users.id = j.user_id
+            ORDER BY id DESC
+            LIMIT ?
+            OFFSET ?
+        SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'sii', [$likeTerm, $limit, $offset]);
+        return $records === null ? [] : $this->convertRecordArrayToUserArray($records);
+    }
+
     public function update(User $user): bool
     {
         if ($user->getId() === null) {

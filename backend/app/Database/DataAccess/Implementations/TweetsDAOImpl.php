@@ -161,6 +161,25 @@ class TweetsDAOImpl implements TweetsDAO
         return $records === null ? null : $this->convertRecordArrayToTweetArray($records);
     }
 
+    public function getByKeywordMatch(string $keyword, int $limit, int $offset): array
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $likeTerm = "%" . $keyword . "%";
+        $query = <<<SQL
+            SELECT 
+                *
+            FROM
+                tweets
+            WHERE
+                message LIKE ?
+            ORDER BY id DESC
+            LIMIT ?
+            OFFSET ?
+        SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'sii', [$likeTerm, $limit, $offset]);
+        return $records === null ? [] : $this->convertRecordArrayToTweetArray($records);
+    }
+
     public function deleteById(int $id): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();

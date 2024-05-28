@@ -13,6 +13,8 @@ use Controllers\ProfileController;
 use Controllers\ReplyController;
 use Controllers\ResetPasswordController;
 use Controllers\RetweetController;
+use Controllers\SearchTweetsController;
+use Controllers\SearchUsersController;
 use Controllers\SignupController;
 use Controllers\TweetController;
 use Database\DataAccess\Implementations\AddressesDAOImpl;
@@ -49,6 +51,7 @@ use Services\ReplyService;
 use Services\ResetPasswordService;
 use Services\RetweetService;
 use Services\ScheduledTweetService;
+use Services\SearchService;
 use Services\SignupService;
 use Services\TweetService;
 
@@ -122,6 +125,7 @@ $liveNotificationService = new LiveNotificationService(
     $retweetNotificationDAOImpl,
     $tweetsDAOImpl
 );
+$searchService = new SearchService($usersDAOImpl, $tweetsDAOImpl);
 
 $loginController = new LoginController($loginService);
 $signupController = new SignupController($signupService);
@@ -138,6 +142,8 @@ $liveMessageController = new LiveMessageController($liveMessageService);
 $notificationController = new NotificationController($notificationService);
 $liveNotificationController = new LiveNotificationController($liveNotificationService);
 $notificationConfirmController = new NotificationConfirmController($notificationService);
+$searchUsersController = new SearchUsersController($searchService);
+$searchTweetsController = new SearchTweetsController($searchService);
 
 $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
 $URL_DIR_PATTERN_RESET_PASSWORD = '/^\/api\/reset_password$/';
@@ -156,6 +162,8 @@ $URL_DIR_PATTERN_MESSAGES_LIVE = '/^\/api\/live\/messages\/([1-9][0-9]*)$/';
 $URL_DIR_PATTERN_NOTIFICATIONS = '/^\/api\/notifications$/';
 $URL_DIR_PATTERN_NOTIFICATIONS_LIVE = '/^\/api\/live\/notifications$/';
 $URL_DIR_PATTERN_NOTIFICATIONS_CONFIRM = '/^\/api\/notifications\/confirm$/';
+$URL_DIR_PATTERN_SEARCH_USERS = '/^\/api\/search\/users$/';
+$URL_DIR_PATTERN_SEARCH_TWEETS = '/^\/api\/search\/tweets$/';
 
 // TODO Nginxのauth_requestモジュールでリクエストを認証用PHPスクリプトに送り、メディアファイルアクセスを許可または拒否する
 return [
@@ -225,6 +233,14 @@ return [
     ],
     $URL_DIR_PATTERN_NOTIFICATIONS_CONFIRM => [
         'controller' => $notificationConfirmController,
+        'middleware' => new AuthMiddleware()
+    ],
+    $URL_DIR_PATTERN_SEARCH_USERS => [
+        'controller' => $searchUsersController,
+        'middleware' => new AuthMiddleware()
+    ],
+    $URL_DIR_PATTERN_SEARCH_TWEETS => [
+        'controller' => $searchTweetsController,
         'middleware' => new AuthMiddleware()
     ],
 ];
