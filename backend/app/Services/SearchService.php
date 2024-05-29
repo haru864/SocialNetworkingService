@@ -52,6 +52,18 @@ class SearchService
         return $userArrs;
     }
 
+    public function getUsersByHobbyKeyword(string $keyword, int $limit, int $offset): array
+    {
+        $users = $this->usersDAOImpl->getByPartialHobbyMatch($keyword, $limit, $offset);
+        $userArrs = [];
+        foreach ($users as $user) {
+            $userArr = $user->toArray();
+            $userArr['email'] = "";
+            array_push($userArrs, $userArr);
+        }
+        return $userArrs;
+    }
+
     public function getTweetsByKeyword(string $keyword, int $limit, int $offset): array
     {
         $tweets = $this->tweetsDAOImpl->getByKeywordMatch($keyword, $limit, $offset);

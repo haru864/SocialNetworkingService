@@ -12,6 +12,7 @@ interface UsersDAO
     public function getByPartialNameMatch(string $name, int $limit, int $offset): array;
     public function getByPartialAddressMatch(string $address, int $limit, int $offset): array;
     public function getByPartialJobMatch(string $job, int $limit, int $offset): array;
+    public function getByPartialHobbyMatch(string $job, int $limit, int $offset): array;
     public function update(User $user): bool;
     public function delete(int $id): bool;
 }

@@ -18,7 +18,7 @@ class SearchUsersRequest
         $this->page = $getData['page'];
         $this->limit = $getData['limit'];
 
-        $validFields = ['name', 'address', 'job'];
+        $validFields = ['name', 'address', 'job', 'hobby'];
         if (!in_array($this->field, $validFields)) {
             $validFieldsString = implode(",", $validFields);
             throw new InvalidRequestParameterException("Parameter 'field' must be follow. [{$validFieldsString}]");

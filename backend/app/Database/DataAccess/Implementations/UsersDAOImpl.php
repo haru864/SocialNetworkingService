@@ -139,6 +139,33 @@ class UsersDAOImpl implements UsersDAO
         return $records === null ? [] : $this->convertRecordArrayToUserArray($records);
     }
 
+    public function getByPartialHobbyMatch(string $hobby, int $limit, int $offset): array
+    {
+        $mysqli = DatabaseManager::getMysqliConnection();
+        $likeTerm = "%" . $hobby . "%";
+        $query = <<<SQL
+            SELECT
+                *
+            FROM
+                users
+            INNER JOIN (
+                SELECT DISTINCT
+                    user_id
+                FROM
+                    hobbies
+                WHERE
+                    hobby LIKE ?
+            ) h
+            ON
+                users.id = h.user_id
+            ORDER BY id DESC
+            LIMIT ?
+            OFFSET ?
+        SQL;
+        $records = $mysqli->prepareAndFetchAll($query, 'sii', [$likeTerm, $limit, $offset]);
+        return $records === null ? [] : $this->convertRecordArrayToUserArray($records);
+    }
+
     public function update(User $user): bool
     {
         if ($user->getId() === null) {

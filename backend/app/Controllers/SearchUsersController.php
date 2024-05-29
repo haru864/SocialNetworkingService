@@ -46,6 +46,13 @@ class SearchUsersController implements ControllerInterface
                     $request->getLimit()
                 );
                 break;
+            case 'hobby':
+                return $this->searchUsersByHobbyMatching(
+                    $request->getQuery(),
+                    $request->getPage(),
+                    $request->getLimit()
+                );
+                break;
             default:
                 throw new InvalidRequestParameterException("Invalid parameter at 'field'.");
                 break;
@@ -78,6 +85,17 @@ class SearchUsersController implements ControllerInterface
     {
         $offset = ($page - 1) * $limit;
         $users = $this->searchService->getUsersByJobKeyword(
+            keyword: $keyword,
+            limit: $limit,
+            offset: $offset
+        );
+        return new JSONRenderer(200, ['users' => $users]);
+    }
+
+    private function searchUsersByHobbyMatching(string $keyword, int $page, int $limit): JSONRenderer
+    {
+        $offset = ($page - 1) * $limit;
+        $users = $this->searchService->getUsersByHobbyKeyword(
             keyword: $keyword,
             limit: $limit,
             offset: $offset

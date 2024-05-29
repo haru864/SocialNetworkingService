@@ -47,6 +47,7 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
     const [newNotification, setNewNotification] = React.useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         (async () => {
@@ -84,6 +85,17 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
     const handleDrawerToggle = () => {
         if (!isClosing) {
             setMobileOpen(!mobileOpen);
+        }
+    };
+
+    const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (searchQuery.trim()) {
+            window.location.href = `/search?query=${encodeURIComponent(searchQuery.trim())}`;
         }
     };
 
@@ -156,15 +168,19 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
                         Social Networking Service
                     </Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                        <Search>
-                            <SearchIconWrapper>
-                                <SearchIcon />
-                            </SearchIconWrapper>
-                            <StyledInputBase
-                                placeholder="Search…"
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </Search>
+                        <form onSubmit={handleSearchSubmit}>
+                            <Search>
+                                <SearchIconWrapper>
+                                    <SearchIcon />
+                                </SearchIconWrapper>
+                                <StyledInputBase
+                                    placeholder="Search…"
+                                    inputProps={{ 'aria-label': 'search' }}
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
+                                />
+                            </Search>
+                        </form>
                     </Box>
                 </Toolbar>
             </AppBar>

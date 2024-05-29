@@ -1851,7 +1851,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/search/users?query=0&field=name&page=1&limit=20",
+							"raw": "http://sns.test.com/api/search/users?query=ba&field=name&page=1&limit=20",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1866,7 +1866,7 @@
 							"query": [
 								{
 									"key": "query",
-									"value": "0"
+									"value": "ba"
 								},
 								{
 									"key": "field",
@@ -1891,7 +1891,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/search/users?query=Mexico&field=address&page=1&limit=20",
+							"raw": "http://sns.test.com/api/search/users?query=ba&field=address&page=1&limit=20",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1906,7 +1906,7 @@
 							"query": [
 								{
 									"key": "query",
-									"value": "Mexico"
+									"value": "ba"
 								},
 								{
 									"key": "field",
@@ -1931,7 +1931,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/search/users?query=air&field=job&page=1&limit=20",
+							"raw": "http://sns.test.com/api/search/users?query=ba&field=job&page=1&limit=20",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1946,11 +1946,51 @@
 							"query": [
 								{
 									"key": "query",
-									"value": "air"
+									"value": "ba"
 								},
 								{
 									"key": "field",
 									"value": "job"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ユーザー検索_趣味",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/search/users?query=as&field=hobby&page=1&limit=20",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"search",
+								"users"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "as"
+								},
+								{
+									"key": "field",
+									"value": "hobby"
 								},
 								{
 									"key": "page",
