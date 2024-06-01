@@ -6,11 +6,15 @@ use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
 use Helpers\SessionManager;
+use Services\AuthenticationService;
 
 class LogoutController implements ControllerInterface
 {
-    public function __construct()
+    private AuthenticationService $authenticationService;
+
+    public function __construct(AuthenticationService $authenticationService)
     {
+        $this->authenticationService = $authenticationService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -23,7 +27,8 @@ class LogoutController implements ControllerInterface
 
     private function logout(): JSONRenderer
     {
-        SessionManager::destroySession();
+        $userId = SessionManager::get('user_id');
+        $this->authenticationService->logout($userId);
         return new JSONRenderer(200, []);
     }
 }

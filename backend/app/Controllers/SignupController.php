@@ -5,19 +5,20 @@ namespace Controllers;
 use Controllers\Interface\ControllerInterface;
 use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
-use Helpers\RedisManager;
-use Helpers\SessionManager;
 use Http\Request\SignupRequest;
 use Http\Request\ValidateEmailRequest;
+use Services\AuthenticationService;
 use Services\SignupService;
 
 class SignupController implements ControllerInterface
 {
     private SignupService $signupService;
+    private AuthenticationService $authenticationService;
 
-    public function __construct(SignupService $signupService)
+    public function __construct(SignupService $signupService, AuthenticationService $authenticationService)
     {
         $this->signupService = $signupService;
+        $this->authenticationService = $authenticationService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -47,12 +48,7 @@ class SignupController implements ControllerInterface
     {
         $this->signupService->validateEmail($request->getId());
         $user = $this->signupService->createUserByPending($request->getId());
-        $userId = $user->getId();
-        $userName = $user->getName();
-        SessionManager::set('user_id', $userId);
-        SessionManager::set('user_name', $userName);
-        $redisClient = RedisManager::getInstance();
-        $redisClient->set($userId, $userName);
+        $this->authenticationService->setLoginDataInSession($user->getId(), $user->getName());
         return new JSONRenderer(200, []);
     }
 }

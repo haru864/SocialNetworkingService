@@ -39,6 +39,7 @@ use Database\DataAccess\Implementations\ScheduledTweetsDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Middleware\AuthMiddleware;
 use Middleware\NoopMiddleware;
+use Services\AuthenticationService;
 use Services\FollowService;
 use Services\LikeService;
 use Services\LiveMessageService;
@@ -76,7 +77,7 @@ $replyNotificationDAOImpl = new ReplyNotificationDAOImpl();
 $retweetNotificationDAOImpl = new RetweetNotificationDAOImpl();
 $notificationDAOImpl = new NotificationDAOImpl();
 
-$loginService = new LoginService($usersDAOImpl);
+$authenticationService = new AuthenticationService($usersDAOImpl);
 $signupService = new SignupService(
     $usersDAOImpl,
     $addressesDAOImpl,
@@ -127,9 +128,9 @@ $liveNotificationService = new LiveNotificationService(
 );
 $searchService = new SearchService($usersDAOImpl, $tweetsDAOImpl);
 
-$loginController = new LoginController($loginService);
-$signupController = new SignupController($signupService);
-$logoutController = new LogoutController();
+$loginController = new LoginController($authenticationService);
+$signupController = new SignupController($signupService, $authenticationService);
+$logoutController = new LogoutController($authenticationService);
 $tweetController = new TweetController($tweetService, $scheduledTweetService);
 $retweetController = new RetweetController($retweetService, $liveNotificationService);
 $replyController  = new ReplyController($replyService, $liveNotificationService);
@@ -185,62 +186,62 @@ return [
     ],
     $URL_DIR_PATTERN_LOGOUT => [
         'controller' => $logoutController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_TWEETS => [
         'controller' => $tweetController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_RETWEETS => [
         'controller' => $retweetController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_REPLIES => [
         'controller' => $replyController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_LIKES => [
         'controller' => $likeController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_FOLLOWS => [
         'controller' => $followController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_PROFILE => [
         'controller' => $profileController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_VALIDATE_UPDATE_EMAIL => [
         'controller' => $profileController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_MESSAGES => [
         'controller' => $messageController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_MESSAGES_LIVE => [
         'controller' => $liveMessageController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_NOTIFICATIONS => [
         'controller' => $notificationController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_NOTIFICATIONS_LIVE => [
         'controller' => $liveNotificationController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_NOTIFICATIONS_CONFIRM => [
         'controller' => $notificationConfirmController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_SEARCH_USERS => [
         'controller' => $searchUsersController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_SEARCH_TWEETS => [
         'controller' => $searchTweetsController,
-        'middleware' => new AuthMiddleware()
+        'middleware' => new AuthMiddleware($authenticationService)
     ],
 ];
