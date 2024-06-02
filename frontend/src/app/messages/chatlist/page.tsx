@@ -3,8 +3,9 @@
 import React from 'react';
 import CommonLayout from '../../common/CommonLayout';
 import ChatList from './components/ChatList';
+import withSessionCheck from '@/app/common/session_check/withSessionCheck';
 
-const HomePage = () => {
+const Chats = () => {
     return (
         <CommonLayout>
             <ChatList />
@@ -12,4 +13,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default withSessionCheck(Chats);

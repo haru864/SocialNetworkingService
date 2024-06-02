@@ -3,8 +3,9 @@
 import React from 'react';
 import CommonLayout from '../common/CommonLayout';
 import SearchResult from './components/SearchResult';
+import withSessionCheck from '../common/session_check/withSessionCheck';
 
-const HomePage = () => {
+const SearchResultPage = () => {
     return (
         <CommonLayout>
             <SearchResult />
@@ -12,4 +13,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default withSessionCheck(SearchResultPage);

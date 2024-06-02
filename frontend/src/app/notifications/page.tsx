@@ -3,8 +3,9 @@
 import React from 'react';
 import CommonLayout from '../common/CommonLayout';
 import Notifications from './components/Notifications';
+import withSessionCheck from '../common/session_check/withSessionCheck';
 
-const HomePage = () => {
+const NotificationList = () => {
     return (
         <CommonLayout>
             <Notifications />
@@ -12,4 +13,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default withSessionCheck(NotificationList);

@@ -17,6 +17,7 @@ spl_autoload_register(function ($class) {
 use Logging\Logger;
 use Http\Response\HttpResponse;
 use Exceptions\Interface\UserVisibleException;
+use Exceptions\InvalidSessionException;
 use Render\JSONRenderer;
 use Settings\Settings;
 
@@ -45,6 +46,10 @@ try {
         $renderer = new JSONRenderer(404, $param);
     }
     $httpResponse = new HttpResponse($renderer);
+} catch (InvalidSessionException $e) {
+    $param = ['error_message' => $e->displayErrorMessage()];
+    $httpResponse = new HttpResponse(new JSONRenderer(401, $param));
+    $logger->logError($e);
 } catch (UserVisibleException $e) {
     $param = ['error_message' => $e->displayErrorMessage()];
     $httpResponse = new HttpResponse(new JSONRenderer(400, $param));

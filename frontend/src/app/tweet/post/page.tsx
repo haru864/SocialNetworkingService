@@ -3,8 +3,9 @@
 import React from 'react';
 import CommonLayout from '../../common/CommonLayout';
 import TweetInput from './components/TweetInput';
+import withSessionCheck from '@/app/common/session_check/withSessionCheck';
 
-const HomePage = () => {
+const TweetPage = () => {
     return (
         <CommonLayout>
             <TweetInput />
@@ -12,4 +13,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default withSessionCheck(TweetPage);

@@ -3,8 +3,9 @@
 import React from 'react';
 import CommonLayout from '../common/CommonLayout';
 import UserProfile from './components/UserProfile';
+import withSessionCheck from '../common/session_check/withSessionCheck';
 
-const HomePage = () => {
+const UserInfoPage = () => {
     return (
         <CommonLayout>
             <UserProfile />
@@ -12,4 +13,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default withSessionCheck(UserInfoPage);

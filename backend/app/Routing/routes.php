@@ -15,6 +15,7 @@ use Controllers\ResetPasswordController;
 use Controllers\RetweetController;
 use Controllers\SearchTweetsController;
 use Controllers\SearchUsersController;
+use Controllers\SessionCheckController;
 use Controllers\SignupController;
 use Controllers\TweetController;
 use Database\DataAccess\Implementations\AddressesDAOImpl;
@@ -128,6 +129,7 @@ $liveNotificationService = new LiveNotificationService(
 );
 $searchService = new SearchService($usersDAOImpl, $tweetsDAOImpl);
 
+$sessionCheckController = new SessionCheckController();
 $loginController = new LoginController($authenticationService);
 $signupController = new SignupController($signupService, $authenticationService);
 $logoutController = new LogoutController($authenticationService);
@@ -146,6 +148,7 @@ $notificationConfirmController = new NotificationConfirmController($notification
 $searchUsersController = new SearchUsersController($searchService);
 $searchTweetsController = new SearchTweetsController($searchService);
 
+$URL_DIR_PATTERN_CHECK_SESSION = '/^\/api\/check_session$/';
 $URL_DIR_PATTERN_LOGIN = '/^\/api\/login$/';
 $URL_DIR_PATTERN_RESET_PASSWORD = '/^\/api\/reset_password$/';
 $URL_DIR_PATTERN_SIGNUP = '/^\/api\/signup$/';
@@ -168,6 +171,10 @@ $URL_DIR_PATTERN_SEARCH_TWEETS = '/^\/api\/search\/tweets$/';
 
 // TODO Nginxのauth_requestモジュールでリクエストを認証用PHPスクリプトに送り、メディアファイルアクセスを許可または拒否する
 return [
+    $URL_DIR_PATTERN_CHECK_SESSION => [
+        'controller' => $sessionCheckController,
+        'middleware' => new AuthMiddleware($authenticationService)
+    ],
     $URL_DIR_PATTERN_LOGIN => [
         'controller' => $loginController,
         'middleware' => new NoopMiddleware()

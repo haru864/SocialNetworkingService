@@ -3,8 +3,9 @@
 import React from 'react';
 import CommonLayout from '../../common/CommonLayout';
 import ReplyList from './components/ReplyList';
+import withSessionCheck from '@/app/common/session_check/withSessionCheck';
 
-const HomePage = () => {
+const ReplyListPage = () => {
     return (
         <CommonLayout>
             <ReplyList />
@@ -12,4 +13,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default withSessionCheck(ReplyListPage);
