@@ -46,6 +46,9 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export async function hasUnconfirmedNotifications(): Promise<boolean> {
     const newestNotificationsPage = 1;
     const recentNotificationDTOs = await getNotifications(newestNotificationsPage);
+    if (recentNotificationDTOs.length === 0) {
+        return false;
+    }
     const newestNotificationDTO = recentNotificationDTOs[0];
     return !newestNotificationDTO.isConfirmed;
 }

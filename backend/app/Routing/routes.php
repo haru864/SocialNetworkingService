@@ -106,7 +106,9 @@ $profileService = new ProfileService(
     $pendingCareersDAOImpl,
     $pendingHobbiesDAOImpl,
     $emailVerificationDAOImpl,
-    $followsDAOImpl
+    $followsDAOImpl,
+    $tweetsDAOImpl,
+    $messagesDAOImpl
 );
 $messageService = new MessageService($messagesDAOImpl, $usersDAOImpl);
 $resetPasswordService = new ResetPasswordService($usersDAOImpl, $emailVerificationDAOImpl);
@@ -138,7 +140,7 @@ $retweetController = new RetweetController($retweetService, $liveNotificationSer
 $replyController  = new ReplyController($replyService, $liveNotificationService);
 $likeController = new LikeController($likeService, $liveNotificationService);
 $followController = new FollowController($followService, $liveNotificationService);
-$profileController = new ProfileController($profileService, $signupService);
+$profileController = new ProfileController($profileService, $signupService, $authenticationService);
 $messageController = new MessageController($messageService, $profileService, $liveMessageService, $liveNotificationService);
 $resetPasswordController = new ResetPasswordController($resetPasswordService);
 $liveMessageController = new LiveMessageController($liveMessageService);

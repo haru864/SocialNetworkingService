@@ -47,8 +47,24 @@ class CreateTrendTweetsView implements Database\SchemaMigration
                 total_count DESC, t.id DESC
         SQL;
 
-        $createViewSql = <<<SQL
-            CREATE TABLE trend_tweets_materialized_view AS {$selectTrendTweets}
+        $createMaterializedViewSql = <<<SQL
+            CREATE TABLE trend_tweets_materialized_view (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                reply_to_id BIGINT,
+                retweet_to_id BIGINT,
+                user_id BIGINT NOT NULL,
+                message VARCHAR(200) NOT NULL,
+                media_file_name VARCHAR(255),
+                media_type VARCHAR(255),
+                posting_datetime DATETIME NOT NULL,
+                like_count BIGINT,
+                retweet_count BIGINT,
+                reply_count BIGINT,
+                total_count BIGINT,
+                FOREIGN KEY (reply_to_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                FOREIGN KEY (retweet_to_id) REFERENCES tweets(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+            )
         SQL;
 
         $createEventSql = <<<SQL
@@ -64,7 +80,7 @@ class CreateTrendTweetsView implements Database\SchemaMigration
         SQL;
 
         return [
-            $createViewSql,
+            $createMaterializedViewSql,
             $createEventSql,
         ];
     }

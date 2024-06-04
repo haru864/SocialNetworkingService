@@ -7,8 +7,9 @@ use Render\JSONRenderer;
 use Exceptions\InvalidRequestMethodException;
 use Helpers\SessionManager;
 use Http\Request\GetProfileRequest;
-use Http\Request\PostProfileRequest;
+use Http\Request\UpdateProfileRequest;
 use Http\Request\ValidateEmailRequest;
+use Services\AuthenticationService;
 use Services\ProfileService;
 use Services\SignupService;
 
@@ -16,11 +17,16 @@ class ProfileController implements ControllerInterface
 {
     private ProfileService $profileService;
     private SignupService $signupService;
+    private AuthenticationService $authenticationService;
 
-    public function __construct(ProfileService $profileService, SignupService $signupService)
-    {
+    public function __construct(
+        ProfileService $profileService,
+        SignupService $signupService,
+        AuthenticationService $authenticationService
+    ) {
         $this->profileService = $profileService;
         $this->signupService = $signupService;
+        $this->authenticationService = $authenticationService;
     }
 
     public function handleRequest(): JSONRenderer
@@ -29,12 +35,8 @@ class ProfileController implements ControllerInterface
             if (!preg_match('/multipart\/form-data/', $_SERVER['CONTENT_TYPE'])) {
                 throw new InvalidRequestMethodException("SignUp request must be 'multipart/form-data'.");
             }
-            $request = new PostProfileRequest($_POST, $_FILES);
-            if ($request->getAction() === 'edit') {
-                return $this->createPendingData($request);
-            } else if ($request->getAction() === 'delete') {
-                return $this->deleteProfile();
-            }
+            $request = new UpdateProfileRequest($_POST, $_FILES);
+            return $this->createPendingData($request);
         } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $isEmailValidation = strpos($_SERVER['REQUEST_URI'], 'validate_email') !== false;
             if ($isEmailValidation) {
@@ -46,8 +48,10 @@ class ProfileController implements ControllerInterface
             } else {
                 return $this->getProfileByUserId($request);
             }
+        } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            return $this->deleteProfile();
         } else {
-            throw new InvalidRequestMethodException("SignUp request must be 'POST', email verification request must be 'GET'.");
+            throw new InvalidRequestMethodException("Invalid Request Method.");
         }
     }
 
@@ -65,7 +69,7 @@ class ProfileController implements ControllerInterface
         return new JSONRenderer(200, ['profile' => $profile]);
     }
 
-    private function createPendingData(PostProfileRequest $request): JSONRenderer
+    private function createPendingData(UpdateProfileRequest $request): JSONRenderer
     {
         $pendingUser = $this->profileService->createPendingUser($request, SessionManager::get('user_id'));
         $url = $this->signupService->publishUserVerificationURL($pendingUser);
@@ -77,8 +81,10 @@ class ProfileController implements ControllerInterface
     {
         $this->signupService->validateEmail($request->getId());
         $user = $this->profileService->updateUserByPending($request->getId());
-        SessionManager::set('user_id', $user->getId());
-        SessionManager::set('user_name', $user->getName());
+        $this->authenticationService->setLoginDataInSession(
+            userId: $user->getId(),
+            userName: $user->getName()
+        );
         return new JSONRenderer(200, []);
     }
 
@@ -86,6 +92,7 @@ class ProfileController implements ControllerInterface
     {
         $userId = SessionManager::get('user_id');
         $this->profileService->deleteUser($userId);
+        $this->authenticationService->logout($userId);
         return new JSONRenderer(200, []);
     }
 }

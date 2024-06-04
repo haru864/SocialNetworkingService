@@ -7,18 +7,21 @@ use Database\DataAccess\Implementations\CareersDAOImpl;
 use Database\DataAccess\Implementations\EmailVerificationDAOImpl;
 use Database\DataAccess\Implementations\FollowsDAOImpl;
 use Database\DataAccess\Implementations\HobbiesDAOImpl;
+use Database\DataAccess\Implementations\MessagesDAOImpl;
 use Database\DataAccess\Implementations\PendingAddressesDAOImpl;
 use Database\DataAccess\Implementations\PendingCareersDAOImpl;
 use Database\DataAccess\Implementations\PendingHobbiesDAOImpl;
 use Database\DataAccess\Implementations\PendingUsersDAOImpl;
+use Database\DataAccess\Implementations\TweetsDAOImpl;
 use Database\DataAccess\Implementations\UsersDAOImpl;
 use Exceptions\InternalServerException;
+use Exceptions\InvalidMimeTypeException;
 use Exceptions\InvalidRequestParameterException;
 use Helpers\FileUtility;
 use Helpers\MailUtility;
 use Helpers\SessionManager;
 use Helpers\ValidationHelper;
-use Http\Request\PostProfileRequest;
+use Http\Request\UpdateProfileRequest;
 use Models\Career;
 use Models\Hobby;
 use Models\PendingAddress;
@@ -41,6 +44,8 @@ class ProfileService
     private PendingHobbiesDAOImpl $pendingHobbiesDAOImpl;
     private EmailVerificationDAOImpl $emailVerificationDAOImpl;
     private FollowsDAOImpl $followsDAOImpl;
+    private TweetsDAOImpl $tweetsDAOImpl;
+    private MessagesDAOImpl $messagesDAOImpl;
 
     public function __construct(
         usersDAOImpl $usersDAOImpl,
@@ -52,7 +57,9 @@ class ProfileService
         PendingCareersDAOImpl $pendingCareersDAOImpl,
         PendingHobbiesDAOImpl $pendingHobbiesDAOImpl,
         EmailVerificationDAOImpl $emailVerificationDAOImpl,
-        FollowsDAOImpl $followsDAOImpl
+        FollowsDAOImpl $followsDAOImpl,
+        TweetsDAOImpl $tweetsDAOImpl,
+        MessagesDAOImpl $messagesDAOImpl,
     ) {
         $this->usersDAOImpl = $usersDAOImpl;
         $this->addressesDAOImpl = $addressesDAOImpl;
@@ -64,9 +71,11 @@ class ProfileService
         $this->pendingHobbiesDAOImpl = $pendingHobbiesDAOImpl;
         $this->emailVerificationDAOImpl = $emailVerificationDAOImpl;
         $this->followsDAOImpl = $followsDAOImpl;
+        $this->tweetsDAOImpl = $tweetsDAOImpl;
+        $this->messagesDAOImpl = $messagesDAOImpl;
     }
 
-    public function createPendingUser(PostProfileRequest $request, int $userId): PendingUser
+    public function createPendingUser(UpdateProfileRequest $request, int $userId): PendingUser
     {
         $currentUser = $this->usersDAOImpl->getById($userId);
         if (is_null($currentUser)) {
@@ -285,8 +294,122 @@ class ProfileService
 
     public function deleteUser(int $userId): void
     {
+        $this->deleteProfileImageFile($userId);
+        $this->deleteTweetMediaFile($userId);
+        $this->deleteMessageMediaFile($userId);
         $this->usersDAOImpl->delete($userId);
-        // TODO ユーザーに紐づく画像ファイルを削除する必要がある
         return;
+    }
+
+    private function deleteProfileImageFile(int $useId): void
+    {
+        $user = $this->usersDAOImpl->getById($useId);
+        $imageFileName = $user->getProfileImage();
+        if (is_null($imageFileName)) {
+            return;
+        }
+        FileUtility::deleteImageWithThumbnail(
+            storeDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_UPLOAD'),
+            thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_PROFILE_THUMBNAIL'),
+            imageFileName: $imageFileName
+        );
+    }
+
+    private function deleteTweetMediaFile(int $userId): void
+    {
+        $limit = 100;
+        $offset = 0;
+        $hasMoreTweets = true;
+
+        while ($hasMoreTweets) {
+            $tweets = $this->tweetsDAOImpl->getByUserId(
+                userId: $userId,
+                limit: $limit,
+                offset: $offset
+            );
+            if (is_null($tweets)) {
+                return;
+            }
+
+            foreach ($tweets as $tweet) {
+                $mediaFileName = $tweet->getMediaFileName;
+                $mediaType = $tweet->getMediaType;
+                if (is_null($mediaFileName)) {
+                    continue;
+                }
+
+                $videoMimeTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+                $imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                $isImageFile = in_array($mediaType, $videoMimeTypes);
+                $isVideoFile = in_array($mediaType, $imageMimeTypes);
+
+                if ($isImageFile) {
+                    FileUtility::deleteImageWithThumbnail(
+                        storeDirPath: Settings::env('IMAGE_FILE_LOCATION_TWEET_UPLOAD'),
+                        thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_TWEET_THUMBNAIL'),
+                        imageFileName: $mediaFileName
+                    );
+                } else if ($isVideoFile) {
+                    FileUtility::deleteVideo(
+                        storeDirPath: Settings::env('VIDEO_FILE_LOCATION_TWEET'),
+                        videoFileName: $mediaFileName
+                    );
+                } else {
+                    throw new InvalidMimeTypeException("Invalid Media-Type: '{$mediaType}'");
+                }
+            }
+
+            $hasMoreTweets = count($tweets) === $limit;
+            $offset++;
+        }
+    }
+
+    private function deleteMessageMediaFile(int $userId): void
+    {
+        $limit = 100;
+        $offset = 0;
+        $hasMoreMessages = true;
+
+        while ($hasMoreMessages) {
+            $messages = $this->messagesDAOImpl->getMessagesBySenderId(
+                senderId: $userId,
+                limit: $limit,
+                offset: $offset
+            );
+            if (is_null($messages)) {
+                return;
+            }
+
+            foreach ($messages as $message) {
+                $mediaFileName = $message->getMediaFileName;
+                $mediaType = $message->getMediaType;
+                if (is_null($mediaFileName)) {
+                    continue;
+                }
+
+                $videoMimeTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+                $imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                $isImageFile = in_array($mediaType, $videoMimeTypes);
+                $isVideoFile = in_array($mediaType, $imageMimeTypes);
+
+                if ($isImageFile) {
+                    FileUtility::deleteImageWithThumbnail(
+                        storeDirPath: Settings::env('IMAGE_FILE_LOCATION_TWEET_UPLOAD'),
+                        thumbDirPath: Settings::env('IMAGE_FILE_LOCATION_TWEET_THUMBNAIL'),
+                        imageFileName: $mediaFileName
+                    );
+                } else if ($isVideoFile) {
+                    FileUtility::deleteVideo(
+                        storeDirPath: Settings::env('VIDEO_FILE_LOCATION_TWEET'),
+                        videoFileName: $mediaFileName
+                    );
+                } else {
+                    throw new InvalidMimeTypeException("Invalid Media-Type: '{$mediaType}'");
+                }
+            }
+
+            $hasMoreMessages = count($messages) === $limit;
+            $offset++;
+        }
     }
 }

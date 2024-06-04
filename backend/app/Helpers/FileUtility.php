@@ -53,11 +53,11 @@ class FileUtility
     ): void {
         $storedImageFilePath = $storeDirPath . DIRECTORY_SEPARATOR . $imageFileName;
         if (!file_exists($storedImageFilePath)) {
-            throw new FileNotFoundException($storedImageFilePath);
+            throw new FileNotFoundException("File Not Found. {$storedImageFilePath}");
         }
         $thumbnailFilePath = $thumbDirPath . DIRECTORY_SEPARATOR . $imageFileName;
         if (!file_exists($thumbnailFilePath)) {
-            throw new FileNotFoundException($thumbnailFilePath);
+            throw new FileNotFoundException("File Not Found. {$thumbnailFilePath}");
         }
         unlink($storedImageFilePath);
         unlink($thumbnailFilePath);
