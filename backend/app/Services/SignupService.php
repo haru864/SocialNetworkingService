@@ -95,22 +95,15 @@ class SignupService
             $pendingUserInTable = null;
             $pendingUserInTable = $this->pendingUsersDAOImpl->create($pendingUser);
 
-            if (
-                $request->getCountry() !== ''
-                || $request->getState() !== ''
-                || $request->getCity() !== ''
-                || $request->getTown() !== ''
-            ) {
-                $pendingAddress = new PendingAddress(
-                    id: null,
-                    pendingUserId: $pendingUserInTable->getId(),
-                    country: $request->getCountry(),
-                    state: $request->getState(),
-                    city: $request->getCity(),
-                    town: $request->getTown()
-                );
-                $this->pendingAddressesDAOImpl->create($pendingAddress);
-            }
+            $pendingAddress = new PendingAddress(
+                id: null,
+                pendingUserId: $pendingUserInTable->getId(),
+                country: $request->getCountry(),
+                state: $request->getState(),
+                city: $request->getCity(),
+                town: $request->getTown()
+            );
+            $this->pendingAddressesDAOImpl->create($pendingAddress);
 
             foreach ($request->getCareers() as $job) {
                 $pendingCareer = new PendingCareer(
