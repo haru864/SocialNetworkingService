@@ -69,12 +69,14 @@ const ChatHistory: React.FC = () => {
     }, [messages]);
 
     const initializeChatData = async (chatPartnerId: number) => {
+        setLoading(true);
         const chatInfo = await getChatInfo(chatPartnerId, page);
         const loginUserInfo = await getUserinfo(chatInfo.loginUser.id);
         const chatPartnerInfo = await getUserinfo(chatInfo.chatPartner.id);
         setLoginUser(loginUserInfo);
         setChatPartner(chatPartnerInfo);
         setMessages(chatInfo.messages);
+        setLoading(false);
     };
 
     // BUG 追加メッセージ取得時にスクロールが最上部で固定されてしまう

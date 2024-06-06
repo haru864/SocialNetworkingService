@@ -2,6 +2,7 @@
 
 namespace Models;
 
+use Exceptions\InvalidRequestParameterException;
 use Models\Interfaces\Model;
 use Models\Traits\GenericModel;
 
@@ -9,6 +10,7 @@ class Message implements Model
 {
     use GenericModel;
 
+    private int $MAX_MESSAGE_CHARS = 200;
     private ?int $id;
     private int $senderId;
     private int $recipientId;
@@ -26,6 +28,11 @@ class Message implements Model
         ?string $mediaType,
         string $sendDatetime
     ) {
+        if (mb_strlen($message < 1 || mb_strlen($message) > $this->MAX_MESSAGE_CHARS)) {
+            throw new InvalidRequestParameterException(
+                "Message must be at least 1 character and no more than {$this->MAX_MESSAGE_CHARS} characters"
+            );
+        }
         $this->id = $id;
         $this->senderId = $senderId;
         $this->recipientId = $recipientId;

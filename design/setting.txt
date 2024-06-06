@@ -11,4 +11,5 @@ SMTP_SERVER_HOST        SMTPサーバーのホスト名
 SMTP_SERVER_PORT        SMTPサーバーのポート番号
 SMTP_SERVER_USERNAME    SMTPサーバーへ接続する際のユーザー名(Gmailメールアドレス)
 SMTP_SERVER_PASSWORD    SMTPサーバーへ接続する際のパスワード(アプリパスワード)
-
+ENCRYPTION_CIPHER       'AES-256-CBC'
+ENCRYPTION_KEY          メッセージ暗号化に使う共通鍵（'openssl rand -base64 32'で生成）

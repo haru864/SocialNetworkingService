@@ -26,10 +26,6 @@ class MessageService
     public function createMessage(PostMessageRequest $request): Message
     {
         $currentDatetime = date('Y-m-d H:i:s');
-        $maxMsgChars = 200;
-        if (mb_strlen($request->getMessage()) < 1 || mb_strlen($request->getMessage()) > $maxMsgChars) {
-            throw new InvalidRequestParameterException("Message must be at least 1 character and no more than {$maxMsgChars} characters");
-        }
         if (is_null($request->getMedia())) {
             $mediaFileName = null;
             $mimeType = null;

@@ -6,6 +6,7 @@ use Database\DataAccess\Interfaces\MessagesDAO;
 use Database\DatabaseManager;
 use Exceptions\QueryFailedException;
 use Models\Message;
+use Settings\Settings;
 
 class MessagesDAOImpl implements MessagesDAO
 {
@@ -16,7 +17,7 @@ class MessagesDAOImpl implements MessagesDAO
             INSERT INTO messages (
                 sender_id,
                 recipient_id,
-                message,
+                encrypted_message,
                 media_file_name,
                 media_type,
                 send_datetime
@@ -31,7 +32,7 @@ class MessagesDAOImpl implements MessagesDAO
             [
                 $message->getSenderId(),
                 $message->getRecipientId(),
-                $message->getMessage(),
+                $this->encryptMessage($message->getMessage()),
                 $message->getMediaFileName(),
                 $message->getMediaType(),
                 $message->getSendDatetime()
@@ -139,11 +140,33 @@ class MessagesDAOImpl implements MessagesDAO
             id: $data['id'],
             senderId: $data['sender_id'],
             recipientId: $data['recipient_id'],
-            message: $data['message'],
+            message: $this->decryptMessage($data['encrypted_message']),
             mediaFileName: $data['media_file_name'],
             mediaType: $data['media_type'],
             sendDatetime: $data['send_datetime']
         );
         return $message;
+    }
+
+    private function encryptMessage(string $message): string
+    {
+        $cipher = Settings::env('ENCRYPTION_CIPHER');
+        $key = Settings::env('ENCRYPTION_KEY');
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher));
+        $encrypted_message = openssl_encrypt($message, $cipher, $key, 0, $iv);
+        $encrypted_message_with_iv = base64_encode($iv . $encrypted_message);
+        return $encrypted_message_with_iv;
+    }
+
+    private function decryptMessage(string $encrypted_message_with_iv): string
+    {
+        $cipher = Settings::env('ENCRYPTION_CIPHER');
+        $key = Settings::env('ENCRYPTION_KEY');
+        $encrypted_message_with_iv = base64_decode($encrypted_message_with_iv);
+        $iv_length = openssl_cipher_iv_length($cipher);
+        $iv = substr($encrypted_message_with_iv, 0, $iv_length);
+        $encrypted_message = substr($encrypted_message_with_iv, $iv_length);
+        $decrypted_message = openssl_decrypt($encrypted_message, $cipher, $key, 0, $iv);
+        return $decrypted_message;
     }
 }

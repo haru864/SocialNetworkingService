@@ -77,7 +77,7 @@ class CreateTables implements Database\SchemaMigration
                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
                 sender_id BIGINT NOT NULL,
                 recipient_id BIGINT NOT NULL,
-                message varchar(200) NOT NULL,
+                encrypted_message TEXT NOT NULL,
                 media_file_name VARCHAR(255),
                 media_type VARCHAR(255),
                 send_datetime DATETIME NOT NULL,
