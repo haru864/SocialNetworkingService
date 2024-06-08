@@ -28,7 +28,6 @@ export async function getChatInfo(chatPartnerId: number, page: number): Promise<
 
 export async function handleSendMessage(
     event: React.FormEvent<HTMLFormElement>,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     chatPartnerId: number
 ) {
     try {
@@ -36,12 +35,10 @@ export async function handleSendMessage(
         const data: FormData = new FormData(event.currentTarget);
         const message: string = data.get('message') as string;
         ValidationUtil.validateCharCount(message, "Message", 1, 200);
-        setLoading(true);
         const response = await fetch(`${process.env.API_DOMAIN}/api/messages/${chatPartnerId}`, {
             method: 'POST',
             body: data
         });
-        setLoading(false);
         if (!response.ok) {
             const responseData = await response.json();
             throw new Error(responseData["error_message"]);

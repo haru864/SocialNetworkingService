@@ -16,10 +16,12 @@ const ChatHistory: React.FC = () => {
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [page, setPage] = useState<number>(1);
+    const hasMoreMessagesRef = useRef<boolean>(true);
+
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const didInitialScroll = useRef(false);
     const listRef = useRef<HTMLUListElement>(null);
-    const [heightDifference, setHeightDifference] = useState(0);
+    const scrollHeightBeforeLoadRef = useRef<number>(0);
     const shouldScrollToBottom = useRef(false);
 
     const searchParams = useSearchParams();
@@ -40,7 +42,7 @@ const ChatHistory: React.FC = () => {
             const data = JSON.parse(event.data);
             const message = new Message(data);
             if (listRef.current) {
-                const isAtBottom = listRef.current.scrollHeight - listRef.current.scrollTop === listRef.current.clientHeight;
+                const isAtBottom = ((listRef.current.scrollHeight - listRef.current.scrollTop) === listRef.current.clientHeight);
                 shouldScrollToBottom.current = isAtBottom;
                 setMessages(prev => [...prev, message]);
             }
@@ -55,17 +57,28 @@ const ChatHistory: React.FC = () => {
     }, [chatPartner]);
 
     useEffect(() => {
-        if (messages.length > 0 && !didInitialScroll.current) {
+        const isInitialLoading = (messages.length > 0 && !didInitialScroll.current);
+        if (isInitialLoading) {
             scrollToBottom();
             didInitialScroll.current = true;
-        }
-        if (listRef.current && heightDifference > 0) {
-            listRef.current.scrollTop += heightDifference;
+            return;
         }
         if (listRef.current && shouldScrollToBottom.current) {
             scrollToBottom();
             shouldScrollToBottom.current = false;
+            return;
         }
+
+        const currentScrollHeight = listRef.current?.scrollHeight ?? 0;
+        console.log(scrollHeightBeforeLoadRef.current);
+        console.log(currentScrollHeight);
+        const newMessagesScrollHeight = currentScrollHeight - scrollHeightBeforeLoadRef.current;
+        if (listRef !== null && listRef.current !== null) {
+            listRef.current.scrollTop = newMessagesScrollHeight;
+        }
+
+
+
     }, [messages]);
 
     const initializeChatData = async (chatPartnerId: number) => {
@@ -79,25 +92,26 @@ const ChatHistory: React.FC = () => {
         setLoading(false);
     };
 
-    // BUG 追加メッセージ取得時にスクロールが最上部で固定されてしまう
     const loadMoreMessages = async (): Promise<void> => {
         if (chatPartner === null) {
             return;
         }
-        const oldScrollHeight = listRef.current?.scrollHeight ?? 0;
+        if (hasMoreMessagesRef.current === false) {
+            return;
+        }
         const chatInfo = await getChatInfo(chatPartner.id, page);
+        if (chatInfo.messages.length === 0) {
+            return;
+        }
         setMessages(prev => [...chatInfo.messages, ...prev]);
         setPage(page + 1);
-        const newScrollHeight = listRef.current?.scrollHeight ?? 0;
-        setHeightDifference(newScrollHeight - oldScrollHeight);
+        hasMoreMessagesRef.current = (chatInfo.messages.length === 20);
     };
 
     const handleScroll = async (e: React.UIEvent<HTMLUListElement>) => {
         if (e.currentTarget.scrollTop === 0) {
+            scrollHeightBeforeLoadRef.current = listRef.current?.scrollHeight ?? 0;
             await loadMoreMessages();
-            if (listRef.current) {
-                listRef.current.scrollTop += heightDifference;
-            }
         }
     };
 
@@ -122,7 +136,7 @@ const ChatHistory: React.FC = () => {
                     ))}
                     <div ref={messagesEndRef} />
                 </List>
-                <Box component="form" onSubmit={(e) => handleSendMessage(e, setLoading, chatPartner.id)} sx={{ padding: 2 }}>
+                <Box component="form" onSubmit={(e) => handleSendMessage(e, chatPartner.id)} sx={{ padding: 2 }}>
                     <TextField
                         fullWidth
                         name="message"
