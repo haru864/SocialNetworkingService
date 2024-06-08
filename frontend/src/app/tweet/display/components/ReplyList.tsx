@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
@@ -7,7 +7,6 @@ import {
 import TweetCard from '@/app/common/TweetCard';
 import { getReplyTweetIds } from './ReplyListFunctions';
 
-// BUG リロードしないとリプライが表示されない場合がある
 const ReplyList: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isValidQuery, setIsValidQuery] = useState<boolean>(true);
@@ -15,10 +14,11 @@ const ReplyList: React.FC = () => {
 
     const [replyIds, setReplyIds] = useState<number[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
-    const [page, setPage] = useState<number>(1);
+    const pageRef = useRef<number>(1);
     const searchParams = useSearchParams();
 
     useEffect(() => {
+        pageRef.current = 1;
         const idString = searchParams.get('id');
         const idNumber = idString ? Number(idString) : null;
         if (idNumber === null || isNaN(idNumber)) {
@@ -37,7 +37,7 @@ const ReplyList: React.FC = () => {
     const loadTweets = async () => {
         setIsLoading(true);
         setReplyIds([]);
-        setPage(1);
+        pageRef.current = 1;
         setHasMore(true);
         await loadMoreReplies();
         setIsLoading(false);
@@ -47,9 +47,9 @@ const ReplyList: React.FC = () => {
         if (currentTweetId === null) {
             return;
         }
-        const currentReplies = await getReplyTweetIds(currentTweetId, page);
+        const currentReplies = await getReplyTweetIds(currentTweetId, pageRef.current);
         setReplyIds(prev => [...prev, ...currentReplies]);
-        setPage(page + 1);
+        pageRef.current++;
         setHasMore(currentReplies.length === 20);
     };
 
