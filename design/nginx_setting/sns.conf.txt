@@ -1,0 +1,49 @@
+server {
+    client_max_body_size 10M;
+
+    listen 80;
+    server_name sns.test.com;
+    root /var/www/SocialNetworkingService/backend/public;
+
+    index php/index.php;
+
+    location = / {
+        return 302 http://sns.test.com/nextjs/login.html;
+    }
+
+    location = /auth {
+        internal;
+        proxy_pass http://sns.test.com/api/check_session;
+    }
+
+    location ~ ^/(images|videos)/ {
+        auth_request /auth;
+        auth_request_set $auth_status $upstream_status;
+        if ($auth_status = 401) {
+            return 401 "Unauthorized";
+        }
+        try_files $uri $uri/ =404;
+    }
+
+    # location = /login {
+    #     try_files /nextjs/login.html =404;
+    # }
+
+    location ~ ^/(login|signup|home|profile)$ {
+        set $nextjs_page "";
+        if ($uri ~ ^/(login|signup|home|profile)$) {
+            set $nextjs_page /nextjs$uri.html;
+        }
+        try_files $nextjs_page =404;
+    }
+
+    location ~ ^/api/ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME /var/www/SocialNetworkingService/backend/public/php/index.php;
+        include fastcgi_params;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

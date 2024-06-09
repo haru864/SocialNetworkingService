@@ -171,7 +171,6 @@ $URL_DIR_PATTERN_NOTIFICATIONS_CONFIRM = '/^\/api\/notifications\/confirm$/';
 $URL_DIR_PATTERN_SEARCH_USERS = '/^\/api\/search\/users$/';
 $URL_DIR_PATTERN_SEARCH_TWEETS = '/^\/api\/search\/tweets$/';
 
-// TODO Nginxのauth_requestモジュールでリクエストを認証用PHPスクリプトに送り、メディアファイルアクセスを許可または拒否する
 return [
     $URL_DIR_PATTERN_CHECK_SESSION => [
         'controller' => $sessionCheckController,
