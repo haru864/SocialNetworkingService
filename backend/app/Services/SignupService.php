@@ -226,7 +226,7 @@ class SignupService
         MailUtility::sendEmail(
             recipientEmail: $pendingUser->getEmail(),
             recipientName: $pendingUser->getName(),
-            subject: 'Sign-Up Email Verification',
+            subject: '[SNS] Sign-Up Email Verification',
             htmlBody: $htmlBody,
             textBody: $textBody
         );

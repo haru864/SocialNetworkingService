@@ -241,7 +241,7 @@ class ProfileService
         MailUtility::sendEmail(
             recipientEmail: $pendingUser->getEmail(),
             recipientName: $pendingUser->getName(),
-            subject: 'Profile Update Email Verification',
+            subject: '[SNS] Profile Update Email Verification',
             htmlBody: $htmlBody,
             textBody: $textBody
         );

@@ -130,7 +130,15 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                         )}
                         <Link href={`/tweet/display?id=${tweet.id}`}>
                             <CardContent>
-                                <Typography variant="h5" component="div">
+                                <Typography
+                                    variant="h5"
+                                    component="div"
+                                    style={{
+                                        wordWrap: 'break-word',
+                                        whiteSpace: 'pre-wrap',
+                                        overflowWrap: 'break-word'
+                                    }}
+                                >
                                     {tweet.message}
                                 </Typography>
                             </CardContent>

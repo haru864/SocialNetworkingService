@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Grid } from '@mui/material';
-import { Tweet } from '@/app/common/Tweet';
 import TweetCard from '@/app/common/TweetCard';
 
 async function getTweetIds(userId: number, page: number): Promise<number[]> {
