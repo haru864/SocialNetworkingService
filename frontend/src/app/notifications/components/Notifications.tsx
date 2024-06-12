@@ -12,10 +12,12 @@ const Notifications: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         loadNotifications();
         confirmNotifications();
-        getNotificationInRealTime();
+        const cleanup = getNotificationInRealTime();
         setLoading(false);
+        return cleanup;
     }, []);
 
     const loadNotifications = async () => {
@@ -63,7 +65,7 @@ const Notifications: React.FC = () => {
             >
                 <Grid container spacing={2}>
                     {notificationDTOs.map(notificationDTO => (
-                        <NotificationCard notificationDTO={notificationDTO} />
+                        <NotificationCard key={notificationDTO.id} notificationDTO={notificationDTO} />
                     ))}
                 </Grid>
             </InfiniteScroll>

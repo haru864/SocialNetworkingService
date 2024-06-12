@@ -89,18 +89,20 @@ const TweetCard: React.FC<TweetCardProps> = ({ tweetId }) => {
                             <Link href={`/userinfo?id=${userInfo.id}`}>
                                 <CardContent sx={{ padding: 1 }}>
                                     <Grid container alignItems="center" spacing={2}>
-                                        <Grid item>
-                                            <CardMedia
-                                                component="img"
-                                                image={userInfo.getThumbnailUrl()}
-                                                alt="profile image"
-                                                sx={{
-                                                    height: 70,
-                                                    width: 1,
-                                                    objectFit: 'contain'
-                                                }}
-                                            />
-                                        </Grid>
+                                        {userInfo.getThumbnailUrl() && (
+                                            <Grid item>
+                                                <CardMedia
+                                                    component="img"
+                                                    image={userInfo.getThumbnailUrl()}
+                                                    alt="profile image"
+                                                    sx={{
+                                                        height: 70,
+                                                        width: 1,
+                                                        objectFit: 'contain'
+                                                    }}
+                                                />
+                                            </Grid>
+                                        )}
                                         <Grid item>
                                             <Typography variant="h4" color="text.primary">
                                                 {userInfo.username}

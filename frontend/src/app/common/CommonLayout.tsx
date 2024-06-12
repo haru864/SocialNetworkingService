@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -48,20 +48,23 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
     const [isClosing, setIsClosing] = React.useState(false);
     const [newNotification, setNewNotification] = React.useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const eventSourceRef = useRef<EventSource | null>(null);
 
     useEffect(() => {
-        (async () => {
+        const fetchData = async () => {
             const result = await hasUnconfirmedNotifications();
             setNewNotification(result);
-        })();
-        checkNotificationInRealTime();
+        };
+        fetchData();
+        const cleanup = checkNotificationInRealTime();
+        return cleanup;
     }, []);
 
     const checkNotificationInRealTime = () => {
         const eventSource = new EventSource(`${process.env.API_DOMAIN}/api/live/notifications`);
         eventSource.onmessage = (event: MessageEvent) => {
             const data = JSON.parse(event.data);
-            const notificationDTO = new NotificationDTO(data);
+            new NotificationDTO(data);
             setNewNotification(true);
         };
         eventSource.onerror = (error) => {

@@ -3,7 +3,7 @@ import { Box, CircularProgress } from '@mui/material';
 import useSessionCheck from './useSessionCheck';
 
 const withSessionCheck = (WrappedComponent: React.ComponentType) => {
-    return (props: any) => {
+    const ComponentWithSessionCheck = (props: any) => {
         const { isLoading, isAuthenticated } = useSessionCheck();
 
         if (isLoading) {
@@ -20,6 +20,8 @@ const withSessionCheck = (WrappedComponent: React.ComponentType) => {
 
         return <WrappedComponent {...props} />;
     };
+    ComponentWithSessionCheck.displayName = `withSessionCheck`;
+    return ComponentWithSessionCheck;
 };
 
 export default withSessionCheck;
