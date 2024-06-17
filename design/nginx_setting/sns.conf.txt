@@ -7,8 +7,8 @@ server {
 
     index php/index.php;
 
-    location = / {
-        return 302 http://sns.test.com/nextjs/login.html;
+    location / {
+        proxy_pass http://localhost:3000;
     }
 
     location = /auth {
@@ -25,25 +25,25 @@ server {
         try_files $uri $uri/ =404;
     }
 
-    # location = /login {
-    #     try_files /nextjs/login.html =404;
-    # }
-
-    location ~ ^/(login|signup|home|profile)$ {
-        set $nextjs_page "";
-        if ($uri ~ ^/(login|signup|home|profile)$) {
-            set $nextjs_page /nextjs$uri.html;
-        }
-        try_files $nextjs_page =404;
-    }
-
     location ~ ^/api/ {
         fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
         fastcgi_param SCRIPT_FILENAME /var/www/SocialNetworkingService/backend/public/php/index.php;
         include fastcgi_params;
     }
 
-    location / {
-        try_files $uri $uri/ =404;
+    location ~ ^/api/live/(notifications|messages/([1-9][0-9]*))$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME /var/www/SocialNetworkingService/backend/public/php/index.php;
+        include fastcgi_params;
+
+        # SSEに必要な設定
+        proxy_buffering off;  # バッファリングを無効化
+        proxy_cache off;  # キャッシュを無効化
+        proxy_read_timeout 60m;  # タイムアウトを長めに設定
+        proxy_send_timeout 60m;  # タイムアウトを長めに設定
+        send_timeout 60m;  # タイムアウトを長めに設定
+
+        add_header Cache-Control no-cache;  # キャッシュ制御ヘッダーを追加
+        add_header Content-Type text/event-stream;  # Content-Type ヘッダーを追加
     }
 }

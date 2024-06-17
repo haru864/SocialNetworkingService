@@ -33,6 +33,7 @@ async function handleSubmit(
         };
         setLoading(true);
         const response = await fetch(`${process.env.API_DOMAIN}/api/login`, {
+            credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

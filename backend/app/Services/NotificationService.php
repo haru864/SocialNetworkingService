@@ -8,11 +8,6 @@ use Database\DataAccess\Implementations\MessageNotificationDAOImpl;
 use Database\DataAccess\Implementations\NotificationDAOImpl;
 use Database\DataAccess\Implementations\ReplyNotificationDAOImpl;
 use Database\DataAccess\Implementations\RetweetNotificationDAOImpl;
-use Models\FollowNotification;
-use Models\LikeNotification;
-use Models\MessageNotification;
-use Models\ReplyNotification;
-use Models\RetweetNotification;
 
 class NotificationService
 {

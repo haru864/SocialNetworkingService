@@ -230,6 +230,7 @@ class LiveNotificationService
     {
         header('Content-Type: text/event-stream');
         header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
         $allowedOrigin = Settings::env('ACCESS_CONTROL_ALLOW_ORIGIN');
         $allowedMethods = 'GET, POST, DELETE';
         $allowedHeaders = 'Content-Type';

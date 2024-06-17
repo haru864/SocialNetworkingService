@@ -48,7 +48,6 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
     const [isClosing, setIsClosing] = React.useState(false);
     const [newNotification, setNewNotification] = React.useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const eventSourceRef = useRef<EventSource | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {

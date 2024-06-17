@@ -37,6 +37,9 @@ const ChatHistory: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        if (chatPartner === null || chatPartner === undefined) {
+            return;
+        }
         const eventSource = new EventSource(`${process.env.API_DOMAIN}/api/live/messages/${chatPartner?.id}`);
         eventSource.onmessage = (event: MessageEvent) => {
             const data = JSON.parse(event.data);
