@@ -3,8 +3,6 @@
 const apiDomain = 'http://sns.test.com';
 
 const nextConfig = {
-    // output: 'export',
-    // basePath: '/nextjs',
     env: {
         FRONT_DOMAIN: 'http://sns.test.com',
         // FRONT_DOMAIN: 'http://localhost:3000',

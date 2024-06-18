@@ -24,6 +24,7 @@ use Models\ReplyNotification;
 use Models\RetweetNotification;
 use Models\Tweet;
 
+// node.jsで代替
 class LiveNotificationService
 {
     private \Predis\Client $redis;

@@ -9,6 +9,7 @@ use Settings\Settings;
 use React\EventLoop\Loop;
 use Clue\React\Redis\Factory as RedisFactory;
 
+// node.jsで代替
 class LiveMessageService
 {
     private $redis;

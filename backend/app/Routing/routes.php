@@ -164,9 +164,7 @@ $URL_DIR_PATTERN_FOLLOWS = '/^\/api\/follows\/(follower|followee|follow)$/';
 $URL_DIR_PATTERN_PROFILE = '/^\/api\/profile$/';
 $URL_DIR_PATTERN_VALIDATE_UPDATE_EMAIL = '/^\/api\/profile\/validate_email$/';
 $URL_DIR_PATTERN_MESSAGES = '/^\/api\/messages(\/([1-9][0-9]*))??$/';
-$URL_DIR_PATTERN_MESSAGES_LIVE = '/^\/api\/live\/messages\/([1-9][0-9]*)$/';
 $URL_DIR_PATTERN_NOTIFICATIONS = '/^\/api\/notifications$/';
-$URL_DIR_PATTERN_NOTIFICATIONS_LIVE = '/^\/api\/live\/notifications$/';
 $URL_DIR_PATTERN_NOTIFICATIONS_CONFIRM = '/^\/api\/notifications\/confirm$/';
 $URL_DIR_PATTERN_SEARCH_USERS = '/^\/api\/search\/users$/';
 $URL_DIR_PATTERN_SEARCH_TWEETS = '/^\/api\/search\/tweets$/';
@@ -228,16 +226,8 @@ return [
         'controller' => $messageController,
         'middleware' => new AuthMiddleware($authenticationService)
     ],
-    $URL_DIR_PATTERN_MESSAGES_LIVE => [
-        'controller' => $liveMessageController,
-        'middleware' => new AuthMiddleware($authenticationService)
-    ],
     $URL_DIR_PATTERN_NOTIFICATIONS => [
         'controller' => $notificationController,
-        'middleware' => new AuthMiddleware($authenticationService)
-    ],
-    $URL_DIR_PATTERN_NOTIFICATIONS_LIVE => [
-        'controller' => $liveNotificationController,
         'middleware' => new AuthMiddleware($authenticationService)
     ],
     $URL_DIR_PATTERN_NOTIFICATIONS_CONFIRM => [

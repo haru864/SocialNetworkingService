@@ -13,3 +13,9 @@ SMTP_SERVER_USERNAME    SMTPサーバーへ接続する際のユーザー名(Gma
 SMTP_SERVER_PASSWORD    SMTPサーバーへ接続する際のパスワード(アプリパスワード)
 ENCRYPTION_CIPHER       'AES-256-CBC'
 ENCRYPTION_KEY          メッセージ暗号化に使う共通鍵（'openssl rand -base64 32'で生成）
+
+# Next.jsサーバーの起動
+npm run start
+
+# Node.jsサーバーの起動
+PORT=4001 node dist/index.js
