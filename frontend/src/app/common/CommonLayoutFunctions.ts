@@ -52,3 +52,22 @@ export async function hasUnconfirmedNotifications(): Promise<boolean> {
     const newestNotificationDTO = recentNotificationDTOs[0];
     return !newestNotificationDTO.isConfirmed;
 }
+
+export async function getLoginUserId(): Promise<number> {
+    try {
+        const response = await fetch(`${process.env.API_DOMAIN}/api/check_session`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        if (response.status !== 200) {
+            window.location.href = `/error/invalid_session`;
+            throw new Error('Invalid session');
+        }
+        const respData = await response.json();
+        return respData['user_id'] as number;
+    } catch (error: any) {
+        console.error(error);
+        alert('An error occurred while fetching the login user ID');
+        throw error;
+    }
+};

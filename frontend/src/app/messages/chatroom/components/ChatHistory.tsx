@@ -40,7 +40,7 @@ const ChatHistory: React.FC = () => {
         if (chatPartner === null || chatPartner === undefined) {
             return;
         }
-        const eventSource = new EventSource(`${process.env.API_DOMAIN}/api/live/messages/${chatPartner?.id}`);
+        const eventSource = new EventSource(`${process.env.SSE_MESSAGE_URL}?login_user_id=${loginUser?.id}&recipient_user_id=${chatPartner?.id}`);
         eventSource.onmessage = (event: MessageEvent) => {
             const data = JSON.parse(event.data);
             const message = new Message(data);

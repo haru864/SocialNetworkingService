@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Controllers\Interface\ControllerInterface;
+use Helpers\SessionManager;
 use Render\JSONRenderer;
 
 class SessionCheckController implements ControllerInterface
@@ -13,6 +14,7 @@ class SessionCheckController implements ControllerInterface
 
     public function handleRequest(): JSONRenderer
     {
-        return new JSONRenderer(200, []);
+        $userId = SessionManager::get('user_id');
+        return new JSONRenderer(200, ['user_id' => $userId]);
     }
 }

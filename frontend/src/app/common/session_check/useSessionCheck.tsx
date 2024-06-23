@@ -27,7 +27,6 @@ const useSessionCheck = () => {
                 setIsLoading(false);
             }
         };
-
         checkSession();
     }, []);
 

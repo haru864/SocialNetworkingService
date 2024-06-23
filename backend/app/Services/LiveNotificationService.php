@@ -15,6 +15,7 @@ use Database\DataAccess\Implementations\ReplyNotificationDAOImpl;
 use Database\DataAccess\Implementations\RetweetNotificationDAOImpl;
 use Database\DataAccess\Implementations\TweetsDAOImpl;
 use Database\DataTransfer\NotificationDTO;
+use Exception;
 use Models\Follow;
 use Models\FollowNotification;
 use Models\Like;
@@ -24,7 +25,6 @@ use Models\ReplyNotification;
 use Models\RetweetNotification;
 use Models\Tweet;
 
-// node.jsで代替
 class LiveNotificationService
 {
     private \Predis\Client $redis;
@@ -57,48 +57,75 @@ class LiveNotificationService
         $this->tweetsDAOImpl = $tweetsDAOImpl;
     }
 
-    public function streamNotification(): void
+    // TODO 削除する
+    // public function streamNotification(): void
+    // {
+    //     $loginUserId = SessionManager::get('user_id');
+    //     $channel = RedisManager::getNotificationChannel($loginUserId);
+
+    //     $this->setHeader();
+    //     set_time_limit(0);
+
+    //     $messages = [];
+
+    //     $loop = Loop::get();
+
+    //     $redisFactory = new RedisFactory($loop);
+    //     $redis = $redisFactory->createLazyClient('redis://' . Settings::env('REDIS_SERVER_ADDRESS') . ':' . Settings::env('REDIS_SERVER_PORT'));
+
+    //     $redis->subscribe($channel);
+
+    //     $redis->on('message', function ($channel, $message) use (&$messages) {
+    //         $messages[] = $message;
+    //     });
+
+    //     $last_heartbeat = time();
+
+    //     $loop->addPeriodicTimer(0.5, function () use (&$last_heartbeat, &$messages) {
+    //         $HEARTBEAT_PERIOD_SECONDS = 10;
+    //         if (time() - $last_heartbeat >= $HEARTBEAT_PERIOD_SECONDS) {
+    //             echo ": heartbeat\n\n";
+    //             ob_flush();
+    //             flush();
+    //             $last_heartbeat = time();
+    //         }
+    //         while (!empty($messages)) {
+    //             $message = array_shift($messages);
+    //             echo "data: {$message}\n\n";
+    //             ob_flush();
+    //             flush();
+    //         }
+    //         if (connection_aborted()) {
+    //             exit();
+    //         }
+    //     });
+    //     $loop->run();
+    // }
+
+    private function postNotificationToSseEndpoint(NotificationDTO $notificationDTO)
     {
-        $loginUserId = SessionManager::get('user_id');
-        $channel = RedisManager::getNotificationChannel($loginUserId);
+        $url = Settings::env('SSE_NOTIFICATION_URL');
 
-        $this->setHeader();
-        set_time_limit(0);
+        $data = $notificationDTO->toArray();
+        $data_json = json_encode($data);
 
-        $messages = [];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_json)
+        ));
+        $response = curl_exec($ch);
 
-        $loop = Loop::get();
+        if (curl_errno($ch)) {
+            $errMsg = 'SSE Post Error: ' . curl_error($ch);
+            throw new \Exception($errMsg);
+        }
 
-        $redisFactory = new RedisFactory($loop);
-        $redis = $redisFactory->createLazyClient('redis://' . Settings::env('REDIS_SERVER_ADDRESS') . ':' . Settings::env('REDIS_SERVER_PORT'));
-
-        $redis->subscribe($channel);
-
-        $redis->on('message', function ($channel, $message) use (&$messages) {
-            $messages[] = $message;
-        });
-
-        $last_heartbeat = time();
-
-        $loop->addPeriodicTimer(0.5, function () use (&$last_heartbeat, &$messages) {
-            $HEARTBEAT_PERIOD_SECONDS = 10;
-            if (time() - $last_heartbeat >= $HEARTBEAT_PERIOD_SECONDS) {
-                echo ": heartbeat\n\n";
-                ob_flush();
-                flush();
-                $last_heartbeat = time();
-            }
-            while (!empty($messages)) {
-                $message = array_shift($messages);
-                echo "data: {$message}\n\n";
-                ob_flush();
-                flush();
-            }
-            if (connection_aborted()) {
-                exit();
-            }
-        });
-        $loop->run();
+        curl_close($ch);
     }
 
     public function publishLikeNotification(Like $like): void
@@ -115,7 +142,7 @@ class LiveNotificationService
         );
         $likeNotificationInTable = $this->likeNotificationDAOImpl->create($likeNotification);
 
-        $channel = RedisManager::getNotificationChannel($tweetUserId);
+        // $channel = RedisManager::getNotificationChannel($tweetUserId);
         $notificationDTO = new NotificationDTO(
             notificationType: 'like',
             id: $likeNotificationInTable->getId(),
@@ -124,7 +151,8 @@ class LiveNotificationService
             isConfirmed: $likeNotificationInTable->getIsConfirmed(),
             createdAt: $likeNotificationInTable->getCreatedAt()
         );
-        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        // $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        $this->postNotificationToSseEndpoint($notificationDTO);
     }
 
     public function publishReplyNotification(Tweet $replyTweet): void
@@ -141,7 +169,7 @@ class LiveNotificationService
         );
         $replyNotificationInTable = $this->replyNotificationDAOImpl->create($replyNotification);
 
-        $channel = RedisManager::getNotificationChannel($tweetUserId);
+        // $channel = RedisManager::getNotificationChannel($tweetUserId);
         $notificationDTO = new NotificationDTO(
             notificationType: 'reply',
             id: $replyNotificationInTable->getId(),
@@ -150,7 +178,8 @@ class LiveNotificationService
             isConfirmed: $replyNotificationInTable->getIsConfirmed(),
             createdAt: $replyNotificationInTable->getCreatedAt()
         );
-        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        // $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        $this->postNotificationToSseEndpoint($notificationDTO);
     }
 
     public function publishRetweetNotification(Tweet $retweet): void
@@ -167,7 +196,7 @@ class LiveNotificationService
         );
         $retweetNotificationInTable = $this->retweetNotificationDAOImpl->create($retweetNotification);
 
-        $channel = RedisManager::getNotificationChannel($tweetUserId);
+        // $channel = RedisManager::getNotificationChannel($tweetUserId);
         $notificationDTO = new NotificationDTO(
             notificationType: 'retweet',
             id: $retweetNotificationInTable->getId(),
@@ -176,7 +205,8 @@ class LiveNotificationService
             isConfirmed: $retweetNotificationInTable->getIsConfirmed(),
             createdAt: $retweetNotificationInTable->getCreatedAt()
         );
-        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        // $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        $this->postNotificationToSseEndpoint($notificationDTO);
     }
 
     public function publishFollowNotification(Follow $follow): void
@@ -191,7 +221,7 @@ class LiveNotificationService
         );
         $followNotificationInTable = $this->followNotificationDAOImpl->create($followNotification);
 
-        $channel = RedisManager::getNotificationChannel($followeeId);
+        // $channel = RedisManager::getNotificationChannel($followeeId);
         $notificationDTO = new NotificationDTO(
             notificationType: 'follow',
             id: $followNotificationInTable->getId(),
@@ -200,7 +230,8 @@ class LiveNotificationService
             isConfirmed: $followNotificationInTable->getIsConfirmed(),
             createdAt: $followNotificationInTable->getCreatedAt()
         );
-        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        // $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        $this->postNotificationToSseEndpoint($notificationDTO);
     }
 
     public function publishMessageNotification(Message $message): void
@@ -215,7 +246,7 @@ class LiveNotificationService
         );
         $messageNotificationInTable = $this->messageNotificationDAOImpl->create($messageNotification);
 
-        $channel = RedisManager::getNotificationChannel($recipientUserid);
+        // $channel = RedisManager::getNotificationChannel($recipientUserid);
         $notificationDTO = new NotificationDTO(
             notificationType: 'message',
             id: $messageNotificationInTable->getId(),
@@ -224,21 +255,23 @@ class LiveNotificationService
             isConfirmed: $messageNotificationInTable->getIsConfirmed(),
             createdAt: $messageNotificationInTable->getCreatedAt()
         );
-        $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        // $this->redis->publish($channel, json_encode($notificationDTO->toArray()));
+        $this->postNotificationToSseEndpoint($notificationDTO);
     }
 
-    private function setHeader(): void
-    {
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
-        header('Connection: keep-alive');
-        $allowedOrigin = Settings::env('ACCESS_CONTROL_ALLOW_ORIGIN');
-        $allowedMethods = 'GET, POST, DELETE';
-        $allowedHeaders = 'Content-Type';
-        header('Access-Control-Allow-Origin: ' . $allowedOrigin);
-        header('Access-Control-Allow-Methods: ' . $allowedMethods);
-        header('Access-Control-Allow-Headers: ' . $allowedHeaders);
-        header('Access-Control-Allow-Credentials: true');
-        header('X-Accel-Buffering: no');
-    }
+    // TODO 削除する
+    // private function setHeader(): void
+    // {
+    //     header('Content-Type: text/event-stream');
+    //     header('Cache-Control: no-cache');
+    //     header('Connection: keep-alive');
+    //     $allowedOrigin = Settings::env('ACCESS_CONTROL_ALLOW_ORIGIN');
+    //     $allowedMethods = 'GET, POST, DELETE';
+    //     $allowedHeaders = 'Content-Type';
+    //     header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+    //     header('Access-Control-Allow-Methods: ' . $allowedMethods);
+    //     header('Access-Control-Allow-Headers: ' . $allowedHeaders);
+    //     header('Access-Control-Allow-Credentials: true');
+    //     header('X-Accel-Buffering: no');
+    // }
 }

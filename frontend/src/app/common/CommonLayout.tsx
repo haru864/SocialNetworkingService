@@ -26,7 +26,10 @@ import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import Copyright from './copyright';
 import Badge from '@mui/material/Badge';
-import { Search, SearchIconWrapper, StyledInputBase, hasUnconfirmedNotifications } from './CommonLayoutFunctions';
+import {
+    Search, SearchIconWrapper, StyledInputBase,
+    hasUnconfirmedNotifications, getLoginUserId
+} from './CommonLayoutFunctions';
 import { NotificationDTO } from '../notifications/components/NotificationDTO';
 
 const drawerWidth = 230;
@@ -48,19 +51,28 @@ const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
     const [isClosing, setIsClosing] = React.useState(false);
     const [newNotification, setNewNotification] = React.useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [loginUserId, setLoginUserId] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             const result = await hasUnconfirmedNotifications();
             setNewNotification(result);
+            const userId = await getLoginUserId();
+            setLoginUserId(userId);
         };
         fetchData();
-        const cleanup = checkNotificationInRealTime();
-        return cleanup;
     }, []);
 
-    const checkNotificationInRealTime = () => {
-        const eventSource = new EventSource(`${process.env.API_DOMAIN}/api/live/notifications`);
+    useEffect(() => {
+        if (loginUserId === null) {
+            return;
+        }
+        const cleanup = checkNotificationInRealTime(loginUserId);
+        return cleanup;
+    }, [loginUserId]);
+
+    const checkNotificationInRealTime = (userId: number) => {
+        const eventSource = new EventSource(`${process.env.SSE_NOTIFICATION_URL}?user_id=${userId}`);
         eventSource.onmessage = (event: MessageEvent) => {
             const data = JSON.parse(event.data);
             new NotificationDTO(data);

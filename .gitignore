@@ -10,3 +10,4 @@ frontend/.next/
 frontend/out/
 
 sse/node_modules
+sse/dist

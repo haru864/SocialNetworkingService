@@ -1,79 +1,34 @@
 import express from 'express';
-import { createClient } from 'redis';
-import { Request, Response } from 'express';
+import dotenv from 'dotenv';
+import sseRoutes from './routes/sseRoutes';
+import { RedisService } from './services/RedisService';
+import { SseController } from './controllers/SseController';
+import { Logger } from './utils/Logger';
+import { errorHandler } from './middlewares/errorHandler';
 
-// 環境変数からポート番号を取得、デフォルトは3000
-const PORT = process.env.PORT || 3000;
+dotenv.config();
+const PORT = process.env.NODE_JS_PORT || 3000;
 
 const app = express();
-const redisClient = createClient();
-
-redisClient.on('error', (err) => {
-  console.error('Redis client error:', err);
-});
-
-let clients: { id: number, res: Response }[] = [];
+const redisService = new RedisService();
+const sseController = new SseController(redisService);
+const logger: Logger = Logger.getInstance();
 
 app.use(express.json());
+app.use(sseRoutes);
+app.use(errorHandler)
 
-app.get('/sse/notifications', (req: Request, res: Response) => {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.flushHeaders(); // flush the headers to establish SSE with client
+const startServer = async () => {
+  await redisService.connect();
+  // await redisService.subscribeToChannel('notifications', sseController.sendMessageToClients.bind(sseController));
+  // await redisService.subscribeToChannel('messages', sseController.sendMessageToClients.bind(sseController));
+  // setInterval(() => sseController.sendHeartbeat(), 10000);
 
-  const clientId = Date.now();
-
-  clients.push({
-    id: clientId,
-    res
-  });
-
-  req.on('close', () => {
-    console.log(`${clientId} Connection closed`);
-    clients = clients.filter(client => client.id !== clientId);
-  });
-});
-
-app.get('/sse/message', (req: Request, res: Response) => {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.flushHeaders(); // flush the headers to establish SSE with client
-
-  const clientId = Date.now();
-
-  clients.push({
-    id: clientId,
-    res
-  });
-
-  req.on('close', () => {
-    console.log(`${clientId} Connection closed`);
-    clients = clients.filter(client => client.id !== clientId);
-  });
-});
-
-// Redis subscribe to a channel
-const subscribeToRedis = () => {
-  const subscriber = redisClient.duplicate();
-  subscriber.connect();
-  subscriber.subscribe('notifications', (message) => {
-    console.log('Message received from notifications channel:', message);
-    clients.forEach(client => client.res.write(`data: ${message}\n\n`));
-  });
-  subscriber.subscribe('messages', (message) => {
-    console.log('Message received from messages channel:', message);
-    clients.forEach(client => client.res.write(`data: ${message}\n\n`));
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
   });
 };
 
-// Heartbeat to keep connections alive
-setInterval(() => {
-  clients.forEach(client => client.res.write(`data: heartbeat\n\n`));
-}, 30000); // send heartbeat every 30 seconds
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-  redisClient.connect().then(subscribeToRedis);
+startServer().catch((err) => {
+  logger.logError('Failed to start server:' + err);
 });
