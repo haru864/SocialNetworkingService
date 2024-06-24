@@ -9,7 +9,7 @@ import { PostMessageRequest } from '../http/request/PostMessageRequest';
 
 export class SseController {
 
-    private requestClient: RequestClient | null = null;
+    private requestClients: RequestClient[] = [];
     private logger: Logger = Logger.getInstance();
     private redisService: RedisService;
 
@@ -35,10 +35,7 @@ export class SseController {
         try {
             const requestObj = new GetMessageRequest(req);
             this.setupSseConnection(requestObj.loginUserId, req, res, '/sse/message');
-            const channel = this.redisService.getMessageChannel(
-                requestObj.loginUserId,
-                requestObj.recipientUserId
-            );
+            const channel = this.redisService.getMessageChannel(requestObj.loginUserId, requestObj.recipientUserId);
             (async () => {
                 await this.redisService.subscribeToChannel(channel, this.sendMessageToClients.bind(this));
                 setInterval(() => this.sendHeartbeat(), 10000);
@@ -80,36 +77,36 @@ export class SseController {
     }
 
     private setupSseConnection(userId: number, req: Request, res: Response, route: string): void {
-        this.requestClient = new RequestClient(userId, req, res);
+        const requestClient = new RequestClient(userId, req, res);
+        this.requestClients.push(requestClient);
+
         res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Credentials', 'true');
         res.flushHeaders();
+
         req.on('close', () => {
             this.logger.logInfo(`Client disconnected from ${route}: ${req.ip}`);
         });
     }
 
     public sendHeartbeat(): void {
-        if (this.requestClient === null) {
-            this.logger.logWarn(`Call 'sendHeartbeat()', but client is null.`);
-        }
-        this.requestClient?.res.write(`: heartbeat\n\n`);
+        this.requestClients.forEach(client => {
+            client.res.write(`: heartbeat\n\n`);
+        });
     }
 
     public sendNotificationToClients(message: string): void {
-        if (this.requestClient === null) {
-            this.logger.logWarn(`Call 'sendNotificationToClients()', but client is null.`);
-        }
-        this.requestClient?.res.write(`data: ${message}\n\n`);
+        this.requestClients.forEach(client => {
+            client.res.write(`data: ${message}\n\n`);
+        });
     }
 
     public sendMessageToClients(message: string): void {
-        if (this.requestClient === null) {
-            this.logger.logWarn(`Call 'sendMessageToClients()', but client is null.`);
-        }
-        this.requestClient?.res.write(`data: ${message}\n\n`);
+        this.requestClients.forEach(client => {
+            client.res.write(`data: ${message}\n\n`);
+        });
     }
 }

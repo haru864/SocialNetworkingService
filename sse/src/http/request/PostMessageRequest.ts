@@ -16,13 +16,13 @@ export class PostMessageRequest implements HttpRequestInterface {
         const messageBody: { [key: string]: any } = request.body;
         this.userId = messageBody.user_id;
         this.messageDTO = new MessageDTO(
-            messageBody.message.id,
-            messageBody.message.senderId,
-            messageBody.message.recipientId,
-            messageBody.message.message,
-            messageBody.message.mediaFileName,
-            messageBody.message.mediaType,
-            messageBody.message.sendDatetime
+            messageBody.id,
+            messageBody.senderId,
+            messageBody.recipientId,
+            messageBody.message,
+            messageBody.mediaFileName,
+            messageBody.mediaType,
+            messageBody.sendDatetime
         );
     }
 }
