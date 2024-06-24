@@ -4,21 +4,34 @@ import { Grid, Box, CircularProgress } from '@mui/material';
 import { NotificationDTO } from './NotificationDTO';
 import { confirmNotifications, getNotifications } from './NotificationFunctions';
 import NotificationCard from './NotificationCard';
+import { getLoginUserId } from '@/app/common/CommonLayoutFunctions'
 
 const Notifications: React.FC = () => {
     const [notificationDTOs, setNotificationDTOs] = useState<NotificationDTO[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [page, setPage] = useState<number>(1);
     const [loading, setLoading] = useState(true);
+    const [loginUserId, setLoginUserId] = useState<number | null>(null);
 
     useEffect(() => {
         setLoading(true);
         loadNotifications();
         confirmNotifications();
-        const cleanup = getNotificationInRealTime();
+        const fetchData = async () => {
+            const userId = await getLoginUserId();
+            setLoginUserId(userId);
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (loginUserId === null) {
+            return;
+        }
+        const cleanup = getNotificationInRealTime(loginUserId);
         setLoading(false);
         return cleanup;
-    }, []);
+    }, [loginUserId]);
 
     const loadNotifications = async () => {
         const currNotifications = await getNotifications(page);
@@ -28,8 +41,8 @@ const Notifications: React.FC = () => {
         setHasMore(currNotifications.length === maxContentsPerPage);
     };
 
-    const getNotificationInRealTime = () => {
-        const eventSource = new EventSource(`${process.env.API_DOMAIN}/api/live/notifications`);
+    const getNotificationInRealTime = (userId: number) => {
+        const eventSource = new EventSource(`${process.env.SSE_NOTIFICATION_URL}?user_id=${userId}`);
         eventSource.onmessage = (event: MessageEvent) => {
             const data = JSON.parse(event.data);
             const notificationDTO = new NotificationDTO(data);

@@ -14,12 +14,12 @@ export class PostNotificationRequest implements HttpRequestInterface {
         }
         const messageBody: { [key: string]: any } = request.body;
         this.notificationDTO = new NotificationDTO(
-            messageBody.notification.notificationType,
-            messageBody.notification.id,
-            messageBody.notification.notifiedUserId,
-            messageBody.notification.entityId,
-            messageBody.notification.isConfirmed,
-            messageBody.notification.createdAt
+            messageBody.notificationType,
+            messageBody.id,
+            messageBody.notifiedUserId,
+            messageBody.entityId,
+            messageBody.isConfirmed,
+            messageBody.createdAt
         );
     }
 }

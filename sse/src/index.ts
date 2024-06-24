@@ -3,8 +3,9 @@ import dotenv from 'dotenv';
 import sseRoutes from './routes/sseRoutes';
 import { RedisService } from './services/RedisService';
 import { SseController } from './controllers/SseController';
-import { Logger } from './utils/Logger';
 import { errorHandler } from './middlewares/errorHandler';
+import { loggerMiddleware } from './middlewares/loggerMiddleware';
+import { Logger } from './utils/Logger';
 
 dotenv.config();
 const PORT = process.env.NODE_JS_PORT || 3000;
@@ -12,9 +13,10 @@ const PORT = process.env.NODE_JS_PORT || 3000;
 const app = express();
 const redisService = new RedisService();
 const sseController = new SseController(redisService);
-const logger: Logger = Logger.getInstance();
+const logger = Logger.getInstance();
 
 app.use(express.json());
+app.use(loggerMiddleware);
 app.use(sseRoutes);
 app.use(errorHandler)
 
