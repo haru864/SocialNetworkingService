@@ -7,6 +7,32 @@
 	},
 	"item": [
 		{
+			"name": "セッションチェック",
+			"item": [
+				{
+					"name": "セッションチェック",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://sns.test.com/api/check_session",
+							"protocol": "http",
+							"host": [
+								"sns",
+								"test",
+								"com"
+							],
+							"path": [
+								"api",
+								"check_session"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "ユーザー情報",
 			"item": [
 				{
@@ -19,7 +45,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "takina",
+									"value": "chisato",
 									"type": "text"
 								},
 								{
@@ -34,62 +60,62 @@
 								},
 								{
 									"key": "self_introduction",
-									"value": "hogehoge",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "profile_image",
 									"type": "file",
-									"src": "/home/haru/Pictures/icon_02 (1).jpg"
+									"src": []
 								},
 								{
 									"key": "country",
-									"value": "country_01",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "state",
-									"value": "state_01",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "city",
-									"value": "city_01",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "town",
-									"value": "town_01",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "hobby_1",
-									"value": "baseball",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "hobby_2",
-									"value": "soccer",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "hobby_3",
-									"value": "tennis",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "career_1",
-									"value": "engineer",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "career_2",
-									"value": "soldier",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "career_3",
-									"value": "president",
+									"value": "",
 									"type": "text"
 								}
 							]
@@ -339,7 +365,7 @@
 								{
 									"key": "profile_image",
 									"type": "file",
-									"src": "/home/haru/Pictures/icon_01 (1).jpg"
+									"src": []
 								},
 								{
 									"key": "country",
@@ -415,7 +441,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://sns.test.com/api/profile/validate_email?id=19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7",
+							"raw": "http://sns.test.com/api/profile/validate_email?id=ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -430,7 +456,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7"
+									"value": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
 								}
 							]
 						}
@@ -440,17 +466,11 @@
 				{
 					"name": "[正常系]プロフィール削除",
 					"request": {
-						"method": "POST",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "action",
-									"value": "delete",
-									"type": "text"
-								}
-							]
+							"formdata": []
 						},
 						"url": {
 							"raw": "http://sns.test.com/api/profile",
@@ -599,13 +619,14 @@
 							"formdata": [
 								{
 									"key": "message",
-									"value": "image tweet from postman",
+									"value": "qbqjYywq7XhRzVyy7Ayx5a2Y2OebcPZZDLwHz5vJQLXa6aVPo4wBEgJVMYE7h3xgpfIOWmLGn1MN9fN8Y5vTwIvOoKZeidTYRIIUnCxWjEmrgJWvUEuZBZK5MWjOGRY0sbY3iSCttKa2DEbGM9B2WldQhJs7gaFKSBZkHFNpq9IKYatJttU4kOjdbwpfFYbdzfCHTWH8",
+									"description": "200文字",
 									"type": "text"
 								},
 								{
 									"key": "media",
 									"type": "file",
-									"src": "/home/haru/Pictures/monster_icon_005.png"
+									"src": "/home/haru/Pictures/2309171800-yh-008.jpg"
 								}
 							]
 						},
@@ -835,7 +856,7 @@
 							"variable": [
 								{
 									"key": "tweet_id",
-									"value": "158"
+									"value": "1"
 								}
 							]
 						}
@@ -886,7 +907,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"action\": \"add\",\n    \"tweet_id\": 155\n}",
+							"raw": "{\n    \"action\": \"add\",\n    \"tweet_id\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1145,7 +1166,7 @@
 							"variable": [
 								{
 									"key": "tweet_id",
-									"value": "101"
+									"value": "2"
 								}
 							]
 						}
@@ -1372,7 +1393,7 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "http://sns.test.com/api/messages/:dm_partner_id?page=1&limit=20",
+							"raw": "http://sns.test.com/api/messages/:dm_partner_id?page=2&limit=20",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1387,7 +1408,7 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "2"
 								},
 								{
 									"key": "limit",
@@ -1478,8 +1499,16 @@
 							"formdata": [
 								{
 									"key": "message",
-									"value": "test text from postman",
+									"value": "qbqjYywq7XhRzVyy7Ayx5a2Y2OebcPZZDLwHz5vJQLXa6aVPo4wBEgJVMYE7h3xgpfIOWmLGn1MN9fN8Y5vTwIvOoKZeidTYRIIUnCxWjEmrgJWvUEuZBZK5MWjOGRY0sbY3iSCttKa2DEbGM9B2WldQhJs7gaFKSBZkHFNpq9IKYatJttU4kOjdbwpfFYbdzfCHTWH8",
+									"description": "半角200文字",
 									"type": "text"
+								},
+								{
+									"key": "message",
+									"value": "Ｃ；ｇ（＝ｔ｜％！Ｒ｝－ｌ４ｅｗＤｍ８＝／ｈ）｝ｓｄ＆Ｕｖ＞ｇｕ［３｝ＸｂＵ＠ＡＧＸＥ，＞ＯＢＤ？＆ｋｍ７ｅ＾＜ＲｙｐＶｕＳ８Ｙｕｖ９Ｑ９３ｓｂｎ．ＨｍＳｐｎＶｐ０ｅｙＢ＠２；＞Ｖ８Ｂｋ｜Ｒ１Ｃ；＂／ｉＤ５ｓ＜ＥＡＥ＼ｇ｝Ｍｄ８ＦＳ２～；ｅ６＃＞ｏＫｔ＆，Ｊ／Ｚｅ）ｎＭＴ）４ＨＯｏ．ＺＦＱＭｌｙＵｄ：ａＭ＼＊；［９ＫＥ［＿ＮＴｉ？？＠｀ＩｃＪＶｕＯＦｐｇ！ＤＫ？Ｃ｝＆２Ｒ）－５ｓａＧＪ＆ｋＰ｛Ｋ７",
+									"description": "全角200文字",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "media",
@@ -1489,7 +1518,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://sns.test.com/api/messages/1",
+							"raw": "http://sns.test.com/api/messages/:recipientUserId",
 							"protocol": "http",
 							"host": [
 								"sns",
@@ -1499,7 +1528,13 @@
 							"path": [
 								"api",
 								"messages",
-								"1"
+								":recipientUserId"
+							],
+							"variable": [
+								{
+									"key": "recipientUserId",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -2006,6 +2041,10 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "SSE",
+			"item": []
 		}
 	]
 }
