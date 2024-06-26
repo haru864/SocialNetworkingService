@@ -12,3 +12,10 @@ frontend/out/
 sse/node_modules/
 sse/dist/
 sse/log/
+
+mysql-variables.env
+
+mysql/create-app-user.sql
+mysql/data/
+
+

@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  frontend:
+    environment:
+      - NODE_ENV=production
+    command: npm start
+
+  nginx:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
