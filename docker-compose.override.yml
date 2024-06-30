@@ -5,7 +5,3 @@ services:
     environment:
       - NODE_ENV=production
     command: npm start
-
-  nginx:
-    extra_hosts:
-      - "host.docker.internal:host-gateway"

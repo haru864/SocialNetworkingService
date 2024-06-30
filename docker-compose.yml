@@ -25,23 +25,23 @@ services:
       php-fpm "
     depends_on:
       - mysql
+      - redis
     volumes:
-      - public_data:./backend/public
+      - public_data:/var/www/sns/backend/public
 
-  # sse:
-  #   build:
-  #     context: .
-  #     dockerfile: ./sse/Dockerfile
-  #   ports:
-  #     - "4001:4001"
+  sse:
+    build:
+      context: .
+      dockerfile: ./sse/Dockerfile
+    ports:
+      - "4001:4001"
+    depends_on:
+      - redis
 
-  # redis:
-  #   image: "redis:latest"
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - "./data/redis:/data"
-  #     - "./redis.conf:/etc/redis.conf"
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
 
   nginx:
     build:
@@ -51,6 +51,10 @@ services:
       - "80:80"
     volumes:
       - public_data:/var/www/sns/backend/public
+    depends_on:
+      - frontend
+      - backend
+      - sse
 
   mysql:
     build:
