@@ -17,6 +17,11 @@ RUN apt-get update && apt-get install -y \
 	unzip \
     && docker-php-ext-install mysqli
 
-# RUN php app/console.php migrate --init
+COPY wait-for-it.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+RUN chmod +x /var/www/sns/backend/docker-entrypoint.sh
 
 EXPOSE 9000
+
+ENTRYPOINT ["./docker-entrypoint.sh"]
