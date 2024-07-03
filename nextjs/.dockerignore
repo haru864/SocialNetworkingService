@@ -1,0 +1,5 @@
+nextjs/node_modules/
+nextjs/.next/
+nextjs/out/
+nextjs/Dockerfile
+nextjs/.dockerignore

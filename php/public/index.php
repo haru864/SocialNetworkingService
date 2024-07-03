@@ -1,8 +1,8 @@
 <?php
 
-$APP_DIRECTORY = __DIR__ . "/../../app/";
+$APP_DIRECTORY = __DIR__ . "/../app/";
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 spl_autoload_extensions(".php");
 spl_autoload_register(function ($class) {

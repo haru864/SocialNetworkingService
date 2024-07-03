@@ -1,17 +1,17 @@
-backend/log/
-backend/config/.env.private
-backend/public/images/
-backend/public/videos/
-backend/public/nextjs/
-backend/vendor/
+php/log/
+php/config/.env.private
+php/public/images/
+php/public/videos/
+php/public/nextjs/
+php/vendor/
 
-frontend/node_modules/
-frontend/.next/
-frontend/out/
+nextjs/node_modules/
+nextjs/.next/
+nextjs/out/
 
-sse/node_modules/
-sse/dist/
-sse/log/
+nodejs/node_modules/
+nodejs/dist/
+nodejs/log/
 
 mysql-variables.env
 

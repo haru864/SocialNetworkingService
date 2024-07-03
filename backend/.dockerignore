@@ -1,4 +1,0 @@
-backend/test/
-backend/vendor/
-backend/.dockerignore
-backend/Dockerfile

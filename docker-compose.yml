@@ -1,20 +1,20 @@
 version: '3.8'
 
 services:
-  frontend:
+  nextjs:
     build:
       context: .
-      dockerfile: ./frontend/Dockerfile
+      dockerfile: ./nextjs/Dockerfile
     ports:
       - "4000:4000"
     environment:
       - NODE_ENV=development
     command: npm run dev
 
-  backend:
+  php:
     build:
       context: .
-      dockerfile: ./backend/Dockerfile
+      dockerfile: ./php/Dockerfile
     ports:
       - "9000:9000"
     command: >
@@ -27,12 +27,12 @@ services:
       - mysql
       - redis
     volumes:
-      - public_data:/var/www/sns/backend/public
+      - public_data:/var/www/sns/php/public
 
-  sse:
+  nodejs:
     build:
       context: .
-      dockerfile: ./sse/Dockerfile
+      dockerfile: ./nodejs/Dockerfile
     ports:
       - "4001:4001"
     depends_on:
@@ -50,11 +50,11 @@ services:
     ports:
       - "80:80"
     volumes:
-      - public_data:/var/www/sns/backend/public
+      - public_data:/var/www/sns/php/public
     depends_on:
-      - frontend
-      - backend
-      - sse
+      - nextjs
+      - php
+      - nodejs
 
   mysql:
     build:

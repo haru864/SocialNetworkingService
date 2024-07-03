@@ -1,0 +1,4 @@
+php/test/
+php/vendor/
+php/.dockerignore
+php/Dockerfile

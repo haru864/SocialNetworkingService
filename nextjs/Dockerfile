@@ -2,11 +2,11 @@ FROM node:20-alpine
 
 WORKDIR /nextjs
 
-COPY ./frontend/package.json ./frontend/package-lock.json ./
+COPY ./nextjs/package.json ./nextjs/package-lock.json ./
 
 RUN npm install
 
-COPY ./frontend ./
+COPY ./nextjs ./
 
 RUN npm run build
 
