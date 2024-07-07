@@ -69,3 +69,7 @@ services:
 
 volumes:
   public_data:
+    driver_opts:
+      type: none
+      device: ${PWD}/php/public
+      o: bind

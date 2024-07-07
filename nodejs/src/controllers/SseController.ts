@@ -95,18 +95,24 @@ export class SseController {
     public sendHeartbeat(): void {
         this.requestClients.forEach(client => {
             client.res.write(`: heartbeat\n\n`);
+
+            console.log('heartbeat\n');
         });
     }
 
     public sendNotificationToClients(message: string): void {
         this.requestClients.forEach(client => {
             client.res.write(`data: ${message}\n\n`);
+
+            console.log(`(sendNotificationToClients) data: ${message}\n\n`);
         });
     }
 
     public sendMessageToClients(message: string): void {
         this.requestClients.forEach(client => {
             client.res.write(`data: ${message}\n\n`);
+
+            console.log(`(sendMessageToClients) data: ${message}\n\n`);
         });
     }
 }

@@ -168,9 +168,19 @@ $URL_DIR_PATTERN_NOTIFICATIONS = '/^\/api\/notifications$/';
 $URL_DIR_PATTERN_NOTIFICATIONS_CONFIRM = '/^\/api\/notifications\/confirm$/';
 $URL_DIR_PATTERN_SEARCH_USERS = '/^\/api\/search\/users$/';
 $URL_DIR_PATTERN_SEARCH_TWEETS = '/^\/api\/search\/tweets$/';
+$URL_DIR_PATTERN_MEDIA_FILES = '/^\/(images|videos)\//';
+$URL_DIR_PATTERN_SSE = '/^\/sse\//';
 
 return [
     $URL_DIR_PATTERN_CHECK_SESSION => [
+        'controller' => $sessionCheckController,
+        'middleware' => new AuthMiddleware($authenticationService)
+    ],
+    $URL_DIR_PATTERN_MEDIA_FILES => [
+        'controller' => $sessionCheckController,
+        'middleware' => new AuthMiddleware($authenticationService)
+    ],
+    $URL_DIR_PATTERN_SSE => [
         'controller' => $sessionCheckController,
         'middleware' => new AuthMiddleware($authenticationService)
     ],

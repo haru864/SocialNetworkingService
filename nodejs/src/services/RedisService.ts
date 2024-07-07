@@ -3,16 +3,32 @@ import { Logger } from '../utils/Logger';
 
 export class RedisService {
 
+    private redisHost = process.env.REDIS_SERVER_ADDRESS || 'localhost';
+    private redisPort = process.env.REDIS_SERVER_PORT || 6379;
     private client;
     private logger;
 
     constructor() {
-        this.client = createClient();
         this.logger = Logger.getInstance();
+        this.client = createClient({
+            url: `redis://${this.redisHost}:${this.redisPort}`
+        })
+            .on('error', err => {
+                console.log('Redis Client Error', err)
+                this.logger.logError('[Redis Client Error] ' + err);
+            });
     }
 
     public async connect() {
-        await this.client.connect();
+        await this.client.connect()
+            .then(() => {
+                console.log(`Connected to Redis at ${this.redisHost}:${this.redisPort}`);
+                this.logger.logError(`Connected to Redis at ${this.redisHost}:${this.redisPort}`);
+            })
+            .catch(err => {
+                console.error('Could not connect to Redis:', err);
+                this.logger.logError('Could not connect to Redis: ' + err);
+            });
     }
 
     public async publishToChannel(channel: string, message: string): Promise<void> {
