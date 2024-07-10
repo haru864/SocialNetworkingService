@@ -39,7 +39,7 @@ services:
       - redis
 
   redis:
-    image: "redis:latest"
+    image: redis:6.0.16
     ports:
       - "6379:6379"
 

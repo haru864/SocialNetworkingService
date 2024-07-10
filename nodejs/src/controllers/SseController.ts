@@ -18,15 +18,32 @@ export class SseController {
     }
 
     public handleGetNotificationRequest(req: Request, res: Response, next: NextFunction): void {
+
+        console.log('Executing handleGetNotificationRequest()...');
+
         try {
             const userId = new GetNotificationRequest(req).userId;
             this.setupSseConnection(userId, req, res, '/sse/notifications');
             const channel = this.redisService.getNotificationChannel(userId);
             (async () => {
-                await this.redisService.subscribeToChannel(channel, this.sendMessageToClients.bind(this));
-                setInterval(() => this.sendHeartbeat(), 10000);
+                setInterval(() => {
+                    try {
+                        this.sendHeartbeat();
+                    } catch (error) {
+                        console.error('Error in sendHeartbeat:', error);
+                    }
+                }, 10000);
+
+                console.log('Executing async...');
+
+                await this.redisService.subscribeToChannel(channel, this.sendNotificationToClients.bind(this));
+
+                console.log('After subscribeToChannel...');
             })();
         } catch (error) {
+
+            console.log(error);
+
             next(error);
         }
     }
@@ -46,6 +63,9 @@ export class SseController {
     }
 
     public handlePostNotificationRequest(req: Request, res: Response, next: NextFunction): void {
+
+        console.log('Executing handlePostNotificationRequest()...');
+
         try {
             const requestObj = new PostNotificationRequest(req);
             const notificationDTO = requestObj.notificationDTO;
@@ -53,10 +73,16 @@ export class SseController {
             const channel = this.redisService.getNotificationChannel(loginUserId);
             const message = requestObj.notificationDTO.toString();
             (async () => {
+
+                console.log('Executing async...');
+
                 await this.redisService.publishToChannel(channel, message);
             })();
             res.sendStatus(200);
         } catch (error) {
+
+            console.log(error);
+
             next(error);
         }
     }
@@ -79,14 +105,12 @@ export class SseController {
     private setupSseConnection(userId: number, req: Request, res: Response, route: string): void {
         const requestClient = new RequestClient(userId, req, res);
         this.requestClients.push(requestClient);
-
         res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Credentials', 'true');
         res.flushHeaders();
-
         req.on('close', () => {
             this.logger.logInfo(`Client disconnected from ${route}: ${req.ip}`);
         });
@@ -96,7 +120,7 @@ export class SseController {
         this.requestClients.forEach(client => {
             client.res.write(`: heartbeat\n\n`);
 
-            console.log('heartbeat\n');
+            console.log('heartbeat');
         });
     }
 
@@ -104,7 +128,7 @@ export class SseController {
         this.requestClients.forEach(client => {
             client.res.write(`data: ${message}\n\n`);
 
-            console.log(`(sendNotificationToClients) data: ${message}\n\n`);
+            console.log(`(sendNotificationToClients) data: ${message}`);
         });
     }
 
@@ -112,7 +136,7 @@ export class SseController {
         this.requestClients.forEach(client => {
             client.res.write(`data: ${message}\n\n`);
 
-            console.log(`(sendMessageToClients) data: ${message}\n\n`);
+            console.log(`(sendMessageToClients) data: ${message}`);
         });
     }
 }
