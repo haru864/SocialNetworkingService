@@ -6,19 +6,19 @@ export class RedisService {
     // private redisHost = process.env.REDIS_SERVER_ADDRESS || 'localhost';
     private redisHost = process.env.REDIS_SERVER_ADDRESS || 'redis';
     private redisPort = process.env.REDIS_SERVER_PORT || 6379;
-    private pubClient;
-    private subClient;
+    private publisher;
+    private subscriber;
     private logger;
 
     constructor() {
         this.logger = Logger.getInstance();
-        this.pubClient = createClient({
+        this.publisher = createClient({
             url: `redis://${this.redisHost}:${this.redisPort}`
         }).on('error', err => {
             console.log('Redis Pub Client Error', err);
             this.logger.logError('[Redis Pub Client Error] ' + err);
         });
-        this.subClient = createClient({
+        this.subscriber = createClient({
             url: `redis://${this.redisHost}:${this.redisPort}`
         }).on('error', err => {
             console.log('Redis Sub Client Error', err);
@@ -28,8 +28,8 @@ export class RedisService {
 
     public async connect() {
         try {
-            await this.pubClient.connect();
-            await this.subClient.connect();
+            await this.publisher.connect();
+            await this.subscriber.connect();
             console.log(`Connected to Redis at ${this.redisHost}:${this.redisPort}`);
             this.logger.logInfo(`Connected to Redis at ${this.redisHost}:${this.redisPort}`);
         } catch (err) {
@@ -39,14 +39,11 @@ export class RedisService {
     }
 
     public async publishToChannel(channel: string, message: string): Promise<void> {
-        console.log('Starting publishToChannel()...');
-        if (!this.pubClient.isOpen) {
-            await this.pubClient.connect();
+        if (!this.publisher.isOpen) {
+            await this.publisher.connect();
         }
-        console.log('Publishing to channel:', channel);
         try {
-            await this.pubClient.publish(channel, message);
-            console.log('Publish successful');
+            await this.publisher.publish(channel, message);
         } catch (err) {
             console.error('Error in publishToChannel(): ', err);
             this.logger.logError('Error in publishToChannel(): ' + err);
@@ -54,19 +51,13 @@ export class RedisService {
     }
 
     public async subscribeToChannel(channel: string, callback: (message: string) => void): Promise<void> {
-        console.log('Starting subscribeToChannel()...');
-        if (!this.subClient.isOpen) {
-            await this.subClient.connect();
+        if (!this.subscriber.isOpen) {
+            await this.subscriber.connect();
         }
         try {
-            console.log('Subscribing to channel:', channel);
-            // BUG Redisに接続しない、PUBが成功してもコールバックが実行されない
-            await this.subClient.subscribe(channel, (message) => {
-                console.log(`Message received from ${channel} channel: ${message}`);
-                this.logger.logInfo(`Message received from ${channel} channel: ${message}`);
+            await this.subscriber.subscribe(channel, (message) => {
                 callback(message);
             });
-            console.log('Subscription successful');
         } catch (err) {
             console.error('Error in subscribeToChannel(): ', err);
             this.logger.logError('Error in subscribeToChannel(): ' + err);

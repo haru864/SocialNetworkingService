@@ -18,27 +18,13 @@ export class SseController {
     }
 
     public handleGetNotificationRequest(req: Request, res: Response, next: NextFunction): void {
-
-        console.log('Executing handleGetNotificationRequest()...');
-
         try {
             const userId = new GetNotificationRequest(req).userId;
             this.setupSseConnection(userId, req, res, '/sse/notifications');
             const channel = this.redisService.getNotificationChannel(userId);
             (async () => {
-                setInterval(() => {
-                    try {
-                        this.sendHeartbeat();
-                    } catch (error) {
-                        console.error('Error in sendHeartbeat:', error);
-                    }
-                }, 10000);
-
-                console.log('Executing async...');
-
+                setInterval(() => { this.sendHeartbeat(); }, 10000);
                 await this.redisService.subscribeToChannel(channel, this.sendNotificationToClients.bind(this));
-
-                console.log('After subscribeToChannel...');
             })();
         } catch (error) {
 
@@ -54,8 +40,8 @@ export class SseController {
             this.setupSseConnection(requestObj.loginUserId, req, res, '/sse/message');
             const channel = this.redisService.getMessageChannel(requestObj.loginUserId, requestObj.recipientUserId);
             (async () => {
-                await this.redisService.subscribeToChannel(channel, this.sendMessageToClients.bind(this));
                 setInterval(() => this.sendHeartbeat(), 10000);
+                await this.redisService.subscribeToChannel(channel, this.sendMessageToClients.bind(this));
             })();
         } catch (error) {
             next(error);
@@ -63,9 +49,6 @@ export class SseController {
     }
 
     public handlePostNotificationRequest(req: Request, res: Response, next: NextFunction): void {
-
-        console.log('Executing handlePostNotificationRequest()...');
-
         try {
             const requestObj = new PostNotificationRequest(req);
             const notificationDTO = requestObj.notificationDTO;
@@ -73,9 +56,6 @@ export class SseController {
             const channel = this.redisService.getNotificationChannel(loginUserId);
             const message = requestObj.notificationDTO.toString();
             (async () => {
-
-                console.log('Executing async...');
-
                 await this.redisService.publishToChannel(channel, message);
             })();
             res.sendStatus(200);
@@ -119,24 +99,18 @@ export class SseController {
     public sendHeartbeat(): void {
         this.requestClients.forEach(client => {
             client.res.write(`: heartbeat\n\n`);
-
-            console.log('heartbeat');
         });
     }
 
     public sendNotificationToClients(message: string): void {
         this.requestClients.forEach(client => {
             client.res.write(`data: ${message}\n\n`);
-
-            console.log(`(sendNotificationToClients) data: ${message}`);
         });
     }
 
     public sendMessageToClients(message: string): void {
         this.requestClients.forEach(client => {
             client.res.write(`data: ${message}\n\n`);
-
-            console.log(`(sendMessageToClients) data: ${message}`);
         });
     }
 }
