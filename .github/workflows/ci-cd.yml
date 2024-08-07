@@ -1,0 +1,34 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PORTFOLIO_EC2_HOST }}
+          username: ${{ secrets.PORTFOLIO_EC2_USER }}
+          key: ${{ secrets.PORTFOLIO_EC2_ACCESS_KEY }}
+          script: |
+            export APP_DIR=/var/www/sns
+
+            if [ -d "$APP_DIR" ]; then
+              rm -rf $APP_DIR
+            fi
+
+            mkdir -p $APP_DIR
+
+            git clone https://github.com/haru864/SocialNetworkingService.git $APP_DIR
