@@ -27,6 +27,6 @@ jobs:
               rm -rf $APP_DIR
             fi
 
-            mkdir -p $APP_DIR
+            sudo mkdir -p $APP_DIR
 
-            git clone https://github.com/haru864/SocialNetworkingService.git $APP_DIR
+            sudo git clone https://github.com/haru864/SocialNetworkingService.git $APP_DIR
