@@ -41,14 +41,14 @@ services:
   redis:
     image: redis:6.0.16
     ports:
-      - "6379:6379"
+      - "16379:6379"
 
   nginx:
     build:
       context: .
       dockerfile: ./nginx/Dockerfile
     ports:
-      - "80:80"
+      - "10080:80"
     volumes:
       - public_data:/var/www/sns/php/public
     depends_on:
@@ -65,7 +65,7 @@ services:
     env_file:
       - mysql-variables.env
     ports:
-      - "3306:3306"
+      - "13306:3306"
 
 volumes:
   public_data:

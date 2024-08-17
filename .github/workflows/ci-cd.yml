@@ -28,5 +28,8 @@ jobs:
             fi
 
             sudo mkdir -p $APP_DIR
+            cd $APP_DIR
 
             sudo git clone https://github.com/haru864/SocialNetworkingService.git $APP_DIR
+
+            docker compose up --build
