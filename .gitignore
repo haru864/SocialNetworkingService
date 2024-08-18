@@ -15,7 +15,6 @@ nodejs/log/
 
 mysql-variables.env
 
-mysql/create-app-user.sql
 mysql/data/
 
 

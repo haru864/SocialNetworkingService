@@ -22,14 +22,43 @@ jobs:
           key: ${{ secrets.PORTFOLIO_EC2_ACCESS_KEY }}
           script: |
             export APP_DIR=/var/www/sns
+            export PHP_DIR=/var/www/sns/php
+            export NEXTJS_DIR=/var/www/sns/nextjs
+            export NODEJS_DIR=/var/www/sns/nodejs
+            export MYSQL_DIR=/var/www/sns/mysql
 
             if [ -d "$APP_DIR" ]; then
               sudo rm -rf $APP_DIR
             fi
 
             sudo mkdir -p $APP_DIR
-            cd $APP_DIR
-
             sudo git clone https://github.com/haru864/SocialNetworkingService.git $APP_DIR
+
+            cd $APP_DIR
+            sudo touch mysql-variables.env
+            sudo chmod 777 mysql-variables.env
+            cat <<EOF > mysql-variables.env
+            MYSQL_ROOT_PASSWORD=secrets.MYSQL_ROOT_PASSWORD
+            MYSQL_DATABASE=secrets.MYSQL_DATABASE
+            MYSQL_USER=secrets.MYSQL_USER
+            MYSQL_PASSWORD=secrets.MYSQL_PASSWORD
+            EOF
+
+            cd $MYSQL_DIR
+            sudo mkdir data
+            sudo chmod 777 ./data/
+
+            cd $PHP_DIR
+            sudo mkdir log/
+            sudo mkdir public/images/
+            sudo mkdir public/videos/
+            sudo mkdir public/nextjs/
+            sudo mkdir vendor/
+            sudo chmod 777 log/
+            sudo chmod 777 public/images/
+            sudo chmod 777 public/videos/
+            sudo chmod 777 public/nextjs/
+            sudo chmod 777 vendor/
+            composer install
 
             docker compose up --build
