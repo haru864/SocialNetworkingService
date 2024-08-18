@@ -61,4 +61,5 @@ jobs:
             sudo chmod 777 vendor/
             composer install
 
+            cd $APP_DIR
             docker compose up --build
