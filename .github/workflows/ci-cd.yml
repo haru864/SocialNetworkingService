@@ -61,5 +61,12 @@ jobs:
             sudo chmod 777 vendor/
             composer install
 
+            cd $NODEJS_DIR
+            sudo mkdir log
+            sudo mkdir dist
+            sudo chmod 777 log
+            sudo chmod 777 dist
+            tsc
+
             cd $APP_DIR
             docker compose up --build
