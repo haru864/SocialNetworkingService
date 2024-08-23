@@ -42,7 +42,7 @@ jobs:
             cd $APP_DIR
             sudo touch mysql-variables.env
             sudo chmod 777 mysql-variables.env
-            cat << EOF > mysql-variables.env
+            sudo cat << EOF > mysql-variables.env
             ${{ secrets.MYSQL_VARIABLES_ENV }}
             EOF
 
@@ -62,7 +62,7 @@ jobs:
             sudo chmod 777 public/nextjs/
             sudo chmod 777 vendor/
             composer install
-            cat << EOF > config/.env.private
+            sudo cat << EOF > config/.env.private
             ${{ secrets.PHP_ENV_PRIVATE }}
             EOF
 
