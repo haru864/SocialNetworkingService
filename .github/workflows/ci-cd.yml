@@ -19,14 +19,6 @@ jobs:
           docker system prune -af --volumes
           docker builder prune -a -f
 
-      - name: Debug secret
-        run: |
-          echo "${{ secrets.PORTFOLIO_EC2_HOST }}"
-          echo "${{ secrets.PORTFOLIO_EC2_USER }}"
-          echo "${{ secrets.PORTFOLIO_EC2_ACCESS_KEY }}"
-          echo "${{ secrets.MYSQL_VARIABLES_ENV }}"
-          echo "${{ secrets.PHP_ENV_PRIVATE }}"
-
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -50,7 +42,9 @@ jobs:
             cd $APP_DIR
             sudo touch mysql-variables.env
             sudo chmod 777 mysql-variables.env
-            echo ${{ secrets.MYSQL_VARIABLES_ENV }} > mysql-variables.env
+            cat << EOF > mysql-variables.env
+            ${{ secrets.MYSQL_VARIABLES_ENV }}
+            EOF
 
             cd $MYSQL_DIR
             sudo mkdir data
@@ -68,7 +62,9 @@ jobs:
             sudo chmod 777 public/nextjs/
             sudo chmod 777 vendor/
             composer install
-            echo ${{ secrets.PHP_ENV_PRIVATE }} > config/.env.private
+            cat << EOF > config/.env.private
+            ${{ secrets.PHP_ENV_PRIVATE }}
+            EOF
 
             cd $NODEJS_DIR
             sudo mkdir log
