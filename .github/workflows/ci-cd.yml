@@ -19,6 +19,14 @@ jobs:
           docker system prune -af --volumes
           docker builder prune -a -f
 
+      - name: Debug secret
+        run: |
+          echo "${{ secrets.PORTFOLIO_EC2_HOST }}"
+          echo "${{ secrets.PORTFOLIO_EC2_USER }}"
+          echo "${{ secrets.PORTFOLIO_EC2_ACCESS_KEY }}"
+          echo "${{ secrets.MYSQL_VARIABLES_ENV }}"
+          echo "${{ secrets.PHP_ENV_PRIVATE }}"
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
