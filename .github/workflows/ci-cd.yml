@@ -68,18 +68,15 @@ jobs:
             sudo npm install
             tsc
 
-            sudo chown -R ubuntu:www-data $APP_DIR
-            sudo chmod -R 775 $APP_DIR
-
             cat << EOF > $APP_DIR/mysql-variables.env
             ${{ secrets.MYSQL_VARIABLES_ENV }}
-            EOF
-            cat << EOF > $APP_DIR/.env.private
-            ${{ secrets.PHP_ENV_PRIVATE }}
             EOF
             cat << EOF > $PHP_DIR/config/.env.private
             ${{ secrets.PHP_ENV_PRIVATE }}
             EOF
+
+            sudo chown -R ubuntu:www-data $APP_DIR
+            sudo chmod -R 775 $APP_DIR
 
             cd $APP_DIR
             docker compose up --build
