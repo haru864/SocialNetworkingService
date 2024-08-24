@@ -51,9 +51,14 @@ jobs:
 
             cd $PHP_DIR
             sudo mkdir log/
-            sudo mkdir public/images/
-            sudo mkdir public/videos/
-            sudo mkdir public/nextjs/
+            sudo mkdir -p public/images/dm/thumbnail
+            sudo mkdir -p public/images/dm/upload
+            sudo mkdir -p public/images/profile/thumbnail
+            sudo mkdir -p public/images/profile/upload
+            sudo mkdir -p public/images/tweet/thumbnail
+            sudo mkdir -p public/images/tweet/upload
+            sudo mkdir -p public/videos/dm
+            sudo mkdir -p public/videos/tweet
             sudo mkdir vendor/
             sudo chmod 777 log/
             sudo chmod 777 public/images/
