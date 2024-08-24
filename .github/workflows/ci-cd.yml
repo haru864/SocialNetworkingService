@@ -87,4 +87,4 @@ jobs:
             sed -i -e "s|server_name .*;|server_name sns.haru864.com;|" "$NGINX_DIR/conf/sns.conf"
             sed -i -e "s|ACCESS_CONTROL_ALLOW_ORIGIN=.*|ACCESS_CONTROL_ALLOW_ORIGIN=${HONBAN_DOMAIN}|" "$PHP_DIR/config/.env.public"
             sed -i -e "s|SESSION_DOMAIN=.*|SESSION_DOMAIN='sns.haru864.com'|" "$PHP_DIR/config/.env.public"
-            # docker compose up --build
+            docker compose up --build
