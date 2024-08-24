@@ -25,7 +25,6 @@ jobs:
           host: ${{ secrets.PORTFOLIO_EC2_HOST }}
           username: ${{ secrets.PORTFOLIO_EC2_USER }}
           key: ${{ secrets.PORTFOLIO_EC2_ACCESS_KEY }}
-          timeout: 600
           script: |
             export APP_DIR=/var/www/sns
             export NGINX_DIR=/var/www/sns/nginx
