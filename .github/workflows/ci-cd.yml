@@ -31,7 +31,7 @@ jobs:
             export NEXTJS_DIR=/var/www/sns/nextjs
             export NODEJS_DIR=/var/www/sns/nodejs
             export MYSQL_DIR=/var/www/sns/mysql
-            export HONBAN_DOMAIN=${{ secrets.HONBAN_DOMAIN }}
+            export HONBAN_DOMAIN=http://sns.haru864.com
 
             if [ -d "$APP_DIR" ]; then
               sudo rm -rf $APP_DIR
