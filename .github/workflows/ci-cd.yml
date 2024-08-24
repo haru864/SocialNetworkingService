@@ -83,7 +83,8 @@ jobs:
             sudo chmod -R 775 $PHP_DIR/config/.env.private
 
             cd $APP_DIR
-            sed -i "s|const apiDomain = '.*';|const apiDomain = '${HONBAN_DOMAIN}';|" "$NEXTJS_DIR/next.config.mjs"
-            sed -i "s|server_name .*;|server_name ${HONBAN_DOMAIN};|" "$NGINX_DIR/conf/sns.config"
-            sed -i "s|ACCESS_CONTROL_ALLOW_ORIGIN=.*|ACCESS_CONTROL_ALLOW_ORIGIN=${HONBAN_DOMAIN}|" "$PHP_DIR/config/.env.public"
+            sed -i -e "s|const apiDomain = '.*';|const apiDomain = '${HONBAN_DOMAIN}';|" "$NEXTJS_DIR/next.config.mjs"
+            sed -i -e "s|\s*server_name .*;|\s*server_name ${HONBAN_DOMAIN};|" "$NGINX_DIR/conf/sns.config"
+            sed -i -e "s|ACCESS_CONTROL_ALLOW_ORIGIN=.*|ACCESS_CONTROL_ALLOW_ORIGIN=${HONBAN_DOMAIN}|" "$PHP_DIR/config/.env.public"
+            sed -i -e "s|SESSION_DOMAIN=.*|SESSION_DOMAIN='sns.haru864.com'|" "$PHP_DIR/config/.env.public"
             # docker compose up --build
