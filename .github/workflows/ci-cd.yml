@@ -27,6 +27,7 @@ jobs:
           key: ${{ secrets.PORTFOLIO_EC2_ACCESS_KEY }}
           script: |
             export APP_DIR=/var/www/sns
+            export NGINX_DIR=/var/www/sns/nginx
             export PHP_DIR=/var/www/sns/php
             export NEXTJS_DIR=/var/www/sns/nextjs
             export NODEJS_DIR=/var/www/sns/nodejs
@@ -83,4 +84,6 @@ jobs:
 
             cd $APP_DIR
             sed -i "s/const apiDomain = '.*';/const apiDomain = '$HONBAN_DOMAIN';/g" $NEXTJS_DIR/next.config.mjs
-            docker compose up --build
+            sed -i "s/server_name .*;/server_name $HONBAN_DOMAIN;/g" $NGINX_DIR/conf/sns.config
+            sed -i "s/ACCESS_CONTROL_ALLOW_ORIGIN=".*"/ACCESS_CONTROL_ALLOW_ORIGIN="$HONBAN_DOMAIN"/g" $PHP_DIR/config/.env.public
+            # docker compose up --build
