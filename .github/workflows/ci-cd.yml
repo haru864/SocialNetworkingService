@@ -21,8 +21,6 @@ jobs:
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
-        env:
-          HONBAN_DOMAIN: ${{ secrets.HONBAN_DOMAIN }}
         with:
           host: ${{ secrets.PORTFOLIO_EC2_HOST }}
           username: ${{ secrets.PORTFOLIO_EC2_USER }}
@@ -33,6 +31,7 @@ jobs:
             export NEXTJS_DIR=/var/www/sns/nextjs
             export NODEJS_DIR=/var/www/sns/nodejs
             export MYSQL_DIR=/var/www/sns/mysql
+            export HONBAN_DOMAIN=${{ secrets.HONBAN_DOMAIN }}
 
             if [ -d "$APP_DIR" ]; then
               sudo rm -rf $APP_DIR
