@@ -71,12 +71,14 @@ jobs:
             cat << EOF > $APP_DIR/mysql-variables.env
             ${{ secrets.MYSQL_VARIABLES_ENV }}
             EOF
+            sudo chown -R ubuntu:www-data $APP_DIR
+            sudo chmod -R 775 $APP_DIR
+            
             cat << EOF > $PHP_DIR/config/.env.private
             ${{ secrets.PHP_ENV_PRIVATE }}
             EOF
-
-            sudo chown -R ubuntu:www-data $APP_DIR
-            sudo chmod -R 775 $APP_DIR
+            sudo chown -R ubuntu:www-data $PHP_DIR/config/.env.private
+            sudo chmod -R 775 $PHP_DIR/config/.env.private
 
             cd $APP_DIR
             docker compose up --build
